@@ -2,85 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/post/eeg_eda/</loc>
+    <loc>https://github.com/samoliverschumacher/post/eeg_eda/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/</loc>
+    <loc>https://github.com/samoliverschumacher/post/eeg_modelling/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/classification/</loc>
+    <loc>https://github.com/samoliverschumacher/post/eeg_costtradeoff/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/datascience/</loc>
+    <loc>https://github.com/samoliverschumacher/categories/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/exploratory-data-analysis/</loc>
+    <loc>https://github.com/samoliverschumacher/tags/classification/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/machine-learning/</loc>
+    <loc>https://github.com/samoliverschumacher/tags/convex-optimisation/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/</loc>
+    <loc>https://github.com/samoliverschumacher/categories/datascience/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/</loc>
+    <loc>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
+    <loc>https://github.com/samoliverschumacher/tags/feature-engineering/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/timeseries/</loc>
+    <loc>https://github.com/samoliverschumacher/tags/lasso/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/basic-elements/</loc>
-    <lastmod>2018-04-16T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/tags/lstm/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/basic-elements/</loc>
-    <lastmod>2018-04-16T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/categories/machine-learning/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/css/</loc>
-    <lastmod>2018-04-16T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/tags/neural-network/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/development/</loc>
-    <lastmod>2018-04-16T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/post/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/html/</loc>
-    <lastmod>2018-04-16T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/creating-a-new-theme/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/tags/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/about/</loc>
-    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/tags/timeseries/</loc>
+    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/goisforlovers/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/development/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/post/hugoisforlovers/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/go/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/golang/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/categories/golang/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/hugo/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/templates/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/themes/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/post/migrate-from-jekyll/</loc>
-    <lastmod>2014-03-10T00:00:00+00:00</lastmod>
+    <loc>https://github.com/samoliverschumacher/about/</loc>
   </url>
 </urlset>

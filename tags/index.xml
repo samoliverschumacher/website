@@ -1,117 +1,81 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Mainroad</title>
-    <link>/tags/</link>
-    <description>Recent content in Tags on Mainroad</description>
+    <title>Tags on Sam Schumacher</title>
+    <link>https://github.com/samoliverschumacher/tags/</link>
+    <description>Recent content in Tags on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://github.com/samoliverschumacher/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>classification</title>
-      <link>/tags/classification/</link>
+      <link>https://github.com/samoliverschumacher/tags/classification/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/classification/</guid>
+      <guid>https://github.com/samoliverschumacher/tags/classification/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>convex optimisation</title>
+      <link>https://github.com/samoliverschumacher/tags/convex-optimisation/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://github.com/samoliverschumacher/tags/convex-optimisation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>exploratory data analysis</title>
-      <link>/tags/exploratory-data-analysis/</link>
+      <link>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/exploratory-data-analysis/</guid>
+      <guid>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>feature engineering</title>
+      <link>https://github.com/samoliverschumacher/tags/feature-engineering/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://github.com/samoliverschumacher/tags/feature-engineering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lasso</title>
+      <link>https://github.com/samoliverschumacher/tags/lasso/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://github.com/samoliverschumacher/tags/lasso/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LSTM</title>
+      <link>https://github.com/samoliverschumacher/tags/lstm/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://github.com/samoliverschumacher/tags/lstm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>neural network</title>
+      <link>https://github.com/samoliverschumacher/tags/neural-network/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://github.com/samoliverschumacher/tags/neural-network/</guid>
       <description></description>
     </item>
     
     <item>
       <title>timeseries</title>
-      <link>/tags/timeseries/</link>
+      <link>https://github.com/samoliverschumacher/tags/timeseries/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/timeseries/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Basic Elements</title>
-      <link>/tags/basic-elements/</link>
-      <pubDate>Mon, 16 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/basic-elements/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>CSS</title>
-      <link>/tags/css/</link>
-      <pubDate>Mon, 16 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/css/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>HTML</title>
-      <link>/tags/html/</link>
-      <pubDate>Mon, 16 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/html/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>development</title>
-      <link>/tags/development/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>go</title>
-      <link>/tags/go/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/go/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>golang</title>
-      <link>/tags/golang/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>hugo</title>
-      <link>/tags/hugo/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>templates</title>
-      <link>/tags/templates/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/templates/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>themes</title>
-      <link>/tags/themes/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/themes/</guid>
+      <guid>https://github.com/samoliverschumacher/tags/timeseries/</guid>
       <description></description>
     </item>
     

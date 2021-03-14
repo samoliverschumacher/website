@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff - Sam Schumacher</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff" />
+<meta property="og:description" content="It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://github.com/samoliverschumacher/post/eeg_costtradeoff/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-12-18T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-18T00:00:00&#43;00:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="https://github.com/samoliverschumacher/css/style.css">
+	
+
+	<link rel="shortcut icon" href="https://github.com/samoliverschumacher/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo logo--mixed">
+		<a class="logo__link" href="https://github.com/samoliverschumacher/" title="Sam Schumacher" rel="home">
+			<div class="logo__item logo__imagebox">
+					<img class="logo__img" src="https://github.com/samoliverschumacher/images/eegeda/1.png">
+				</div><div class="logo__item logo__text">
+					<div class="logo__title">Sam Schumacher</div>
+					<div class="logo__tagline">ML &amp; AI</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="https://github.com/samoliverschumacher/about/">
+				
+				<span class="menu__text">this blog</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</h1>
+			<p class="post__lead">Binary classification using EEG readings (part 3 of 3)</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-18T00:00:00Z">December 18, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="https://github.com/samoliverschumacher/categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="https://github.com/samoliverschumacher/categories/datascience/" rel="category">Datascience</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<p><em>It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open.</em></p>
+<hr>
+<ul>
+<li><a href="#motivation--approach">Motivation &amp; approach</a></li>
+<li><a href="#assymetric-loss-function-trading-incorrect-open-state-detection-for-incorrect-closed-states">Assymetric Loss function: trading incorrect Open state detection for incorrect Closed states.</a></li>
+<li><a href="#methods-to-implement-an-imbalanced-cost-of-fn-vs-fp">Methods to implement an imbalanced cost of FN vs FP</a></li>
+<li><a href="#adjust-intercept---lasso-probit-model">Adjust intercept - Lasso-probit model</a></li>
+<li><a href="#adjust-observation-weights---probit-model">Adjust observation weights - Probit model</a></li>
+<li><a href="#select-a-classification-threshold---partial-least-squares">Select a classification threshold - Partial Least Squares</a></li>
+<li><a href="#custom-loss-function---recurrent-neural-network-lstm">Custom Loss function - Recurrent Neural Network (LSTM)</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<h1 id="motivation--approach">Motivation &amp; approach</h1>
+<p>Understanding the context of the business application of a machine learning solution is critical. The business problem was for a driver microsleep detector, though by thinking about the context of the real world application, we decided it was much worse to classify a &ldquo;Closed&rdquo; state as an &ldquo;Open&rdquo;, than it was to classify eyes as closed, when really they were open. It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open. Open eyes will also be called &ldquo;Positive&rdquo;, and closed eyes will be called Negative. So we want to avoid a false positive (F.P.) 3 times as much as we want to avoid a false negative (F.N.)</p>
+<p>In the modelling done so far, the loss curves for (mis)classifying &ldquo;eyes open&rdquo; is the same as loss curve for classifying &ldquo;eyes closed&rdquo;. The False Negative to False Positive ratios for all 4 models so far;</p>
+<ol>
+<li>Probit regression: 7:6 (FPs : FNs)</li>
+<li>Lasso Probit regression: 10:10</li>
+<li>Partial Least Squares regression: 8:13</li>
+<li>Reccurent neural network (LSTM): 16:88</li>
+</ol>
+<p>The goal is to get this ratio to be 3:1</p>
+<h1 id="assymetric-loss-function-trading-incorrect-open-state-detection-for-incorrect-closed-states">Assymetric Loss function: trading incorrect Open state detection for incorrect Closed states.</h1>
+<blockquote>
+<p><em><strong>Assymetric loss function</strong></em>: &ldquo;It&rsquo;s much more important to not mistake eyes closed for eyes open, than the other way around&rdquo;</p>
+</blockquote>
+<p>The objective is to correctly predict the binary eye state: &lsquo;open&rsquo; or &lsquo;closed&rsquo;. This is commonly done with a cross-entropy loss function. The &lsquo;log&rsquo; helps to move faster from confidently wrong models in the training process, than it does from slightly wrong models.</p>
+<h1 id="methods-to-implement-an-imbalanced-cost-of-fn-vs-fp">Methods to implement an imbalanced cost of FN vs FP</h1>
+<h1 id="adjust-intercept---lasso-probit-model">Adjust intercept - Lasso-probit model</h1>
+<h1 id="adjust-observation-weights---probit-model">Adjust observation weights - Probit model</h1>
+<h1 id="select-a-classification-threshold---partial-least-squares">Select a classification threshold - Partial Least Squares</h1>
+<h1 id="custom-loss-function---recurrent-neural-network-lstm">Custom Loss function - Recurrent Neural Network (LSTM)</h1>
+<h1 id="summary">Summary</h1>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="https://github.com/samoliverschumacher/tags/classification/" rel="tag">classification</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="https://github.com/samoliverschumacher/tags/convex-optimisation/" rel="tag">convex optimisation</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Sam Schumacher avatar" src="https://github.com/samoliverschumacher/images/eegeda/2.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Sam Schumacher</span>
+	</div>
+	<div class="authorbox__description">
+		Using machine learning projects to discover the world through its problems
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="https://github.com/samoliverschumacher/post/eeg_modelling/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol2: Modelling</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 Sam Schumacher.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+	</div>
+<script async defer src="https://github.com/samoliverschumacher/js/menu.js"></script>
+</body>
+</html>
