@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>statistics on Sam Schumacher</title>
+    <link>/tags/statistics/</link>
+    <description>Recent content in statistics on Sam Schumacher</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Autonomous vechicle microsleep detector Vol1: EDA</title>
+      <link>/post/eeg_eda/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/eeg_eda/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Produce a detector that distinguisihes when a car&amp;rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

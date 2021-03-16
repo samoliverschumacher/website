@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>convex optimisation on Sam Schumacher</title>
-    <link>https://github.com/samoliverschumacher/tags/convex-optimisation/</link>
+    <link>/tags/convex-optimisation/</link>
     <description>Recent content in convex optimisation on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://github.com/samoliverschumacher/tags/convex-optimisation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/convex-optimisation/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</title>
-      <link>https://github.com/samoliverschumacher/post/eeg_costtradeoff/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      <link>/post/eeg_costtradeoff/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/post/eeg_costtradeoff/</guid>
+      <guid>/post/eeg_costtradeoff/</guid>
       <description>&lt;p&gt;&lt;em&gt;It&amp;rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open.&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     

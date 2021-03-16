@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>exploratory data analysis on Sam Schumacher</title>
-    <link>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</link>
+    <link>/tags/exploratory-data-analysis/</link>
     <description>Recent content in exploratory data analysis on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://github.com/samoliverschumacher/tags/exploratory-data-analysis/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/exploratory-data-analysis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Autonomous vechicle microsleep detector Vol1: EDA</title>
-      <link>https://github.com/samoliverschumacher/post/eeg_eda/</link>
+      <link>/post/eeg_eda/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/post/eeg_eda/</guid>
+      <guid>/post/eeg_eda/</guid>
       <description>&lt;p&gt;&lt;em&gt;Produce a detector that distinguisihes when a car&amp;rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Autonomous vechicle microsleep detector Vol2: Modelling</title>
-      <link>https://github.com/samoliverschumacher/post/eeg_modelling/</link>
+      <link>/post/eeg_modelling/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/post/eeg_modelling/</guid>
-      <description>&lt;h2 id=&#34;autonomous-vehichles-are-no-longer-reserved-for-the-realm-of-science-fiction-but-some-ai-experts-say-the-complexities-of-ai-driven-cars-in-public-make-the-possibility-never-eeding-to-drive-a-far-off-future-perhaps-to-bridge-the-gap-are-technologies-that-greatly-reduce-the-labour-involved-in-driving-while-still-reducing-the-risk&#34;&gt;&lt;em&gt;Autonomous vehichles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility never eeding to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.&lt;/em&gt;&lt;/h2&gt;</description>
+      <guid>/post/eeg_modelling/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Autonomous vehichles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility never eeding to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

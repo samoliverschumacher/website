@@ -10,7 +10,7 @@
 		<meta property="og:title" content="Autonomous vechicle microsleep detector Vol1: EDA" />
 <meta property="og:description" content="Produce a detector that distinguisihes when a car&rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://github.com/samoliverschumacher/post/eeg_eda/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="/post/eeg_eda/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2020-12-18T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2020-12-18T00:00:00&#43;00:00" />
 
@@ -74,6 +74,10 @@
 </div></div>
 		</header><div class="content post__content clearfix">
 			<p><em>Produce a detector that distinguisihes when a car&rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.</em></p>
+<hr>
+<blockquote>
+<p>This is the first in a 3 part project that shows how brain waves can be used to predict if a persons eyes are closed. The mock-bussiness problem is that of a car&rsquo;s partial autopilot system. Part 1 is this Exploratory data analysis, <a href="../../post/eeg_modelling/" title="Modelling">Part 2</a> is the feature engineering and model creation, <a href="../../post/eeg_costtradeoff/" title="Cost Tradeoff">Part 3</a> explores  the process of re-weighting an accuracy metric, to favour correctly predicting when the eyes are closed.</p>
+</blockquote>
 <hr>
 <h3 id="table-of-contents">Table of Contents</h3>
 <ul>
@@ -365,9 +369,10 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 <li><strong>False transition signals are indicated by anomalies in EEGs 5 &amp; 8.</strong></li>
 <li><strong>Some EEG correlations shift significatnly depending on eye state.</strong></li>
 </ol>
-<p>In this Exploratory Data Analysis, we&rsquo;ve established a foundation of knowledge about the data &amp; the probelm. Now the model selction process can start.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">save(<span style="color:#e6db74">&#39;EEGloseEyes_EDA.mat&#39;</span>)
 </code></pre></div><hr>
+<p>In this Exploratory Data Analysis, we&rsquo;ve established a foundation of knowledge about the data &amp; the probelm. Now the <a href="../../post/eeg_modelling/" title="Modelling">model selection process</a> can start.</p>
+<hr>
 		</div>
 		<footer class="post__footer">
 			
@@ -378,7 +383,10 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 			<a class="tags__link btn" href="../../tags/timeseries/" rel="tag">timeseries</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="../../tags/classification/" rel="tag">classification</a>
+			<a class="tags__link btn" href="../../tags/data-visualisation/" rel="tag">data visualisation</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/statistics/" rel="tag">statistics</a>
 		</li>
 		<li class="tags__item">
 			<a class="tags__link btn" href="../../tags/exploratory-data-analysis/" rel="tag">exploratory data analysis</a>
@@ -408,6 +416,12 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 			<p class="pager__title">Autonomous vechicle microsleep detector Vol2: Modelling</p>
 		</a>
 	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="../../post/eeg_costtradeoff/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</p>
+		</a>
+	</div>
 </nav>
 
 
@@ -429,5 +443,9 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 </script>
 	</div>
 <script async defer src="../../js/menu.js"></script>
+
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>
+</script>
 </body>
 </html>

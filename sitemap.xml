@@ -2,57 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://github.com/samoliverschumacher/post/eeg_eda/</loc>
+    <loc>/post/eeg_costtradeoff/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/classification/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/convex-optimisation/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/datascience/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/lstm/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/machine-learning/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/neural-network/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/eeg_eda/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/post/eeg_modelling/</loc>
+    <loc>/post/eeg_modelling/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/post/eeg_costtradeoff/</loc>
+    <loc>/tags/data-visualisation/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/categories/</loc>
+    <loc>/tags/exploratory-data-analysis/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/classification/</loc>
+    <loc>/tags/feature-engineering/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/convex-optimisation/</loc>
+    <loc>/tags/lasso/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/categories/datascience/</loc>
+    <loc>/tags/statistics/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</loc>
+    <loc>/tags/timeseries/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/feature-engineering/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/lasso/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/lstm/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/categories/machine-learning/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/neural-network/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/post/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/tags/timeseries/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://github.com/samoliverschumacher/about/</loc>
+    <loc>/about/</loc>
   </url>
 </urlset>

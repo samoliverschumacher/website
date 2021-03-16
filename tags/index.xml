@@ -2,80 +2,98 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Sam Schumacher</title>
-    <link>https://github.com/samoliverschumacher/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://github.com/samoliverschumacher/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>classification</title>
-      <link>https://github.com/samoliverschumacher/tags/classification/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      <link>/tags/classification/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/tags/classification/</guid>
+      <guid>/tags/classification/</guid>
       <description></description>
     </item>
     
     <item>
       <title>convex optimisation</title>
-      <link>https://github.com/samoliverschumacher/tags/convex-optimisation/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      <link>/tags/convex-optimisation/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/tags/convex-optimisation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>exploratory data analysis</title>
-      <link>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://github.com/samoliverschumacher/tags/exploratory-data-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>feature engineering</title>
-      <link>https://github.com/samoliverschumacher/tags/feature-engineering/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://github.com/samoliverschumacher/tags/feature-engineering/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>lasso</title>
-      <link>https://github.com/samoliverschumacher/tags/lasso/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://github.com/samoliverschumacher/tags/lasso/</guid>
+      <guid>/tags/convex-optimisation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>LSTM</title>
-      <link>https://github.com/samoliverschumacher/tags/lstm/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      <link>/tags/lstm/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/tags/lstm/</guid>
+      <guid>/tags/lstm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>neural network</title>
-      <link>https://github.com/samoliverschumacher/tags/neural-network/</link>
+      <link>/tags/neural-network/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/neural-network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data visualisation</title>
+      <link>/tags/data-visualisation/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/tags/neural-network/</guid>
+      <guid>/tags/data-visualisation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>exploratory data analysis</title>
+      <link>/tags/exploratory-data-analysis/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/exploratory-data-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>feature engineering</title>
+      <link>/tags/feature-engineering/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/feature-engineering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lasso</title>
+      <link>/tags/lasso/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lasso/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>timeseries</title>
-      <link>https://github.com/samoliverschumacher/tags/timeseries/</link>
+      <link>/tags/timeseries/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/samoliverschumacher/tags/timeseries/</guid>
+      <guid>/tags/timeseries/</guid>
       <description></description>
     </item>
     
