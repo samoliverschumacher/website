@@ -20,10 +20,10 @@
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
 
-	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="../../css/style.css">
 	
 
-	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="shortcut icon" href="../../favicon.ico">
 		
 </head>
 <body class="body">
@@ -32,9 +32,9 @@
 	<div class="container header__container">
 		
 	<div class="logo logo--mixed">
-		<a class="logo__link" href="/" title="Sam Schumacher" rel="home">
+		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
 			<div class="logo__item logo__imagebox">
-					<img class="logo__img" src="/images/matlabart_neuronevolution.png">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
 				</div><div class="logo__item logo__text">
 					<div class="logo__title">Sam Schumacher</div>
 					<div class="logo__tagline">ML &amp; AI</div>
@@ -48,7 +48,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/about/">
+			<a class="menu__link" href="../../about/">
 				
 				<span class="menu__text">this blog</span>
 				
@@ -69,14 +69,14 @@
 			<p class="post__lead">learning a neural network from the inside out</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-01-02T00:00:00Z">January 02, 2021</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/machine-learning/" rel="category">Machine Learning</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-01-02T00:00:00Z">January 02, 2021</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>
 	</span>
 </div></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/../../images/matlabart_neuronevolution2.png/" alt="5-min reads: why cell state propogation slows convergence">
+			<img src="../../../../images/matlabart_neuronevolution2.png/" alt="5-min reads: why cell state propogation slows convergence">
 		</figure><div class="content post__content clearfix">
-			<p><em>In this 5-min read I&rsquo;ll try to explain how convergence can be slower for LSTM neural networks where memory state is maintained from one mini-batch to the next. An example of this problem can be found in my <a href="/post/eeg_modelling/" title="Autonomous vehicle microsleep detector">project about a microsleep detector</a></em></p>
+			<p><em>In this 5-min read I&rsquo;ll try to explain how convergence can be slower for LSTM neural networks where memory state is maintained from one mini-batch to the next. An example of this problem can be found in my <a href="../../post/eeg_modelling/" title="Autonomous vehicle microsleep detector">project about a microsleep detector</a></em></p>
 <hr>
 <h2 id="convergence-of-lstm-with-memory-passed-through-mini-batches">Convergence of LSTM with memory passed through mini-batches;</h2>
 <p>Parameters determine cell state, used to make a prediction, whose error is the basis for parameter update: $$ \theta_b^i =g\left(C_{\mathit{{b}}}^{{{i}}} ,X_b ,Y_{b} \right)+\theta_{b-1}^i $$</p>
@@ -117,13 +117,13 @@ state, across all batches and iterations;</em></p>
 	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/lstm/" rel="tag">LSTM</a>
+			<a class="tags__link btn" href="../../tags/lstm/" rel="tag">LSTM</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/neural-network/" rel="tag">neural network</a>
+			<a class="tags__link btn" href="../../tags/neural-network/" rel="tag">neural network</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/rnn/" rel="tag">RNN</a>
+			<a class="tags__link btn" href="../../tags/rnn/" rel="tag">RNN</a>
 		</li>
 	</ul>
 </div>
@@ -133,7 +133,7 @@ state, across all batches and iterations;</em></p>
 
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="Sam Schumacher avatar" src="/images/matlabart_neuronevolution2.png/" class="avatar" height="90" width="90">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png/" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
 		<span class="authorbox__name">About Sam Schumacher</span>
@@ -145,7 +145,7 @@ state, across all batches and iterations;</em></p>
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/post/eeg_costtradeoff/" rel="prev">
+		<a class="pager__link" href="../../post/eeg_costtradeoff/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;Previous</span>
 			<p class="pager__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</p>
 		</a>
@@ -170,7 +170,7 @@ state, across all batches and iterations;</em></p>
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 	</div>
-<script async defer src="/js/menu.js"></script>
+<script async defer src="../../js/menu.js"></script>
 
 <script 
 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>

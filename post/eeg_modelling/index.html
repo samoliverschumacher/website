@@ -20,10 +20,10 @@
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
 
-	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="../../css/style.css">
 	
 
-	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="shortcut icon" href="../../favicon.ico">
 		
 </head>
 <body class="body">
@@ -32,9 +32,9 @@
 	<div class="container header__container">
 		
 	<div class="logo logo--mixed">
-		<a class="logo__link" href="/" title="Sam Schumacher" rel="home">
+		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
 			<div class="logo__item logo__imagebox">
-					<img class="logo__img" src="/images/matlabart_neuronevolution.png">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
 				</div><div class="logo__item logo__text">
 					<div class="logo__title">Sam Schumacher</div>
 					<div class="logo__tagline">ML &amp; AI</div>
@@ -48,7 +48,7 @@
 	</button>
 	<ul class="menu__list">
 		<li class="menu__item">
-			<a class="menu__link" href="/about/">
+			<a class="menu__link" href="../../about/">
 				
 				<span class="menu__text">this blog</span>
 				
@@ -69,12 +69,12 @@
 			<p class="post__lead">Binary classification using EEG readings (part 2 of 3)</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-20T00:00:00Z">December 20, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="/categories/datascience/" rel="category">Datascience</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-20T00:00:00Z">December 20, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
 	</span>
 </div></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="/images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol2: Modelling">
+			<img src="../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol2: Modelling">
 		</figure><div class="content post__content clearfix">
 			<p><em>Autonomous vehicles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility of never needing to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.</em></p>
 <hr>
@@ -149,7 +149,7 @@
 </ol>
 <p>The variable correlation insight may allow models not traditionally used for times series prediction to be used.
 The window selected must be short enough so that a few consecutive misclassifications isn&rsquo;t catastrophic in the business application, but long enough that it captures the predictive power of EEG correlations, instead of noise.</p>
-<p><a href="/post/buildingnnet/" title="LSTM trainer">A custom built</a> Long Short Term Memory (LSTM) recurrent neural network will be used to take advantage of the EEG patterns that mark transition points, and maintain the eye state until a new pattern signals a transition back to the original open/closed state.</p>
+<p><a href="../../post/buildingnnet/" title="LSTM trainer">A custom built</a> Long Short Term Memory (LSTM) recurrent neural network will be used to take advantage of the EEG patterns that mark transition points, and maintain the eye state until a new pattern signals a transition back to the original open/closed state.</p>
 <p><a href="https://au.mathworks.com/help/ident/time-series-model-identification.html">MATLAB functions exist</a> for many traditional time series modelling techniques, but using models that require independently drawn data (not time series) will be more interesting.</p>
 <p>To approach the cost asymmetry problem of avoiding False Negatives more than False Positives, some convex optimisation techniques will be explored where MATLAB native functions may not be satisfactory.</p>
 <h2 id="feature-engineering-windowed-variable-correlations">Feature Engineering: Windowed Variable Correlations</h2>
@@ -312,7 +312,7 @@ yfitPLS = [ones(numel(windowstartId),<span style="color:#ae81ff">1</span>)<span 
 <h2 id="recurrent-neural-network---long-short-term-memory-lstm">Recurrent Neural Network - Long Short Term Memory (LSTM)</h2>
 <p>A recurrent neural network (RNN) was selected for its ability to store memory of a particular pattern over many sequences. The &lsquo;transition spikes&rsquo; could be a good candidate for this, as they occur only a handful of times, and preceed long continuous sequences of one state or another.</p>
 <p>An LSTM may be able to deal with the long input sequences required to detect these &lsquo;transition shapes&rsquo; which are 100-150 timesteps (about a second).</p>
-<p>The EEG variables with pronounced transition spikes might be easier for the LSTM network to detect and remember. However, recalling from <a href="/post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
+<p>The EEG variables with pronounced transition spikes might be easier for the LSTM network to detect and remember. However, recalling from <a href="../../post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
 <blockquote>
 <p><strong>Insight #5</strong> <em>&ldquo;Similar patterns to transition-spikes occur at some non-transition timesteps in EEGs 1-4, 11-14, but EEGs 5 &amp; 8 have a uniquely pronounced signal at this time also&rdquo;</em></p>
 </blockquote>
@@ -334,7 +334,7 @@ ylabel(<span style="color:#e6db74">&#39;EEG value&#39;</span>); xlabel(<span sty
 title(<span style="color:#e6db74">&#39;Original EEG signal with it&#39;&#39;s downsampled approximation&#39;</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/11.png" alt="time series probit"><br>
 The red line is the average of original sequence across a 5-step window, which shifts forward by 3 steps each time. New downsampled data becomes 1/3 the length allowing for faster training, and a less noisy input signal.</p>
-<p>From <a href="/post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
+<p>From <a href="../../post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
 <blockquote>
 <p><strong>Insight #4:</strong> <em>&ldquo;Shape' of Lead signal is independent of starting magnitude.&quot;</em></p>
 </blockquote>
@@ -693,7 +693,7 @@ The training performance and loss history is summarised below.</li>
 <p>Best model in training was LSTM. Though, for real-world application, more info is needed: on the hardware limitations &amp; the specifics of how user interacts with the product. For example limited computational power / memory might restric use of LSTM neural network. In Probit, Lasso &amp; PLS, perhaps the correlation data is overfitting to the sample - transition spikes were apparent across all EEGs &amp; time, so might be more genralisable to other EEG capture devices.</p>
 <p>Not yet addressed is the disproportionate impact getting a &ldquo;closed&rdquo; eye-state state classified as &ldquo;open&rdquo; eyes. In the third and final section of this project, different techniques will be used to tune the models to minimise this impact.</p>
 <hr>
-<p><em>In the <a href="/post/eeg_costtradeoff/" title="About Us">next volume of this project</a>, the cost imbalance of misclassification is addressed</em></p>
+<p><em>In the <a href="../../post/eeg_costtradeoff/" title="About Us">next volume of this project</a>, the cost imbalance of misclassification is addressed</em></p>
 <hr>
 <h2 id="-tldr----1-an-interesting-aside-about-residual-skew-in-pls-model-when-blinking-is-not-removed"><em>{ TL;DR } ^ -1 (an interesting aside about residual skew in PLS model, when &lsquo;blinking&rsquo; is not removed)</em></h2>
 <p><em>When running the same feature engineering &amp; modelling algorithms on the data, but not removing the &lt;0.4 second eye closed moments (blinks), the PLS model shows a large skew in misclassifications. Diving into the understanding of why, gives insights into how the PLS/ PCA algorithm works &amp; some implications of skewness.</em></p>
@@ -731,28 +731,28 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/timeseries/" rel="tag">timeseries</a>
+			<a class="tags__link btn" href="../../tags/timeseries/" rel="tag">timeseries</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/classification/" rel="tag">classification</a>
+			<a class="tags__link btn" href="../../tags/classification/" rel="tag">classification</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/feature-engineering/" rel="tag">feature engineering</a>
+			<a class="tags__link btn" href="../../tags/feature-engineering/" rel="tag">feature engineering</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/pca/" rel="tag">PCA</a>
+			<a class="tags__link btn" href="../../tags/pca/" rel="tag">PCA</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/lstm/" rel="tag">LSTM</a>
+			<a class="tags__link btn" href="../../tags/lstm/" rel="tag">LSTM</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/neural-network/" rel="tag">neural network</a>
+			<a class="tags__link btn" href="../../tags/neural-network/" rel="tag">neural network</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/lasso/" rel="tag">lasso</a>
+			<a class="tags__link btn" href="../../tags/lasso/" rel="tag">lasso</a>
 		</li>
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/exploratory-data-analysis/" rel="tag">exploratory data analysis</a>
+			<a class="tags__link btn" href="../../tags/exploratory-data-analysis/" rel="tag">exploratory data analysis</a>
 		</li>
 	</ul>
 </div>
@@ -762,7 +762,7 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="Sam Schumacher avatar" src="/images/matlabart_neuronevolution2.png/" class="avatar" height="90" width="90">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png/" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
 		<span class="authorbox__name">About Sam Schumacher</span>
@@ -774,13 +774,13 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/post/eeg_eda/" rel="prev">
+		<a class="pager__link" href="../../post/eeg_eda/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;Previous</span>
 			<p class="pager__title">Autonomous vechicle microsleep detector Vol1: EDA</p>
 		</a>
 	</div>
 	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/post/eeg_costtradeoff/" rel="next">
+		<a class="pager__link" href="../../post/eeg_costtradeoff/" rel="next">
 			<span class="pager__subtitle">Next&thinsp;»</span>
 			<p class="pager__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</p>
 		</a>
@@ -805,7 +805,7 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 	</div>
-<script async defer src="/js/menu.js"></script>
+<script async defer src="../../js/menu.js"></script>
 
 <script 
 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>
