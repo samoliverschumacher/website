@@ -6,7 +6,34 @@
     <description>Recent content in Tags on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LSTM</title>
+      <link>/tags/lstm/</link>
+      <pubDate>Sat, 02 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lstm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>neural network</title>
+      <link>/tags/neural-network/</link>
+      <pubDate>Sat, 02 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/neural-network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>RNN</title>
+      <link>/tags/rnn/</link>
+      <pubDate>Sat, 02 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rnn/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>classification</title>
       <link>/tags/classification/</link>
@@ -26,20 +53,47 @@
     </item>
     
     <item>
-      <title>LSTM</title>
-      <link>/tags/lstm/</link>
-      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <title>exploratory data analysis</title>
+      <link>/tags/exploratory-data-analysis/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/lstm/</guid>
+      <guid>/tags/exploratory-data-analysis/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>neural network</title>
-      <link>/tags/neural-network/</link>
-      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <title>feature engineering</title>
+      <link>/tags/feature-engineering/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/neural-network/</guid>
+      <guid>/tags/feature-engineering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lasso</title>
+      <link>/tags/lasso/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lasso/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PCA</title>
+      <link>/tags/pca/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pca/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>timeseries</title>
+      <link>/tags/timeseries/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/timeseries/</guid>
       <description></description>
     </item>
     
@@ -53,33 +107,6 @@
     </item>
     
     <item>
-      <title>exploratory data analysis</title>
-      <link>/tags/exploratory-data-analysis/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/exploratory-data-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>feature engineering</title>
-      <link>/tags/feature-engineering/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/feature-engineering/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>lasso</title>
-      <link>/tags/lasso/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/lasso/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>statistics</title>
       <link>/tags/statistics/</link>
       <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
@@ -89,11 +116,11 @@
     </item>
     
     <item>
-      <title>timeseries</title>
-      <link>/tags/timeseries/</link>
-      <pubDate>Fri, 18 Dec 2020 00:00:00 +0000</pubDate>
+      <title>Attentional LSTM</title>
+      <link>/tags/attentional-lstm/</link>
+      <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/timeseries/</guid>
+      <guid>/tags/attentional-lstm/</guid>
       <description></description>
     </item>
     

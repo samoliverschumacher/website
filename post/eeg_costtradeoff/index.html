@@ -34,7 +34,7 @@
 	<div class="logo logo--mixed">
 		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
 			<div class="logo__item logo__imagebox">
-					<img class="logo__img" src="../../images/eegeda/1.png">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
 				</div><div class="logo__item logo__text">
 					<div class="logo__title">Sam Schumacher</div>
 					<div class="logo__tagline">ML &amp; AI</div>
@@ -72,7 +72,10 @@
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-21T00:00:00Z">December 21, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
 	</span>
 </div></div>
-		</header><div class="content post__content clearfix">
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff">
+		</figure><div class="content post__content clearfix">
 			<p><em>It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open.</em></p>
 <hr>
 <h3 id="table-of-contents">Table of Contents</h3>
@@ -371,14 +374,9 @@ $$\frac{\delta \mathrm{Loss}}{\delta z_i }=\left\lbrace \begin{array}{cc}\frac{{
 NNModels = [{NNLayerEnc},{NNLayerDec},{NNLayerFinal}];
 <span style="color:#75715e">% Loss type will be Sine weighted on the &#34;Closed Eyes&#34; class</span>
 trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
-<span style="color:#75715e">% Load trained neural network</span>
-<span style="color:#66d9ef">if</span> exist(<span style="color:#e6db74">&#39;EEGworkspace_45Hus3downsampleV_5_8_1_2_11_13_seqIn40seqOut5_Wregular_gradclip_minus1to1_sinwLoss_noblink_B.mat&#39;</span>,<span style="color:#e6db74">&#39;file&#39;</span>)<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>
-      load(<span style="color:#e6db74">&#39;EEGworkspace_45Hus3downsampleV_5_8_1_2_11_13_seqIn40seqOut5_Wregular_gradclip_minus1to1_sinwLoss_noblink_B.mat&#39;</span>)
-<span style="color:#66d9ef">else</span>
-    <span style="color:#75715e">%% call training algorithm to learn the EEG dependencies</span>
-      [NNModels, <span style="color:#f92672">~</span>, <span style="color:#f92672">~</span> , <span style="color:#f92672">~</span> ] = <span style="color:#75715e">...</span>
-            TrainSequnceNNetV3(NNModels, trainingSettings , DataX_batched, DataY_batched, [], []);
-<span style="color:#66d9ef">end</span>
+<span style="color:#75715e">%% call training algorithm to learn the EEG dependencies</span>
+[NNModels, <span style="color:#f92672">~</span>, <span style="color:#f92672">~</span> , <span style="color:#f92672">~</span> ] = <span style="color:#75715e">...</span>
+    TrainSequnceNNetV3(NNModels, trainingSettings , DataX_batched, DataY_batched, [], []);
 <span style="color:#75715e">% Run an inference only loop over the dataset with the trained model</span>
     [NNModels, Predictions, <span style="color:#f92672">~</span>, <span style="color:#f92672">~</span>] = <span style="color:#75715e">...</span>
         TrainSequnceNNetV3(NNModels, epochs, trainingSettings , DataX_batched, DataY_batched, [], [],true,false);
@@ -417,7 +415,9 @@ trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
     xLabInds = unique([ceil(linspace(<span style="color:#ae81ff">1</span>,TI<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">4</span>)) , ceil(linspace(TI<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>TI <span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">4</span>)) ]);
     set(gca,<span style="color:#e6db74">&#39;xtick&#39;</span>,xLabInds,<span style="color:#e6db74">&#39;xticklabels&#39;</span>, timelabels(xLabInds),<span style="color:#e6db74">&#39;xlim&#39;</span> ,[<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>TI<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>],<span style="color:#75715e">...</span>
           <span style="color:#e6db74">&#39;ylim&#39;</span> ,[<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>]); 
-</code></pre></div><p><img src="../../images/eegcosttradeoff/13.png" alt="eye state transition error LSTM"></p>
+</code></pre></div><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><img src="../../images/eegcosttradeoff/13.png" alt="eye state transition error LSTM"></p>
 <p>On average, the prediction has error centered around eye state transitions. The network placed lower loss on observations trailing from a &lsquo;closing eye&rsquo; transition, so hasn&rsquo;t learnt the transition pattern as well, due to the asymmetric loss function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">    <span style="color:#75715e">% Plot prediction as a Confusion Matrix</span>
     [ fh1 , fh2 ] = plotPrediction( round(yfitRNNLSTM) , TargetSeq, yfitRNNLSTM , TargetSeq , <span style="color:#ae81ff">117</span><span style="color:#f92672">/</span>(N) <span style="color:#f92672">*</span>seqlen_out<span style="color:#f92672">*</span>dsr ,<span style="color:#e6db74">&#39;confusion&#39;</span> );
@@ -466,7 +466,7 @@ trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
 
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="Sam Schumacher avatar" src="../../images/eegeda/2.png" class="avatar" height="90" width="90">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
 		<span class="authorbox__name">About Sam Schumacher</span>
@@ -478,9 +478,15 @@ trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="../../post/eeg_eda/" rel="prev">
+		<a class="pager__link" href="../../post/eeg_modelling/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;Previous</span>
-			<p class="pager__title">Autonomous vechicle microsleep detector Vol1: EDA</p>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol2: Modelling</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="../../post/rnn5min_1/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">5-min reads: why cell state propogation slows convergence</p>
 		</a>
 	</div>
 </nav>

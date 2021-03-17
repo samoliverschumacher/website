@@ -2,10 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/post/eeg_costtradeoff/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/post/rnn5min_1/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/lstm/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/machine-learning/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/neural-network/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/rnn/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2021-01-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/eeg_costtradeoff/</loc>
     <lastmod>2020-12-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/classification/</loc>
@@ -17,47 +41,38 @@
     <loc>/categories/datascience/</loc>
     <lastmod>2020-12-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/lstm/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/post/eeg_modelling/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/machine-learning/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/tags/exploratory-data-analysis/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/neural-network/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/tags/feature-engineering/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/tags/lasso/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/tags/pca/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
-    <lastmod>2020-12-21T00:00:00+00:00</lastmod>
+    <loc>/tags/timeseries/</loc>
+    <lastmod>2020-12-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/post/eeg_eda/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/post/eeg_modelling/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/data-visualisation/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/exploratory-data-analysis/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/feature-engineering/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/lasso/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/tags/statistics/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/timeseries/</loc>
-    <lastmod>2020-12-18T00:00:00+00:00</lastmod>
+    <loc>/post/buildingnnet/</loc>
+    <lastmod>2020-08-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/attentional-lstm/</loc>
+    <lastmod>2020-08-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/about/</loc>
   </url>

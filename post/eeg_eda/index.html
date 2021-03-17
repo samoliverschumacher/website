@@ -34,7 +34,7 @@
 	<div class="logo logo--mixed">
 		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
 			<div class="logo__item logo__imagebox">
-					<img class="logo__img" src="../../images/eegeda/1.png">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
 				</div><div class="logo__item logo__text">
 					<div class="logo__title">Sam Schumacher</div>
 					<div class="logo__tagline">ML &amp; AI</div>
@@ -72,7 +72,10 @@
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-18T00:00:00Z">December 18, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
 	</span>
 </div></div>
-		</header><div class="content post__content clearfix">
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol1: EDA">
+		</figure><div class="content post__content clearfix">
 			<p><em>Produce a detector that distinguisihes when a car&rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.</em></p>
 <hr>
 <blockquote>
@@ -93,7 +96,7 @@
 <li><a href="#eda-summary">EDA Summary</a></li>
 </ul>
 <h1 id="the-business-problem">The Business Problem</h1>
-<p>The dataset for training the model, described from the source;</p>
+<p>The dataset for training the model, described <a href="https://github.com/datasets/eeg-eye-state/">from the source</a>;</p>
 <blockquote>
 <p><em>&ldquo;All data is from one continuous EEG measurement with the Emotiv EEG Neuroheadset. The duration of the measurement was 117 seconds. The eye state was detected via a camera during the EEG measurement and added later manually to the file after analysing the video frames. &lsquo;1&rsquo; indicates the eye-closed and &lsquo;0&rsquo; the eye-open state. All values are in chronological order with the first measured value at the top of the data.&quot;</em></p>
 </blockquote>
@@ -102,11 +105,14 @@
 <li>Detector must work on-line; makes predictions only with the sequence of data points leading up to prediction timestep.</li>
 <li>A car autopilot that turns on when it&rsquo;s not supposed to, isn&rsquo;t nearly as bad as one that doesn&rsquo;t turn on when it&rsquo;s supposed to.</li>
 <li>Not all &ldquo;eyes closed&rdquo; are equal - blinking should not trigger the autopilot system.</li>
-<li>Temporal consistency in autopilot state (on or off) is important to usability. Like a flickering light, avoiding an autopilot that flickers on/off when eyes are open is critical for the final product usability.</li>
+<li>Temporal consistency in autopilot state (on or off) is important to usability. Like a flickering light, avoiding an autopilot that switches on &amp; off is critical for the final product usability.</li>
 </ol>
-<p>Before trying models to predict the eye state over the data set, we will explore the datasets' shapes, patterns, anomalies in order to develop some hypotheses about which modelling technique is well suited. While the dataset at first glance is time series, we will refrain from making any assumptions about how best to treat it, until it is understood. exploration will be from two perspectives;
-Distributions of values &amp; correlations between variables, as if it were a static dataset.
-Temporality. Including wave patterns &amp; temporal relationships etc.</p>
+<p>Before trying models to predict the eye state, we will explore the datasets' shapes, patterns &amp; anomalies in order to develop some hypotheses about which modelling technique is well suited.</p>
+<p>While the dataset at first glance is time series, we will refrain from making any assumptions about how best to treat it, until it is understood. exploration will be from two perspectives;</p>
+<ul>
+<li>Distributions of values &amp; correlations between variables, as if it were a static dataset.</li>
+<li>Temporality. Including wave patterns &amp; temporal relationships etc.</li>
+</ul>
 <h1 id="static-dataset-analysis">Static Dataset analysis</h1>
 <p>Variables 1 - 14 are the voltage recorded by the EEG at different points on the subjects brain, and the 15th is the eye state detected via a camera.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">load(<span style="color:#e6db74">&#39;EEGrawData.mat&#39;</span>);
@@ -188,7 +194,7 @@ summary(rawData)
             Min           0     
             Median        0     
             Max           1     
-</code></pre><p>Median voltage values are around 4300, minimums and maximums are roughly the same, except a few observations that are two orders of magnitude higher (or lower). These can be removed by replacing values outside the upper and lower 0.1% quantile with their nearest value in row order.</p>
+</code></pre><p>Median voltage values are around 4300, minimums and maximums are roughly the same, except a few observations that are two orders of magnitude higher (or lower). These can be removed by replacing values outside the upper and lower 0.1% quantile with their nearest value in time.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">N = height(rawData); <span style="color:#75715e">% number of observations</span>
 N_seconds = <span style="color:#ae81ff">117</span>; <span style="color:#75715e">% approx length of timeseries in seconds</span>
 idx_openclose = rawData{:,<span style="color:#e6db74">&#39;Eyestate&#39;</span>};
@@ -204,7 +210,7 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
 <span style="color:#66d9ef">end</span>
 title(<span style="color:#e6db74">&#39;EEG signals within 99.9% of all observed values&#39;</span>); xlabel(<span style="color:#e6db74">&#39;mV&#39;</span>);
 </code></pre></div><p><img src="../../images/eegeda/1.png" alt="multi"></p>
-<p>Each of the EEGs have a slightly different range of values, but this will be irrelevant as long as each EEG is standardised before feeding into a model, or the model treats each of them as a unique dimension. There appears to be some histograms with different skew which will be easiest viewed with a boxplot, after normalising the outlier-free data.</p>
+<p>Each of the EEGs have a slightly different range of values, but this will be irrelevant as long as each EEG is standardised before feeding into a model, or, if the model treats each of them as a unique dimension. There appears to be some histograms with different skew which will be easiest viewed with a boxplot, after normalising the outlier-free data.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">TimeSeries_clnnorm = normalize( TimeSeries_cln );
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">141</span>,<span style="color:#ae81ff">224</span>,<span style="color:#ae81ff">1586</span>,<span style="color:#ae81ff">717</span>]);
 <span style="color:#75715e">% Set Outliers to display if they are outside 3 std. deviations</span>
@@ -213,13 +219,13 @@ yticklabels(eegName); grid on;
 xlim([<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span> , <span style="color:#ae81ff">8</span>]); xlabel(<span style="color:#e6db74">&#39;normalised mV&#39;</span>)
 title(<span style="color:#e6db74">&#39;EEG signals within 99.9% of all observed values&#39;</span>)
 </code></pre></div><p><img src="../../images/eegeda/7.png/" alt="eeg box plot"></p>
-<p>The boxplot whisker length is set to 3 times the interquartile range. Seeing more outliers across all variuables' box-plots to the right, means the distribution will have heavy tails (compared to a normal distribution) i.e. more very large values than very small values. The prediction model must be capable of handling asymmetric extreme values.</p>
+<p>The boxplot whisker length is set to 3 times the interquartile range. Seeing more outliers across all variables' box-plots to the right, means the distribution will have heavy tails (compared to a normal distribution) i.e. more very large values than very small values. The prediction model must be capable of handling asymmetric extreme values.</p>
 <blockquote>
 <p><strong>Insight #1</strong>: <em>&ldquo;EEG values' extremes are asymmetric around their medians&rdquo;</em></p>
 </blockquote>
-<p>Whats not clear, is whether during eyes closed, the EEG varialbes differ to the open state, (regardless of which timestep). So the question is;</p>
+<p>Whats not clear, is whether during eyes closed, the EEG variables differ to the open state, (regardless of which timestep). So the question is;</p>
 <p><em>Can the data be treated as independent observations, rather than as time-series, for the purpose of classifying the state of the eye?</em></p>
-<p>If the data were strictly time-invariant, EEG values could predict the eye state regardless of what it&rsquo;s value was before or after an observation. A histogram of EEG values comparing eye states should give a hint if this is happening.</p>
+<p>If the data were strictly time-invariant, EEG values could predict the eye state regardless of what the eye-state was before or after an observation. A histogram of EEG values comparing eye states should give a hint if this is happening.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% Standardise values to have zero mean</span>
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">141</span>,<span style="color:#ae81ff">224</span>,<span style="color:#ae81ff">1586</span>,<span style="color:#ae81ff">717</span>]);
 <span style="color:#66d9ef">for</span> v=<span style="color:#ae81ff">1</span>:Nvars
@@ -229,13 +235,13 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
     title(eegName(v)); legend({<span style="color:#e6db74">&#39;Closed&#39;</span>,<span style="color:#e6db74">&#39;Open&#39;</span>}); xlabel(<span style="color:#e6db74">&#39;Normalised mV&#39;</span>)
     xlim([<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span> , <span style="color:#ae81ff">8</span>]);
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/6.png/" alt="eeg histograms">
-It is not obvious that the magnitude of EEG values is affected only by whether or not eyes are open in a given timestep.</p>
+</code></pre></div><p><img src="../../images/eegeda/6.png/" alt="eeg histograms"></p>
+<p>Globally, it&rsquo;s not obvious that magnitude of EEG values is different for each eye-state.</p>
 <blockquote>
 <p><strong>Insight #2</strong>: <em>&ldquo;Mean EEG value doesn&rsquo;t change much globally with eye state&rdquo;</em></p>
 </blockquote>
 <h1 id="temporal-patterns">Temporal Patterns</h1>
-<p>Next, is to put the assumption that the dataset is stationary on hold, and inspect the temporality of the data. There are quite a few EEG variables to be able to visualise their time-based interdependencies of, but overlaying the eye-state variable on each EEG will help to reveal any obvious patterns.</p>
+<p>Next, is to put the assumption that the dataset is stationary on hold, and inspect the temporality of the data. Visualising the time-based interdependencies of EEG variables might be hard as there are quite a few. Though overlaying eye-state could help to reveal obvious patterns.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% View data as time series</span>
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">141</span>,<span style="color:#ae81ff">224</span>,<span style="color:#ae81ff">1586</span>,<span style="color:#ae81ff">717</span>]);
 <span style="color:#66d9ef">for</span> v=<span style="color:#ae81ff">1</span>:Nvars
@@ -251,8 +257,8 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
     xlim(subplot(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">3</span>,v),[<span style="color:#ae81ff">2000</span> , <span style="color:#ae81ff">3500</span>])
 <span style="color:#66d9ef">end</span>
 </code></pre></div><p><img src="../../images/eegeda/5.png/" alt="eeg time series zoom"></p>
-<p>The patterns happen before opening &amp; closing, including a brief blink around t = 2800. This makes the pattern more specific for regular closing, compared to blinking only.</p>
-<p>The effect is more pronounced in EEGs 1-2 &amp; 11-14 across the whole dataset</p>
+<p>The patterns happen before opening &amp; closing, including a brief blink around t = 2800. So, the pattern is more specific for regular closing, compared to blinking only.</p>
+<p>The effect is more pronounced in EEGs 1-2 &amp; 11-14 across the whole dataset.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% View particular Variables only, as time series.</span>
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">141</span>,<span style="color:#ae81ff">224</span>,<span style="color:#ae81ff">1586</span>,<span style="color:#ae81ff">717</span>]);
 vars=[<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">11</span>:<span style="color:#ae81ff">14</span>];
@@ -267,11 +273,11 @@ vars=[<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>,
 <blockquote>
 <p><strong>Insight #3</strong>: <em>&ldquo;Lead signals exist for closing &amp; opening eys. Strongest in EEGs 1-2 &amp; 11-14&rdquo;</em></p>
 </blockquote>
-<p>It&rsquo;s worth noting that the temporal shape and magnitude of the spikes for opening and closing eyes differ across time, for all variables. Transition signals begin at different values also.</p>
+<p>It&rsquo;s worth noting that the temporal shape and magnitude of the spikes differ across time, for all variables. Transition signals begin at different values also.</p>
 <blockquote>
 <p><strong>Insight #4</strong>: <em>&ldquo;Shape of Lead signal is independent of starting magnitude&rdquo;</em></p>
 </blockquote>
-<p>There is also an anomalous pattern that occurs only twice in the series, prior to the last time patient closes @ t ~ 11,000. It looks like the rest of the eye-state transition patterns, but occurs earlier, is more dragged out, and is strongly apparent in EEGs which normally don&rsquo;t have obvious spikes signalling eye-state transition.</p>
+<p>There is also an anomalous pattern that occurs only twice in the series, prior to the last time the subject closes eyes @ t ~ 11,000. It looks like the rest of the eye-state transition patterns, but occurs earlier, &amp; is more dragged out. It&rsquo;s also relatively stronger in EEGs which normally don&rsquo;t have obvious spikes that signal an eye-state transition.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">141</span>,<span style="color:#ae81ff">224</span>,<span style="color:#ae81ff">1586</span>,<span style="color:#ae81ff">717</span>]);
 vars=[<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">13</span>];
 <span style="color:#66d9ef">for</span> v=vars
@@ -286,9 +292,9 @@ vars=[<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">8</span>,
 <blockquote>
 <p><strong>Insight #5</strong>: <em>&ldquo;Similar patterns to transition-spikes in EEGs 1-2, 11-14 occur at some non-transition timesteps, but EEGs 5 &amp; 8 have a uniquely pronounced signal at this time also&rdquo;</em></p>
 </blockquote>
-<p>The EEGs without pronounced spikes aroun eye-state transitions could be critical to predicting the transitions, because they have pronounced spikes only during the anomolous patterns after t=11,000 which could be used by a model to nullify the normal (false) transition-spike detection.</p>
+<p>The EEGs without pronounced spikes around eye-state transitions could be critical to predicting the transitions, because they have pronounced spikes only during the anomalous patterns after t=11,000 which could be used by a model to nullify the normal (false) transition-spike detection.</p>
 <h2 id="removing-blinking-from-the-closed-eyes-class">Removing blinking from the Closed-eyes class</h2>
-<p>As the machine learning application is to detect microsleep in a driver, blinking should not classify as being asleep/ in a microsleep. A quick google search of blinking shows microsleeps occur with duration 500 miliseconds. So for this analysis, closed eye sequences of less than 0.45 seconds will be converted to open eye class.</p>
+<p>As the machine learning application is to detect microsleep in a driver, blinking should not classify as being asleep (in a microsleep). <a href="https://iovs.arvojournals.org/article.aspx?articleid=2188061">A quick google search</a> of blinking shows microsleeps occur with duration 500 miliseconds. So for this analysis, closed eye sequences of less than 0.45 seconds will be converted to the open eye class.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% remove &#39;eyes blinking&#39; from the dataset: closed eyes for under 1 second only</span>
 blinkduration_seconds = <span style="color:#ae81ff">0.45</span>;
 blinkduration_tsteps = N<span style="color:#f92672">*</span>(blinkduration_seconds<span style="color:#f92672">/</span>N_seconds);
@@ -311,10 +317,10 @@ disp(EEGcorr(unique(rw),unique(cl)))
     EEG3      <span style="color:#ae81ff">0.070592</span>     <span style="color:#ae81ff">0.13336</span>    <span style="color:#ae81ff">0.13232</span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">0.21959</span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">0.083616</span>
     EEG4    <span style="color:#f92672">-</span><span style="color:#ae81ff">0.0015357</span>    <span style="color:#ae81ff">0.059228</span>    <span style="color:#ae81ff">0.16603</span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">0.22099</span>     <span style="color:#f92672">-</span><span style="color:#ae81ff">0.13115</span>
     EEG7     <span style="color:#f92672">-</span><span style="color:#ae81ff">0.037652</span>    <span style="color:#ae81ff">0.023117</span>    <span style="color:#ae81ff">0.12199</span>     <span style="color:#ae81ff">0.11297</span>      <span style="color:#ae81ff">0.18187</span>
-</code></pre></div><p>Of the 14 x 14 EEG Covariance matrix, the most extreme differences in correlations between open and closed eye states are around 0.1 - 0.25. for example, EEG1 is 0.178 less correlated with EEG2, when the eyes are Open.</p>
+</code></pre></div><p>Of the 14 x 14 EEG Covariance matrix, the most extreme differences in correlations between open and closed eye states are around 0.1 - 0.25. For example, EEG1 is 0.178 less correlated with EEG2, when the eyes are open.</p>
 <p>This is promising, but still far from useful as the business problem requires an online detection algorithm. these covariance matrix pertubations need to be occuring on a local time-scale, not just across the entire dataset.</p>
 <h2 id="moving-window-of-eeg-correlations">Moving window of EEG correlations</h2>
-<p>To check if this insight is going to be practical, the effect must occur on a small time window. For example, &ldquo;the cars autopilot should activate after a maximum of 1 second&rdquo; could be an upper bound on the final product&rsquo;s design.</p>
+<p>To check if this insight is going to be practical, the effect must occur on a small time window. For example, <em>&ldquo;the cars autopilot should activate with a delay no longer than 1 second&rdquo;</em> could be an upper bound on the final product&rsquo;s design.</p>
 <p>Dividing the 117 second sequence randmoly, into buckets of roughly 0.5 seconds in length, and then checking whether the covarianve matrices differ between eye states on this smaller timescale;</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% partition the data into 200 buckets, while maintaining class balance in each bucket (open-close eyes)</span>
 CV = cvpartition(idx_openclose,<span style="color:#e6db74">&#39;KFold&#39;</span>,<span style="color:#ae81ff">200</span> );
@@ -324,7 +330,7 @@ disp(CV)
        NumTestSets: 200
      TrainSize: 14906  14905  14905  14905  14905  14905  14905  14905  14905  14905 ...
       TestSize: 74  75  75  75  75  75  75  75  75  75 ...
-</code></pre><p>Each bucket is 75 timesteps, and should have the same balance between open and closed state observations. Now we the differences in correlation matricies, for each of the 200 buckets will be a newly engineered feature.</p>
+</code></pre><p>Each bucket is 75 timesteps, and should have the same balance between open and closed state observations. Now we have the differences in correlation matricies, for each of the 200 buckets.</p>
 <p>There will be 91 correlations between variables (14 variables, less correlations between themselves). Each of the 200 buckets will have 91 values showing the change in correlations between EEGs due to the eye state.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% loop over each of the 200 samples, and store the covariance matrix of</span>
 <span style="color:#75715e">% EEGs for both Open and Closed eye states.</span>
@@ -354,12 +360,12 @@ grid on; xlabel(<span style="color:#e6db74">&#39;EEG correlations&#39;</span>); 
 title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation differences due to eye state, across the 200 samples&#39;</span>)
 </code></pre></div><p><img src="../../images/eegeda/2.png/" alt="EEGc correlation differences distribution"></p>
 <p>The box plot shows how the 91 correlation changes are distributed over the 200 randomly picked buckets.</p>
-<p>Highlighted are the correlations which change due to eye state, with 99% confidence (against the zero mean normal assumption). For example, the left most box and whisker plot is shows the 200 samples are distributed above zero, with all but a few outlier. It says EEG 1 is more correlated with EEG 2 when eyes are open. And EEG 1 &amp; 8, are less correlated when eyes are open, though the effect has more variance in it (by the longer box, compared to EEG1-2).</p>
+<p>Highlighted are the correlations which change due to eye state, with 99% confidence (against the zero mean normal assumption). For example, the left most box and whisker plot is shows the 200 samples are distributed above zero, with all but a few outliers. It shows EEGs 1 &amp; 2 are more stronbgly correlated when eyes are open. And EEG 1 &amp; 8, are less correlated when eyes are open, though the effect ismore variaed across the 200 buckets (by the longer box, compared to EEG1-2).</p>
 <blockquote>
 <p><strong>Insight #6</strong>: <em>&ldquo;Some EEG correlations shift significatnly depending on eye state.&quot;</em></p>
 </blockquote>
 <h1 id="eda-summary">EDA Summary</h1>
-<p>Through visually inspecting the dataset, we&rsquo;ve seen both visually and with some statistics, how a model might best split the two classes using the 14 EEGs. In summary;</p>
+<p>Through inspecting the dataset, we&rsquo;ve seen both visually and with some statistics, how a model might best split the two classes using the 14 EEGs. In summary;</p>
 <p><strong>Insights found in the dataset;</strong></p>
 <ol>
 <li><strong>EEG values' extremes are asymmetric around their medians.</strong></li>
@@ -399,7 +405,7 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="Sam Schumacher avatar" src="../../images/eegeda/2.png" class="avatar" height="90" width="90">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
 		<span class="authorbox__name">About Sam Schumacher</span>
@@ -411,15 +417,15 @@ title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation diffe
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="../../post/eeg_modelling/" rel="prev">
+		<a class="pager__link" href="../../post/buildingnnet/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;Previous</span>
-			<p class="pager__title">Autonomous vechicle microsleep detector Vol2: Modelling</p>
+			<p class="pager__title">A DIY reccurent neural network algorithm</p>
 		</a>
 	</div>
 	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="../../post/eeg_costtradeoff/" rel="next">
+		<a class="pager__link" href="../../post/eeg_modelling/" rel="next">
 			<span class="pager__subtitle">Next&thinsp;»</span>
-			<p class="pager__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</p>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol2: Modelling</p>
 		</a>
 	</div>
 </nav>

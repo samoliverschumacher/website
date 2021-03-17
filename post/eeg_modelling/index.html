@@ -11,8 +11,8 @@
 <meta property="og:description" content="Example test article that contains basic HTML elements for text formatting on the Web." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/post/eeg_modelling/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-12-18T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-12-18T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-12-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-20T00:00:00&#43;00:00" />
 
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@
 	<div class="logo logo--mixed">
 		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
 			<div class="logo__item logo__imagebox">
-					<img class="logo__img" src="../../images/eegeda/1.png">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
 				</div><div class="logo__item logo__text">
 					<div class="logo__title">Sam Schumacher</div>
 					<div class="logo__tagline">ML &amp; AI</div>
@@ -69,11 +69,14 @@
 			<p class="post__lead">Binary classification using EEG readings (part 2 of 3)</p>
 			<div class="post__meta meta">
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-18T00:00:00Z">December 18, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-12-20T00:00:00Z">December 20, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
 	</span>
 </div></div>
-		</header><div class="content post__content clearfix">
-			<p><em>Autonomous vehichles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility never eeding to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.</em></p>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol2: Modelling">
+		</figure><div class="content post__content clearfix">
+			<p><em>Autonomous vehicles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility of never needing to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.</em></p>
 <hr>
 <h3 id="table-of-contents">Table of Contents</h3>
 <ul>
@@ -128,27 +131,27 @@
 <ol>
 <li><em>EEG values' extremes are asymmetric around their medians.</em></li>
 <li><em>Mean EEG value doesn&rsquo;t change much globally with eye state.</em></li>
-<li><em>Lead signals exist for eyes opening &amp; eyes 4. closing. Strongest in variables 1-2 &amp; 11-14.</em></li>
+<li><em>Lead signals exist for eyes opening &amp; eyes closing. Strongest in variables 1-2 &amp; 11-14.</em></li>
 <li><em>&lsquo;Shape&rsquo; of Lead signal is independent of starting magnitude.</em></li>
 <li><em>False transition signals are indicated by anomalies in EEGs 5 &amp; 8.</em></li>
-<li><em>Some EEG correlations shift significatnly depending on eye state.</em></li>
+<li><em>Some EEG correlations shift significantly depending on eye state.</em></li>
 </ol>
 <p><em><strong>Assumptions on the modelling process</strong></em></p>
 <ul>
-<li>No test datasets. With only EEG sensor data from one patient across one continuous period, inferring auto-pilots performance in a real life situation is too much of a leap from the limited dataset. Knowing generalisation performance is impossible, instead we will speculate, and prescribe robust modelling techniques when they should be.</li>
+<li>No test datasets. With only EEG sensor data from one patient across one continuous period, inferring how the auto-pilot would perform in live situation is too much of a leap from the limited dataset. Knowing generalisation performance is impossible, instead we will speculate, and prescribe robust modelling techniques as fit.</li>
 <li>Applying the machine learning solution in a real world context, data will be fed to the system continuously, although a total allowable lag of 0.2 seconds will be assumed. This will cover car dynamics &amp; machine computation time while still preventing long sequences of an uncontrolled car!</li>
 </ul>
 <p><em><strong>Constraints to design for</strong></em></p>
 <ol>
 <li><em><strong>3x more &lsquo;Open eye&rsquo; misclassifications than &lsquo;Closed eye&rsquo; misclassifications.</strong></em></li>
 <li><em><strong>Delay in detecting eye state change must be &lt;1 second.</strong></em></li>
-<li><em><strong>Short interval eye closed (&lt;0.3 seconds), to be disregarded (blinking not the same as closing)</strong></em></li>
+<li><em><strong>Short interval eye closed (&lt;0.5 seconds), to be disregarded (blinking not the same as closing)</strong></em></li>
 </ol>
 <p>The variable correlation insight may allow models not traditionally used for times series prediction to be used.
-The window selected must be short enough so that a few consecutive miscalssifications isn&rsquo;t catastrphoic in the business application, but long enough that it captures the predictive power of EEG correlations, instead of noise.</p>
-<p>A custom built Long Short Term Memory (LSTM) recurrent neural network will be used to take advantage of the EEG patterns that mark transition points, and maintain the eye state until a new pattern signals a transition back to the original open/closed state.</p>
-<p>MATLAB functions exist for many traditional time series modelling techniques, but using models that require independently drawn data (not time series) will be more interesting.</p>
-<p>To approach the cost asymmetry probelm of avoiding False Negatives more than False Positives, some convex optimisation techniques will be explored where MATALAB native functions may not be satisfactory.</p>
+The window selected must be short enough so that a few consecutive misclassifications isn&rsquo;t catastrophic in the business application, but long enough that it captures the predictive power of EEG correlations, instead of noise.</p>
+<p><a href="../../post/buildingnnet/" title="LSTM trainer">A custom built</a> Long Short Term Memory (LSTM) recurrent neural network will be used to take advantage of the EEG patterns that mark transition points, and maintain the eye state until a new pattern signals a transition back to the original open/closed state.</p>
+<p><a href="https://au.mathworks.com/help/ident/time-series-model-identification.html">MATLAB functions exist</a> for many traditional time series modelling techniques, but using models that require independently drawn data (not time series) will be more interesting.</p>
+<p>To approach the cost asymmetry problem of avoiding False Negatives more than False Positives, some convex optimisation techniques will be explored where MATLAB native functions may not be satisfactory.</p>
 <h2 id="feature-engineering-windowed-variable-correlations">Feature Engineering: Windowed Variable Correlations</h2>
 <p>The Exploratory Data Analysis (EDA) showed that EEG correlations had some predictive power in eye state. The creation process was;</p>
 <pre><code>1. Randomly sample a very small number of EEG observations, in any temporal order, stratifying the draws into open &amp; closed observations.
@@ -156,7 +159,7 @@ The window selected must be short enough so that a few consecutive miscalssifica
 3. Compare those correlations which were calculated with random observations of Open compared to Closed eye-state.
 </code></pre>
 <h3 id="selecting-correlation-windows">Selecting correlation windows</h3>
-<p>The business application is an autonomous driving system for a passenger who&rsquo;s shut their eyes. So the model will make predictions &lsquo;on-line&rsquo;, and a lag in making that prediction greater than 0.2 seconds is too slow. A lot can happen when travelling at 100km/h.</p>
+<p>The business application is an autonomous driving system for a passenger who&rsquo;s fallen asleep at the wheel. So the model will make predictions &lsquo;on-line&rsquo;, and a lag in making that prediction greater than 0.2 seconds is too slow. A lot can happen when travelling at 100km/h.</p>
 <p>Creating new features out of the raw EEG values will be through a process of shifting a &lsquo;window&rsquo; forward through time over the data. Each 0.2 seconds, correlations between EEGs are calculated over a window spanning the latest 2 seconds.</p>
 <p>This will create 567 samples out of the original 14980 samples of raw data, where the first observation in the new feature set is EEG correlations during the first 256 timesteps.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% Load Data from E.D.A.</span>
@@ -203,8 +206,8 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
 histogram(x_train,linspace(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">60</span>),<span style="color:#e6db74">&#39;Normalization&#39;</span>,<span style="color:#e6db74">&#39;probability&#39;</span>); title(<span style="color:#e6db74">&#39;EEG correlations histogram&#39;</span>); xlabel(<span style="color:#e6db74">&#39;x&#39;</span>,<span style="color:#e6db74">&#39;Interpreter&#39;</span>,<span style="color:#e6db74">&#39;latex&#39;</span>,<span style="color:#e6db74">&#39;FontSize&#39;</span>,<span style="color:#ae81ff">16</span>); ylabel(<span style="color:#e6db74">&#39;$P( x )$&#39;</span>,<span style="color:#e6db74">&#39;Interpreter&#39;</span>,<span style="color:#e6db74">&#39;latex&#39;</span>,<span style="color:#e6db74">&#39;FontSize&#39;</span>,<span style="color:#ae81ff">16</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/1.png" alt="hist eeg correlations"></p>
 <h3 id="normalising--transforming">Normalising &amp; Transforming</h3>
-<p>This feature is heavily skewed to the right, so a transform will be needed to normalise it. Normalised features will mean that marginal changes in them (X), will equate to the same percentage change in the predicted Y variable once multiplied by a coefficient, no matter the value of X.<br>
-An exponential transform would work, as we want to spread out the upper values which currently are clumped together a little. Centering the data and then using its Z-scores should spread values evenly further.</p>
+<p>This feature is heavily skewed to the right, so a transform will be needed to normalise it. Normalised features will mean that marginal changes in them (X), will equate to the same percentage change in the predicted Y variable once multiplied by a coefficient, no matter the value of X.</p>
+<p>An exponential transform would work, as we want to spread out the upper values which currently are clumped together a little. Centering the data and then using its Z-scores should spread values evenly further.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">hold on; 
 xLog_train = exp(x_train);
 <span style="color:#75715e">% z-score of data  its exponent</span>
@@ -217,8 +220,8 @@ legend({<span style="color:#e6db74">&#39;EEG Correlations&#39;</span>,<span styl
 </code></pre></div><p><img src="../../images/eegmodelling/2.png" alt="hist features eeg correlations">
 The z-score of the exponent of the EEG correlations (white bars) are now much closer to normally distributed. Since the task is binary classification, A probit model comes to mind.</p>
 <h2 id="probit-regression">Probit Regression</h2>
-<p>Since a probit model does an exponential transform on independent variables already, the raw correlation metrics will be used (blue bars).<br>
-There are a large number of variables compared to observations (91 to 576), and no validation data exists as measurements are taken from one subjects EEG. So, even though the transformed data looks normally distributed, a pvalue of 0.01 will be used instead of 0.05 to be cautious of overfitting.</p>
+<p>Since a probit model does an exponential transform on independent variables already, the raw correlation metrics will be used (blue bars).</p>
+<p>There are a large number of variables compared to observations (91 to 576), and no validation data exists as measurements are taken from one subjects EEG. So, even though the transformed data looks normally distributed, a pvalue of 0.01 will be used instead of 0.05 to be cautious of overfitting.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% Fit the correlation data to eye state with a binomial probability model</span>
 mdl_probit = fitglm( x_train ,y_train,<span style="color:#e6db74">&#39;Distribution&#39;</span>,<span style="color:#e6db74">&#39;binomial&#39;</span>,<span style="color:#e6db74">&#39;link&#39;</span>,<span style="color:#e6db74">&#39;probit&#39;</span>);
 <span style="color:#75715e">% remove variables sequentially starting with largest pvalue, untill all are under tolerance.</span>
@@ -278,7 +281,7 @@ Again, we will look at the coefficients to speculate on generalisation performan
 figure; bar( sort(abs(coefLASSO),<span style="color:#e6db74">&#39;descend&#39;</span>) )
 title(<span style="color:#e6db74">&#39;Magnitude of coefficients for best Lasso probit model&#39;</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/7.png" alt="time series probit"><br>
-Like the boxplot of correlation differences in the EDA showed, under half of the correlations have significant predictive power. Their is a lot of noise in most of the EEG correlation features. The model coefficients are now in the same order of magnitude as the model features themselves. This would likely have much better generalisation performance than the probit regression, which had extrememly large values in its parameters.</p>
+Like the boxplot of correlation differences in the EDA showed, under half of the correlations have significant predictive power. There is a lot of noise in most of the EEG correlation features. The model coefficients are now in the same order of magnitude as the model features themselves. This would likely have much better generalisation performance than the probit regression, which had extrememly large values in its parameters.</p>
 <h2 id="partial-least-squares-regression">Partial Least Squares Regression</h2>
 <p>Instead of assuming gaussian distribution of error terms like the probit model, the PLS algorithm minimises squared residuals after &lsquo;de-noising&rsquo; the input features to a lower dimensional &amp; orthogonal set. This is pertinent because a majority of the original EEG variables are correlated.</p>
 <p>Now the normalised exponent of the correlation variables calculated earlier is used, as PLS only uses a squaring function to penalise residuals, which will be best utilised if the input variables are evenly &amp; symmetrically spread.</p>
@@ -304,11 +307,12 @@ yfitPLS = [ones(numel(windowstartId),<span style="color:#ae81ff">1</span>)<span 
 [ <span style="color:#f92672">~</span> ] = plotPrediction( yfitPLS<span style="color:#f92672">&gt;</span>=<span style="color:#ae81ff">0.5</span> , yBinom_train, yfitPLS , y_train , steplength_seconds );
 </code></pre></div><p><img src="../../images/eegmodelling/9.png" alt="time series probit"><br>
 <img src="../../images/eegmodelling/10.png" alt="time series probit"></p>
-<p>This model is good, doesn&rsquo;t require the assumption of normally distributed errors, and reduces the problems high dimensionality artificially created through the windowing method on EEG correlations. It&rsquo;s interesting to note the predictions are no longer considered probabilities in the range of 0 - 1, they are estimations of eye-state as decimals, and do not have the same meaning as predictions by the lasso or probit models.</p>
+<p>This model is good, doesn&rsquo;t require the assumption of normally distributed errors, and reduces the problems high dimensionality, which was artificially created through the windowing method on EEG correlations.</p>
+<p>It&rsquo;s interesting to note the predictions are no longer considered probabilities in the range of 0 - 1, they are estimations of eye-state as decimals, and do not have the same meaning as predictions by the lasso or probit models.</p>
 <h2 id="recurrent-neural-network---long-short-term-memory-lstm">Recurrent Neural Network - Long Short Term Memory (LSTM)</h2>
 <p>A recurrent neural network (RNN) was selected for its ability to store memory of a particular pattern over many sequences. The &lsquo;transition spikes&rsquo; could be a good candidate for this, as they occur only a handful of times, and preceed long continuous sequences of one state or another.</p>
-<p>An LSTM may be able to deal with the long input sequences required to detect these &lsquo;transition shapes&rsquo; which are 100-150 timesteps - about a second.</p>
-<p>The EEG variables with pronounced transition spikes might be easier for the LSTM network to detect and remember. However, recalling from the EDA;</p>
+<p>An LSTM may be able to deal with the long input sequences required to detect these &lsquo;transition shapes&rsquo; which are 100-150 timesteps (about a second).</p>
+<p>The EEG variables with pronounced transition spikes might be easier for the LSTM network to detect and remember. However, recalling from <a href="../../post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
 <blockquote>
 <p><strong>Insight #5</strong> <em>&ldquo;Similar patterns to transition-spikes occur at some non-transition timesteps in EEGs 1-4, 11-14, but EEGs 5 &amp; 8 have a uniquely pronounced signal at this time also&rdquo;</em></p>
 </blockquote>
@@ -330,7 +334,7 @@ ylabel(<span style="color:#e6db74">&#39;EEG value&#39;</span>); xlabel(<span sty
 title(<span style="color:#e6db74">&#39;Original EEG signal with it&#39;&#39;s downsampled approximation&#39;</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/11.png" alt="time series probit"><br>
 The red line is the average of original sequence across a 5-step window, which shifts forward by 3 steps each time. New downsampled data becomes 1/3 the length allowing for faster training, and a less noisy input signal.</p>
-<p>From the EDA;</p>
+<p>From <a href="../../post/eeg_eda/" title="Exploratory Data Analysis">the EDA</a>;</p>
 <blockquote>
 <p><strong>Insight #4:</strong> <em>&ldquo;Shape' of Lead signal is independent of starting magnitude.&quot;</em></p>
 </blockquote>
@@ -427,7 +431,7 @@ pSB = plot(Yind_c( smplB ,:), squeeze(DataY_batched{<span style="color:#ae81ff">
 xlabel(<span style="color:#e6db74">&#39;timestep&#39;</span>); ylabel(<span style="color:#e6db74">&#39;Eye-state&#39;</span>)
 legend([pEA(<span style="color:#ae81ff">1</span>),pEB(<span style="color:#ae81ff">1</span>),pSA(<span style="color:#ae81ff">1</span>),pSB(<span style="color:#ae81ff">1</span>)],<span style="color:#e6db74">&#39;EEGs @ sample sequence A&#39;</span>,<span style="color:#e6db74">&#39;EEGs @ sample sequence B&#39;</span>,<span style="color:#e6db74">&#39;Eye state @ end of seq A&#39;</span>,<span style="color:#e6db74">&#39;Eye state @ end of seq B&#39;</span>,<span style="color:#e6db74">&#39;location&#39;</span>,<span style="color:#e6db74">&#39;north&#39;</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/13.png" alt="input-output pairs from minibatch">
-Here the network will have to learn that the &lsquo;red&rsquo; sequences indicate a transition from open to close, using only the 40-step sequence as context. The samples that follow in mini-batch #2 will have this context passed to them (they will start at t=61).</p>
+Here the network will have to learn that the &lsquo;red&rsquo; EEG sequences indicate a transition from open to close, using only the 40-step sequence as context. The samples that follow in mini-batch #2 will have this context passed to them (they will start at t=61).</p>
 <h3 id="maintaining-cell-memory-across-mini-batches">Maintaining cell-memory across mini-batches</h3>
 <p>Each mini-batch contains 400 samples of sequences 40 timesteps long. Visualising the mini-batches shows that each is exposed to a maximum of 2 trainsition spikes. This could be a problem for training, and put limitations on how the model is used for prediction.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">147</span> <span style="color:#ae81ff">549</span> <span style="color:#ae81ff">1182</span> <span style="color:#ae81ff">363</span>]);
@@ -442,11 +446,11 @@ title(<span style="color:#e6db74">&#39;EEG features color coded by training mini
 </code></pre></div><p><img src="../../images/eegmodelling/14.png" alt="features across mini-batches">
 The first mini-batch propogated through time by the network (blue) passes it&rsquo;s memory state/context to the next batch of 440 steps (green), which then passes to the next 440 steps (purple), and so on.</p>
 <h3 id="convergence-of-lstm-with-memory-passed-through-mini-batches">Convergence of LSTM with memory passed through mini-batches;</h3>
-<p>Parameters determine cell state, used to predict and update parameters based on that error: $$ \theta_b^i =g\left(C_{\mathit{{b}}}^{{{i}}} ,X_b ,Y_{b} \right)+\theta_{b-1}^i $$</p>
+<p>Parameters determine cell state, used to make a prediction, whose error is the basis for parameter update: $$ \theta_b^i =g\left(C_{\mathit{{b}}}^{{{i}}} ,X_b ,Y_{b} \right)+\theta_{b-1}^i $$</p>
 <!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
-<p>The cell state <em>prior</em> to a parameter 
-update is used to calculate cell in the next batch: 
+<p>The cell state calculated <em>prior</em> to a parameter 
+update is used to calculate the cell state of the next batch: 
 $$ C_b =\mathit{{f}}\left(C_{\mathit{{b}}-1}^{\mathit{{i}}-1} 
 ,\theta_{{{b}}-1}^{\mathit{{i}}} ,{\mathit{{X}}}_{\mathit{{b}}} 
 \right) $$
@@ -478,7 +482,7 @@ state, across all batches and iterations;</em></p>
 <h3 id="defining-the-network-topology">Defining the network topology</h3>
 <p>The output sequence length requires a 5-timestep length, but the transition patterns in the EEGs occur over a much longer period. An encoder-decoder model permits different length sequences of input &amp; output, so that will be used with a regular feed forward layer at the end of each decoder step to convert the values into the range 0 - 1, and do the classification using softmax activation.</p>
 <p>Probit, Lasso &amp; PLS models used 91 correlation features, though only 20 or so contained the large majority of the explanatory power. RNN training takes a long time because each step needs to be calculated in series, not paralellel - so the network will be created with 45 hidden units in both the encoder and decoder.</p>
-<p>The function <strong>GenerateNNetLayer.m</strong> takes batch size, number of units &amp; other parameters to define a layer in the network, with weights pre-initialised.</p>
+<p>The function <a href="https://github.com/samoliverschumacher/neuralnets/blob/main/rnngenerator/GenerateNNetLayer.m/"><strong>GenerateNNetLayer.m</strong></a> takes batch size, number of units &amp; other parameters to define a layer in the network, with weights pre-initialised.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">%% Topology</span>
     epochs = <span style="color:#ae81ff">800</span>;
     trainingSettings.GDOptimizer = <span style="color:#e6db74">&#39;Adam&#39;</span>;
@@ -564,14 +568,12 @@ disp([newline ,<span style="color:#e6db74">&#39;Input Layer (Encoder); &#39;</sp
 <h2 id="lstm-model-training--prediction">LSTM Model Training &amp; Prediction</h2>
 <p>Now the network hyperparameters &amp; topology have been set, the training algorithm can search for the best parameter settings for the objective</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">%% call training algorithm to learn the EEG dependencies</span>
-<span style="color:#66d9ef">try</span>
-    load(<span style="color:#e6db74">&#39;EEGworkspace_45Hus3downsampleV_13_8_11_1_2_seqIn40seqOut5_gradclip_minus1to1_B.mat&#39;</span>)
-<span style="color:#66d9ef">catch</span> ME
-    [NNModels, <span style="color:#f92672">~</span>, <span style="color:#f92672">~</span> , <span style="color:#f92672">~</span> ] = <span style="color:#75715e">...</span>
-        TrainSequnceNNetV3(NNModels, epochs, trainingSettings , DataX_batched, DataY_batched, [], []);
-<span style="color:#66d9ef">end</span>
+[NNModels, <span style="color:#f92672">~</span>, <span style="color:#f92672">~</span> , <span style="color:#f92672">~</span> ] = <span style="color:#75715e">...</span>
+    TrainSequnceNNetV3(NNModels, epochs, trainingSettings , DataX_batched, DataY_batched, [], []);
 printNNetsettings(NNModels{<span style="color:#66d9ef">end</span>}.trainingInformation)
-</code></pre></div><pre><code>    Network Settings:
+</code></pre></div><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>    Network Settings:
                gradclip :  : True 
                 LossFcn :  : @(Pred,Real)-sum(Real.*log(Pred),3) 
              Loss_delta :  : @(Pred,Real)CrossEntropyDeriv_ifisnan(Real,Pred) 
@@ -580,13 +582,13 @@ seedStateFromPriorLayer :  : False
     &quot;regular&quot;    &quot;RepeatVector&quot;    &quot;TimeDistributed&quot;
     &quot;LSTM&quot;       &quot;LSTM&quot;            &quot;dense&quot;          
         NewDataperEpoch :  : False 
-</code></pre><p>First layer, the encoder, is a 40-step LSTM ingesting the EEG sequences. 2nd Layer is a 5-step LSTM which takes last output of encoder, uses it as input for all 5 of the decoders&rsquo; timesteps. Memory state in the 2nd layer (decoder) is initialised with the last memory state of the 1st layer (encoder). Final 3rd layer is a regular fully connected softmax layer which makes 5 classifications of open or cloed eyes, with each of the 5 recurrent outputs from the 2nd layer (decoder).</p>
+</code></pre><p>First layer, the encoder, is a 40-step LSTM ingesting the EEG sequences. 2nd Layer is a 5-step LSTM which takes last output of encoder, uses it as input for all 5 of the decoders&rsquo; timesteps. Memory state in the 2nd layer (decoder) is initialised with the last memory state of the 1st layer (encoder). Final 3rd layer is a regular fully connected softmax layer which makes 5 classifications of open or closed eyes, with each of the 5 recurrent outputs from the 2nd layer (decoder).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">figure;
 plot(NNModels{<span style="color:#66d9ef">end</span>}.LossHistory); xlabel(<span style="color:#e6db74">&#39;epoch&#39;</span>); ylabel(<span style="color:#e6db74">&#39;Cross-entropy loss&#39;</span>); title(<span style="color:#e6db74">&#39;Training loss&#39;</span>)
 </code></pre></div><p><img src="../../images/eegmodelling/15.png" alt="LSTM training loss"><br>
 Training loss looks very volatile, proably due to the long sequences it&rsquo;s learning. Other reasons could be;</p>
 <ol>
-<li><strong>Dataset</strong> isn&rsquo;t varied / large enough. The model has learnt the data (overfit).</li>
+<li><strong>Dataset</strong> isn&rsquo;t varied / large enough. The model has learnt the data not the relationships (overfit).</li>
 <li><strong>Learning rate</strong> - too high. When network approaches a minima in the solution space, it could overshoot as it heads toward an optimal set of parameters.</li>
 <li><strong>Optimiser</strong> - Adadelta could work, and would make learning rate selection obsolete.</li>
 <li><strong>Hidden units</strong> - too many. 30HUs gives over 10,000 parameters, for just 4000 observations. Lasso model, while not a neural network models had just 20-30 relevant parameters.</li>
@@ -644,7 +646,7 @@ Prediction errors are densest around the transition spikes, and low in between -
 </code></pre></div><p><img src="../../images/eegmodelling/17.png" alt="LSTM confusion"></p>
 <p>Prediction accuracy is quite high, on par with the other models. False negatives greatly outweigh false positives - mostly in the &lsquo;eyes-closed&rsquo; state between t=2500 to t=3000. As memory is passed forward through training sequences, it&rsquo;s more likely that an error will be repeated due to the nature of RNNs, rather than a section of data that was complex to learn.</p>
 <h2 id="lstm-model-selection">LSTM: Model Selection</h2>
-<p>Theoretically a neural network can form any nonlinear function, though practically this is unrealistic. Each dataset has hyperparmeters/ topologies that suit it uniquely. the following were varied in search for a model that would converge &amp; perform well;</p>
+<p>Theoretically a neural network can form any nonlinear function, though practically this is unrealistic. Each dataset has hyperparmeters &amp; topologies that suit it uniquely. The following were varied in search for a model that would converge &amp; perform well;</p>
 <ol>
 <li><strong>EEG variables entered</strong>. 3 sets of varaibles EEGs: (A) 1,2,8,11,13 (B) 1,2,8,11,13 &amp; 5 (C) All 14 EEGs.</li>
 <li><strong>Number of Hidden units in Encoder &amp; Decoder</strong>: To test whether the dataset was more or less complex than expected, models with 15, 30, 45 &amp; 60 Hidden units were trained.
@@ -667,28 +669,29 @@ The training performance and loss history is summarised below.</li>
     &quot;1 2 5 8 11 13&quot;     &quot;60&quot;     &quot;98.06%&quot;          &quot;600&quot;        
     &quot;1 2 5 8 11 13&quot;     &quot;60&quot;     &quot;95.41%&quot;          &quot;960&quot;        
     &quot;All&quot;               &quot;60&quot;     &quot;98.67%&quot;          &quot;760&quot;        
-</code></pre><p>Due to the stochastic nature of Neural network training, there is a lot of variation in performance. Though it seems the models with 60 Hidden units in both encoder and decoder consistently converge to a high performance in the shortest number of training epochs. In theory, more HUs smooth out the probabilistic nature of finding parameters.</p>
+</code></pre><p>Due to the stochastic nature of neural network training, there is a lot of variation in performance. Though it seems the models with 60 hidden units in both encoder and decoder consistently converge to a high performance in the shortest number of training epochs. In theory, more HUs smooth out the probabilistic nature of finding parameters.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">    save(<span style="color:#e6db74">&#39;EECloseEyes_Modelling.mat&#39;</span>)
 </code></pre></div><h2 id="summary">Summary</h2>
-<p>The model could be an on-device predictor of eye-state to detect when the driver is having a microsleep, and trigger driverless control of the car. The business problem implied working on-line, using prior timesteps only, and a predict-ahead length of 0.2 seconds. Below in the top plot shows the longest periods each model is wrong for, in a 1-second window.</p>
+<p>The model could be an on-device predictor of eye-state to detect when the driver is having a microsleep, and trigger driverless control of the car. The business problem implied working on-line, using prior timesteps only, and a predict-ahead length of 0.2 seconds.</p>
+<p>Below in the top plot shows the longest periods each model is wrong for, in a 1-second window.</p>
 <p>At worst, the PLS &amp; Lasso model is wrong for a total of 1.008 seconds, around t=12,000. These models fail the objective of the business problem.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">EEGCloseEyes_CompreModels(&#34;ModelSummaryTable&#34;)
 </code></pre></div><pre><code>                           Probit     LassoProbit      PLS      RNNLSTM
                            _______    ___________    _______    _______
-    Accuracy               0.93331      0.95454      0.94152    0.94613
-    MaxConsecutiveError     0.9375       1.0078       1.0078    0.84375
+    Accuracy               0.96195      0.96302      0.95955    0.98618
+    MaxConsecutiveError    0.55469      0.61719       0.9375    0.49219
 </code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">EEGCloseEyes_CompreModels(&#34;CompareModels&#34;)
 </code></pre></div><p><img src="../../images/eegmodelling/18.png" alt="Model comparison"></p>
 <h3 id="in-sample-performance">In-sample performance</h3>
 <p>All models achieved a 90%+ test-accuracy. The LSTM-RNN achieved highest in-sample accuracy of 95.2%.</p>
 <p>Concerning is the LSTMs reccuring errors during the long closed eye period in the middle of the sequence. This is a problem with RNNs that occurs because the memory (of an error) is passed forward though a single sequence input, and moreso when the memory cell is passed between batches.</p>
 <h3 id="generalisation-performance">Generalisation performance</h3>
-<p>Generalisation performance could have been checked by holding a set of consecutive observations out before training, though the business application would be for use by different users to test data, so evauluating generalisation performance would be both wrong and irresponsible.</p>
+<p>Generalisation performance could have been checked by holding a set of consecutive observations out before training, though the business application would be for use by different users to test data, so evaluating generalisation performance would be both wrong and irresponsible.</p>
 <p>When in doubt, the simpler model is preffered. The LSTM used only 6 input variables, where the Lasso, Probit and PLS models were fed 91 correlation variables. 91 is likely too many for the size of the sample to be reliable. Speculating, the LSTM is the superior model.</p>
 <h3 id="real-world-application-of-predictions">Real-world application of predictions</h3>
 <p>Within a 1 second prediction period, Probit model had a maximum of 0.4 seconds of error, PLS &amp; Lasso-probit had 0.6 seconds. The LSTM has a 1 second window with 0.634 seconds of error.</p>
-<p>Best model in training was LSTM. Though, for real-world application, more info is needed: on the hardware limitations &amp; the specifics of how user interacts with the product. For example limited computational power / memory might restric use of LSTM neural network. In Probit, Lasso &amp; PLS, Perhaps the correlation data is overfitting to the sample - transition spikes were apparent across all EEGs &amp; time, so might be more genralisable to other EEG capture devices.</p>
-<p>Not yet addressed is the disproportionate impact getting a Closed eye-state state classified as Open eyes. In the third and final section of this project, different techniques will be used to tune the models to minimise this impact.</p>
+<p>Best model in training was LSTM. Though, for real-world application, more info is needed: on the hardware limitations &amp; the specifics of how user interacts with the product. For example limited computational power / memory might restric use of LSTM neural network. In Probit, Lasso &amp; PLS, perhaps the correlation data is overfitting to the sample - transition spikes were apparent across all EEGs &amp; time, so might be more genralisable to other EEG capture devices.</p>
+<p>Not yet addressed is the disproportionate impact getting a &ldquo;closed&rdquo; eye-state state classified as &ldquo;open&rdquo; eyes. In the third and final section of this project, different techniques will be used to tune the models to minimise this impact.</p>
 <hr>
 <p><em>In the <a href="../../post/eeg_costtradeoff/" title="About Us">next volume of this project</a>, the cost imbalance of misclassification is addressed</em></p>
 <hr>
@@ -710,7 +713,8 @@ yfitPLS_withblink = [ones(N_corrwin,<span style="color:#ae81ff">1</span>)<span s
 </code></pre></div><p>This new fitted model tries to predict the blinks just the same as all other closed eye observations. The effect it has is driven mainly by the inclusion of much sharper EEG transition signals that occur during a blink.</p>
 <h3 id="false-positives-vs-false-negatives---skew-of-residuals">False positives vs. False Negatives - (skew of residuals)</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">[ <span style="color:#f92672">~</span> ] = plotPrediction( yfitPLS_withblink<span style="color:#f92672">&gt;</span>=<span style="color:#ae81ff">0.5</span> , y_withblink<span style="color:#f92672">&gt;</span>=<span style="color:#ae81ff">0.5</span> , yfitPLS_withblink , y_withblink , steplength_seconds ,<span style="color:#e6db74">&#39;confusion&#39;</span> );
-</code></pre></div><p>The 1&rsquo;s are classified wrong more than the 0&rsquo;s are. In the EDA, a boxplot of the EEGs showed longer tails on the right, meaning more weight in the lower values. If the Input variables to PLS model also has a skew, and it is heavier in observations of one eye-state vs another, it could cause the model to be asymmetric in the prediction of extreme errors, like those more wrong than the 0.5 probability cutoff for classification;</p>
+</code></pre></div><p><img src="../../images/eegmodelling/19.png" alt="conf skew residuals"></p>
+<p>The 1&rsquo;s are classified wrong more than the 0&rsquo;s are. In the EDA, a boxplot of the EEGs showed longer tails on the right, meaning more weight in the lower values. If the Input variables to PLS model also has a skew, and it is heavier in observations of one eye-state vs another, it could cause the model to be asymmetric in the prediction of extreme errors, like those more wrong than the 0.5 probability cutoff for classification;</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">fprintf(<span style="color:#e6db74">&#39;Median predictor skewness of all observations %.3g \nMedian predictor skewness in &#34;Open&#34; classes %.3g \nMedian predictor skewness in &#34;Closed&#34; classes %.3g&#39;</span> ,<span style="color:#75715e">...</span>
     median( moment( xLogNorm_train(:,:) , <span style="color:#ae81ff">3</span> ) ),<span style="color:#75715e">...</span>
     median( moment( xLogNorm_train(y_withblink<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>,:) , <span style="color:#ae81ff">3</span>  ) ),<span style="color:#75715e">...</span>
@@ -736,6 +740,9 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 			<a class="tags__link btn" href="../../tags/feature-engineering/" rel="tag">feature engineering</a>
 		</li>
 		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/pca/" rel="tag">PCA</a>
+		</li>
+		<li class="tags__item">
 			<a class="tags__link btn" href="../../tags/lstm/" rel="tag">LSTM</a>
 		</li>
 		<li class="tags__item">
@@ -755,7 +762,7 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="Sam Schumacher avatar" src="../../images/eegeda/2.png" class="avatar" height="90" width="90">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
 		<span class="authorbox__name">About Sam Schumacher</span>
@@ -766,10 +773,16 @@ Median predictor skewness in &quot;Closed&quot; classes 0.361
 </div>
 
 <nav class="pager flex">
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="../../post/eeg_eda/" rel="next">
-			<span class="pager__subtitle">Next&thinsp;»</span>
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="../../post/eeg_eda/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;Previous</span>
 			<p class="pager__title">Autonomous vechicle microsleep detector Vol1: EDA</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="../../post/eeg_costtradeoff/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</p>
 		</a>
 	</div>
 </nav>
