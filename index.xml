@@ -13,7 +13,7 @@
       <pubDate>Sat, 02 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>/post/rnn5min_1/</guid>
-      <description>&lt;p&gt;&lt;em&gt;In this 5-min read I&amp;rsquo;ll try to explain how convergence can be slower for LSTM neural networks where memory state is maintained from one mini-batch to the next. An example of this problem can be found in my &lt;a href=&#34;/post/eeg_modelling/&#34; title=&#34;Autonomous vehicle microsleep detector&#34;&gt;project about a microsleep detector&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;em&gt;In this 5-min read I&amp;rsquo;ll try to explain how convergence can be slower for LSTM neural networks where memory state is maintained from one mini-batch to the next. An example of this problem can be found in my &lt;a href=&#34;./post/eeg_modelling/&#34; title=&#34;Autonomous vehicle microsleep detector&#34;&gt;project about a microsleep detector&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
