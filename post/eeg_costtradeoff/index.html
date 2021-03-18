@@ -74,7 +74,7 @@
 </div></div>
 		</header>
 		<figure class="post__thumbnail">
-			<img src="../../../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff">
+			<img src="../../images/eegvis_landscapeB.png" alt="Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff">
 		</figure><div class="content post__content clearfix">
 			<p><em>It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open.</em></p>
 <hr>
@@ -98,15 +98,15 @@
 </li>
 </ul>
 <h2 id="motivation--approach">Motivation &amp; approach</h2>
-<p>Understanding the context of the business application of a machine learning solution is critical. The business problem was for a driver microsleep detector, though by thinking about the context of the real world application, we decided it was much worse to classify a &ldquo;Closed&rdquo; state as an &ldquo;Open&rdquo;, than it was to classify eyes as closed, when really they were open. It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open. Open eyes will also be called &ldquo;Positive&rdquo;, and closed eyes will be called Negative. So we want to avoid a false positive (F.P.) 3 times as much as we want to avoid a false negative (F.N.)</p>
+<p>Understanding the context of the business application of a machine learning solution is critical. The business problem was for a driver microsleep detector, though by thinking about the context of the real world application, we decided it was much worse to classify a &ldquo;Closed&rdquo; state as an &ldquo;Open&rdquo;, than it was to classify eyes as closed, when really they were open. It&rsquo;s much more costly to the end user for the autonomous vehcile to not take over the steering when eyes are closed, than to take over steering when eyes are open. Open eyes will also be called &ldquo;Positive&rdquo;, and closed eyes will be called Negative. So we want to avoid a false negative (F.N.) 3 times as much as we want to avoid a false positive (F.P.)</p>
 <p>In the modelling done so far, the loss curves for (mis)classifying &ldquo;eyes open&rdquo; is the same as loss curve for classifying &ldquo;eyes closed&rdquo;. The False Negative to False Positive ratios for all 4 models so far;</p>
 <ol>
-<li>Probit regression: 7:6 (FPs : FNs)</li>
-<li>Lasso Probit regression: 10:10</li>
-<li>Partial Least Squares regression: 8:13</li>
-<li>Reccurent neural network (LSTM): 16:88</li>
+<li>Probit regression: 6:5 (FPs : FNs)</li>
+<li>Lasso Probit regression: 6:8</li>
+<li>Partial Least Squares regression: 9:11</li>
+<li>Reccurent neural network (LSTM): 17:20</li>
 </ol>
-<p>The goal is to get this ratio to be 3:1</p>
+<p>The goal is to get this ratio to be 1:3</p>
 <h2 id="assymetric-loss-function-trading-incorrect-open-state-detection-for-incorrect-closed-states">Assymetric Loss function: trading incorrect Open state detection for incorrect Closed states.</h2>
 <blockquote>
 <p><em><strong>Assymetric loss function</strong></em>: &ldquo;It&rsquo;s much more important to not mistake eyes closed for eyes open, than the other way around&rdquo;</p>
@@ -132,7 +132,7 @@ hold on;
 p1 = plot( carcrash_risk<span style="color:#f92672">&#39;</span>,<span style="color:#e6db74">&#39;r&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;HandleVisibility&#39;</span>,<span style="color:#e6db74">&#39;off&#39;</span>); p2 = plot( autopilot_takeover_risk<span style="color:#f92672">&#39;</span>,<span style="color:#e6db74">&#39;b&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;HandleVisibility&#39;</span>,<span style="color:#e6db74">&#39;off&#39;</span>);
 </code></pre></div><p><img src="../../images/eegcosttradeoff/1.png" alt="log loss regular"></p>
 <p>This loss shows it is equally bad to predict that eyes are closed when they are open, as it does to predict eyes open, when they are closed.</p>
-<p>Knowing the model will make some mistakes, we&rsquo;d prefer more false &ldquo;Opens&rdquo; if we can get them, even at the cost of more of false &ldquo;Closed&rdquo;. Penalising the loss curve more heavily when the true class is &ldquo;Closed&rdquo; could help to achieve this. It would be an asymmetric loss function.</p>
+<p>Knowing the model will make some mistakes, we&rsquo;d prefer more false &ldquo;Opens&rdquo; (false negatives) if we can get them, even at the cost of more of false &ldquo;Closed&rdquo;. Penalising the loss curve more heavily when the true class is &ldquo;Closed&rdquo; could help to achieve this. It would be an asymmetric loss function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% loss for miscalssifying Closed eyes</span>
 carcrash_risk_weighted = (Loss_closeeye<span style="color:#f92672">.^</span>(<span style="color:#ae81ff">2</span>))<span style="color:#f92672">.*</span>[ones(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>),NaN(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>)];
 plot( Loss_closeeye<span style="color:#f92672">.^</span>(<span style="color:#ae81ff">2</span>)<span style="color:#f92672">&#39;</span>,<span style="color:#e6db74">&#39;r.-&#39;</span>,<span style="color:#e6db74">&#39;DisplayName&#39;</span>,<span style="color:#e6db74">&#39;target class=1 (weighted)&#39;</span>,<span style="color:#e6db74">&#39;MarkerSize&#39;</span>,<span style="color:#ae81ff">10</span>); <span style="color:#75715e">%set(gca,&#39;YLim&#39;,[0 5]);%,&#39;DisplayName&#39;,&#39;target class=0 (Closed eyes), increased penalty&#39;); set(gca,&#39;YLim&#39;,[0 5]);</span>
@@ -167,7 +167,7 @@ plotPrediction( yfit_LS<span style="color:#f92672">&gt;</span>=<span style="colo
 <p>$$\begin{array}{l}\mathrm{FP}\left(p\right)=\left\lbrace \begin{array}{cc}p_x 
 -0\ldotp 5 &amp; p_x &gt;0\ldotp 5\\0 &amp; p_x \le 0\ldotp 5\end{array}\right.\\ \mathrm{FN}\left(p\right)=\left\lbrace 
 \begin{array}{cc}0 &amp; p_x &gt;0\ldotp 5\\0\ldotp 5-p_x  &amp; p_x \le 0\ldotp 5\end{array}\right.\end{array}$$</p>
-<p>Now we can add a new component to the existing (least squares) objective function, that targets the tradeoff between error costs specified by the business problem. The deisgn constraints added to the original business problem statement were that &lsquo;Closed eye&rsquo; misclassifications (FP&rsquo;s) are 3x as bad as &lsquo;Open eye&rsquo; miscalssifcations (FN&rsquo;s);</p>
+<p>Now we can add a new component to the existing (least squares) objective function, that targets the tradeoff between error costs specified by the business problem. The deisgn constraints added to the original business problem statement were that &lsquo;Closed eye&rsquo; misclassifications (FN&rsquo;s) are 3x as bad as &lsquo;Open eye&rsquo; miscalssifcations (FP&rsquo;s);</p>
 <p>$$\underset{\mathbf{w},\lambda }{\arg \min} \left(\left(1-\lambda 
 \right)\sum_{i\in \textrm{All}\ \textrm{observations}} \textrm{Cost}\left(y_i 
 ,p_i \right)+\lambda \left(\sum_{i\in \textrm{Closed}\ \textrm{eye}} 
@@ -223,7 +223,7 @@ to miscalssify. The cost function discontinuity makes the model not robust.</p>
 <ol>
 <li>Immitate a &ldquo;class imbalance&rdquo; in the dataset. i.e. adjust the intercept of PLS regression to identify different FP FN tradeoffs.</li>
 <li>Adjust the class threshold until the optimal cost is achieved.</li>
-<li>Rewrite the cost function to make it asymettrical: one that equates a FP to be 3x as costly as a FN, particularly across probabilities that would be above 0.5, or below 0.5 respretively. (see asymetric cost explanation at start of EDA)</li>
+<li>Rewrite the cost function to make it asymettrical: one that equates a FN to be 3x as costly as a FP, particularly across probabilities that would be above 0.5, or below 0.5 respretively. (see asymetric cost explanation at start of EDA)</li>
 <li>Use ensemble methods to give weight to the models which give a balance in FP FN as per the desired application.</li>
 </ol>
 <p><em>Each of the 4 models developed will have a different technique applied, for illustrative purposes.</em></p>
@@ -259,15 +259,16 @@ yfit_weightedLasso = yfitLasso(:,mnI);
 <span style="color:#75715e">% Plot prediction as time-series, and Confusion Matrix</span>
 [ <span style="color:#f92672">~</span> ] = plotPrediction( yfit_weightedLasso<span style="color:#f92672">&gt;</span>=<span style="color:#ae81ff">0.5</span> , ybin, yfit_weightedLasso , y_weighted , steplength_seconds ,<span style="color:#e6db74">&#39;confusion&#39;</span>);
 </code></pre></div><p><img src="../../images/eegcosttradeoff/6.png" alt="confusion intercept Lasso"></p>
-<p>Across all the adjustments to the lasso model&rsquo;s intercept term, the minimum FN-FP tradeoff-weighted score occurs with intercept 1.5% higher than the balanced-cost case. This gives 6 times the false positives than false negatives.</p>
+<p>Across all the adjustments to the lasso model&rsquo;s intercept term, the minimum FN-FP tradeoff-weighted score occurs with intercept 1.5% lower than the balanced-cost case. This gives 17 times the false positives than false negatives.</p>
 <h1 id="adjust-observation-weights---probit-model">Adjust observation weights - Probit model</h1>
-<p>Weighting observations is usually reserved for differences in the fidelity of measurement of those observations. However in essence it&rsquo;s adjusting the &lsquo;importance&rsquo; of the observation in the overall purpose of the model. Each prediction residual in the &ldquo;Open&rdquo; class will count as an additional &lsquo;w&rsquo; data points, in the maximum likelihood parameter search.</p>
+<p>Weighting observations is usually reserved for differences in the fidelity of measurement of those observations. However in essence it&rsquo;s adjusting the &lsquo;importance&rsquo; of the observation in the overall purpose of the model. Each prediction residual in the true &ldquo;Closed&rdquo; class will count as an additional &lsquo;w&rsquo; data points, in the maximum likelihood parameter search.</p>
 <p>Unlike the lasso model, no action was taken to hedge against poor generalisation performance, in a similar way the lasso model is prone to overfitting when searching for the best parameter, so is the probit mdoel when searching for the best observation weighting. Cross validated scores are taken for the FN-FP tradeoff;</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% create indices that separate data into 10 train and test sets</span>
 Xval = cvpartition(ybin,<span style="color:#e6db74">&#39;KFold&#39;</span>, <span style="color:#ae81ff">20</span> );
 [confMatXval_probit , weightedCost_probit] = deal( [] );
 <span style="color:#75715e">% weighting factor for each observation in data</span>
 wi = ones(size(ybin));
+
 <span style="color:#75715e">% iterate over differing observation weights, either side of the true FN = 3*FP;</span>
 FPFNtradeoff = linspace(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">21</span>);
 yfit_probit = NaN( size(y_weighted,<span style="color:#ae81ff">1</span>),numel(FPFNtradeoff) );
@@ -275,16 +276,20 @@ yfit_probit = NaN( size(y_weighted,<span style="color:#ae81ff">1</span>),numel(F
     wi(ybin<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>) = FPFNtradeoff(ci);
     mdl_probit = fitglm( x_train ,y_weighted,<span style="color:#e6db74">&#39;Distribution&#39;</span>,<span style="color:#e6db74">&#39;binomial&#39;</span>,<span style="color:#e6db74">&#39;link&#39;</span>,<span style="color:#e6db74">&#39;probit&#39;</span>,<span style="color:#e6db74">&#39;Weights&#39;</span>, wi );
     mdl_probit = remlargePv3(mdl_probit,<span style="color:#e6db74">&#39;&#39;</span>,<span style="color:#ae81ff">0.01</span>);
+    
     <span style="color:#75715e">% evaluate model over each cross validation set</span>
     <span style="color:#66d9ef">for</span> k = <span style="color:#ae81ff">1</span>:Xval.NumTestSets
         mdlXval = fitglm(mdl_probit.Variables(training(Xval,k),:), mdl_probit.Formula,<span style="color:#e6db74">&#39;Distribution&#39;</span>,<span style="color:#e6db74">&#39;binomial&#39;</span>,<span style="color:#e6db74">&#39;link&#39;</span>,<span style="color:#e6db74">&#39;probit&#39;</span>,<span style="color:#e6db74">&#39;Weights&#39;</span>,wi(training(Xval,k)));
         yhatXval = predict(mdlXval , x_train(test(Xval,k),:) );
         y_hatXvalBinom = yhatXval<span style="color:#f92672">&gt;</span>=<span style="color:#ae81ff">0.5</span>;
         confMatXval_probit(:,:,ci,k) = confusionmat( categorical(ybin(test(Xval,k),:)) , categorical(y_hatXvalBinom) );
-        weightedCost_probit(k,ci) = (<span style="color:#ae81ff">3</span>)<span style="color:#f92672">*</span>confMatXval_probit(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,ci,k) <span style="color:#f92672">+</span> confMatXval_probit(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,ci,k);
+        weightedCost_probit(k,ci) = (<span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>confMatXval_probit(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,ci,k) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span>)<span style="color:#f92672">*</span>confMatXval_probit(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,ci,k);
     <span style="color:#66d9ef">end</span>
+    
     yfit_probit(:,ci) = mdl_probit.Fitted.Response;
+    
 <span style="color:#66d9ef">end</span>
+
 <span style="color:#75715e">% Inspect cross validated mean scores of error tradeoff costs</span>
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">612</span>   <span style="color:#ae81ff">358</span>   <span style="color:#ae81ff">945</span>   <span style="color:#ae81ff">568</span>]); 
 boxplot(weightedCost_probit);<span style="color:#75715e">%,&#39;PlotStyle&#39;,&#39;compact&#39;)</span>
@@ -307,31 +312,37 @@ yfit_weightedProbit = yfit_probit(:,mnI);
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">%% Fit a PLS model, then find optimal FP-FN tradeoff using Threshold Search</span>
 FPFNtradeoff = linspace(<span style="color:#ae81ff">0.5</span>,<span style="color:#ae81ff">1.5</span>,<span style="color:#ae81ff">50</span>);
 thresh = FPFNtradeoff<span style="color:#f92672">.*</span><span style="color:#ae81ff">0.5</span>;
+
 confMat = NaN( <span style="color:#ae81ff">2</span> ); 
 weightedCost_PLS = deal( NaN( Xval.NumTestSets , numel(FPFNtradeoff) ) );
+
 <span style="color:#75715e">% fit PLS model using previous settings</span>
 [Xloadings,Yloadings,Xscores,Yscores,betaPLS,<span style="color:#f92672">~</span>] = plsregress( xLogNorm_train , y_weighted , ncomp );
-yfitPLS = [ones(win_trainN,<span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>betaPLS(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> xLogNorm_train<span style="color:#f92672">*</span>betaPLS(<span style="color:#ae81ff">2</span>:<span style="color:#66d9ef">end</span>)];
+yfitPLS = [ones(N_corrwin,<span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>betaPLS(<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> xLogNorm_train<span style="color:#f92672">*</span>betaPLS(<span style="color:#ae81ff">2</span>:<span style="color:#66d9ef">end</span>)];
+
 <span style="color:#75715e">% Loop over a range of adjustments to the base 50% classification threshold</span>
 <span style="color:#66d9ef">for</span> ci=<span style="color:#ae81ff">1</span>:numel(FPFNtradeoff)    
         
     <span style="color:#75715e">% evaluate model over each cross validation set</span>
     <span style="color:#66d9ef">for</span> k = <span style="color:#ae81ff">1</span>:Xval.NumTestSets
           confMat = confusionmat( categorical( y_weighted(test(Xval,k))<span style="color:#f92672">&gt;</span>= thresh(:,ci)  ) , categorical(yfitPLS((test(Xval,k)))<span style="color:#f92672">&gt;</span>= thresh(:,ci)) );
-          weightedCost_PLS(k,ci) = (<span style="color:#ae81ff">3</span>)<span style="color:#f92672">*</span>confMat(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> confMat(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>);
+          weightedCost_PLS(k,ci) = (<span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>confMat(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span>)<span style="color:#f92672">*</span>confMat(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>);
     <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
+
 [<span style="color:#f92672">~</span>,mnI] = min( mean(weightedCost_PLS,<span style="color:#ae81ff">1</span>) );
+
 <span style="color:#75715e">% Inspect cross validated mean scores of error tradeoff costs</span>
 figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color:#ae81ff">612</span>   <span style="color:#ae81ff">358</span>   <span style="color:#ae81ff">945</span>   <span style="color:#ae81ff">568</span>]); 
 boxplot(weightedCost_PLS);<span style="color:#75715e">%,&#39;PlotStyle&#39;,&#39;compact&#39;)</span>
  hold on;  plot( <span style="color:#ae81ff">1</span>:numel(thresh),mean(weightedCost_PLS,<span style="color:#ae81ff">1</span>),<span style="color:#e6db74">&#39;r--&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>);
  plot( (mnI) , mean(weightedCost_PLS(:,mnI),<span style="color:#ae81ff">1</span>) , <span style="color:#e6db74">&#39;r*&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">10</span>);
 set(gca,{<span style="color:#e6db74">&#39;XTick&#39;</span>,<span style="color:#e6db74">&#39;XTickLabel&#39;</span>},{floor(linspace(<span style="color:#ae81ff">1</span>,ci,<span style="color:#ae81ff">8</span>)),[strcat(string(<span style="color:#ae81ff">100.</span><span style="color:#f92672">*</span>round(thresh(floor(linspace(<span style="color:#ae81ff">1</span>,ci,<span style="color:#ae81ff">8</span>))),<span style="color:#ae81ff">1</span>)),<span style="color:#e6db74">&#39;%&#39;</span>)] } );
+
 title({<span style="color:#e6db74">&#39;False Negative - Positive tradeoff scores&#39;</span>,[<span style="color:#e6db74">&#39;Min (weighted) cost when Positive classification threshold above &#39;</span>,num2str(round(<span style="color:#ae81ff">100</span><span style="color:#f92672">*</span>thresh(mnI) ,<span style="color:#ae81ff">1</span>)),<span style="color:#e6db74">&#39;%&#39;</span>]})
 ylabel(<span style="color:#e6db74">&#39;Score = 3 *False Negative + False Positive&#39;</span>); xlabel(<span style="color:#e6db74">&#39;Open Eyes classification threshold&#39;</span>)
 </code></pre></div><p><img src="../../images/eegcosttradeoff/9.png" alt="FN FP tradeoff PLS classification threshold"></p>
-<p>Classifying an eye state as Open when its probability is less than 58.7% gives the overall lowest cost of incorrect predictions when FPs are 3 times the importance of FNs.</p>
+<p>Classifying an eye state as Closed when its probability is greater than 46.4% gives the overall lowest cost of incorrect predictions when FPs are 3 times the importance of FNs.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% Plot prediction as time-series, and Confusion Matrix</span>
 weightedThreshold = thresh(:,mnI);
 [ fh1, <span style="color:#f92672">~</span> ] = plotPrediction( yfitPLS<span style="color:#f92672">&gt;</span>=weightedThreshold , ybin, yfitPLS , y_weighted , steplength_seconds );
@@ -340,12 +351,12 @@ plot( <span style="color:#ae81ff">1</span>:win_trainN , ones(<span style="color:
 hold on; plot( <span style="color:#ae81ff">1</span>:win_trainN , ones(<span style="color:#ae81ff">1</span>,win_trainN)<span style="color:#f92672">*</span>thresh(:,mnI),<span style="color:#e6db74">&#39;r--&#39;</span> ,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;DisplayName&#39;</span>,<span style="color:#e6db74">&#39;Cost Optimised Positive class threshold&#39;</span>)
 </code></pre></div><p><img src="../../images/eegcosttradeoff/10.png" alt="FN FP tradeoff prediction PLS">
 <img src="../../images/eegcosttradeoff/11.png" alt="FN FP tradeoff confusion PLS"></p>
-<p>The red line is the prediction threshold for Closed eyes, across the entire 117 second interval. The shifted threshold removed most of the open-eyes miscalssifications, but now many more closed states are predicted incorrectly.</p>
+<p>The red line is the prediction threshold for Closed eyes, across the entire 117 second interval. The shifted threshold removed some of the closed-eyes miscalssifications, but now many more open states are predicted incorrectly.</p>
 <h2 id="custom-loss-function---recurrent-neural-network-lstm">Custom Loss function - Recurrent Neural Network (LSTM)</h2>
 <p>For the least squares regression, re-writing the objective function to include a term that penalises only misclassifications forced many of the predictions to lie just outside the classification boundary (≥ or &lt; 50%). That  model wouldn&rsquo;t be robust to out-of-sample data.</p>
 <p>The alternative is to make an objective function that is similar, but continuous &amp; smooth at every point.</p>
-<p>The Neural network algorithm I&rsquo;ve designed allows customising all parts of training and inference. Any customised loss function can be implemented, but it is the derivative of loss function that guides the training. Instead of the regular binary cross entropy loss, an adjustment is made for when the target class is &ldquo;Open eyes&rdquo;.</p>
-<p>The new cost gradient needs to have a value of 0 when prediction is perfect for both classes, but must grow faster with a closed eyes classification (i.e. an open eyes misclassification)</p>
+<p>The Neural network algorithm I&rsquo;ve designed allows customising all parts of training and inference. Any customised loss function can be implemented, but it is the derivative of loss function that guides the training. Instead of the regular binary cross entropy loss, an adjustment is made for when the target class is &ldquo;Closed eyes&rdquo;.</p>
+<p>The new cost gradient needs to have a value of 0 when prediction is perfect for both classes, but must grow faster when classifying a closed class</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% Regular binary cross entropy loss</span>
 Loss_delta = @(Pred,Real) (<span style="color:#f92672">-</span>Real<span style="color:#f92672">./</span>Pred) <span style="color:#f92672">+</span> ( (<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>Real)<span style="color:#f92672">./</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>Pred) );
 <span style="color:#75715e">% Middle-range weighted on the negative class</span>
@@ -418,28 +429,30 @@ trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
 </code></pre></div><!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
 <p><img src="../../images/eegcosttradeoff/13.png" alt="eye state transition error LSTM"></p>
-<p>On average, the prediction has error centered around eye state transitions. The network placed lower loss on observations trailing from a &lsquo;closing eye&rsquo; transition, so hasn&rsquo;t learnt the transition pattern as well, due to the asymmetric loss function.</p>
+<p>On average, the prediction has error centered around eye state transitions. The network attained lower loss on observations trailing from a &lsquo;closing eye&rsquo; transition, so hasn&rsquo;t learnt the transition pattern as well, due to the asymmetric loss function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">    <span style="color:#75715e">% Plot prediction as a Confusion Matrix</span>
     [ fh1 , fh2 ] = plotPrediction( round(yfitRNNLSTM) , TargetSeq, yfitRNNLSTM , TargetSeq , <span style="color:#ae81ff">117</span><span style="color:#f92672">/</span>(N) <span style="color:#f92672">*</span>seqlen_out<span style="color:#f92672">*</span>dsr ,<span style="color:#e6db74">&#39;confusion&#39;</span> );
 </code></pre></div><p><img src="../../images/eegcosttradeoff/14.png" alt="tradeoff LSTM confusion"></p>
-<p>The results are as expected - More misclassifications when targe state is &ldquo;0 / Open&rdquo;, than when the target state is Closed. The neural network focused on eye closing transition patterns more, and it resulted in more false positives at the cost of false negatives.</p>
+<p>The results are as expected - More misclassifications when targe state is &ldquo;0 / Open&rdquo;, than when the target state is Closed. The neural network focused on eye closing transition patterns more, and it resulted in more false positives, but less false negatives.</p>
 <h2 id="summary">Summary</h2>
 <p>Across the 4 methods for altering the cost balance of classes, each is more or less appropriate depending on the situation &amp; type of model.</p>
 <p>In the training process, EEG correlations were windowed with length 256 and step length of 26, giving a total of 576 samples. In the final comparison the step length was set to 1, to give 14724 observations (14980-256). The RNN was downsampled with a sliding &amp; overlapping average in the training process with downsampling ratio of 3, for comparison it was upsampled which lost fidelity, but brought number of observations to the full 14980.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">EEGCloseEyes_CompreModels(&#34;CompareTradeoffModels&#34;)
-</code></pre></div><p><img src="../../images/eegcosttradeoff/15b.png" alt="LSTM netork comparisions"></p>
-<p>There is a definite effect in the ratio of false negatives to positives across all approaches. Though, it has come at the cost of unweighted accuracy overall, or length of consequtive time the prediction is incorrect.</p>
+</code></pre></div><p><img src="../../images/eegcosttradeoff/15.png" alt="LSTM netork comparisions"></p>
+<p>There is a definite effect in the ratio of false negatives to positives across all approaches. Though, it has come at the cost of unweighted accuracy overall, or the length of consequtive time the prediction is incorrect.</p>
 <pre><code>                FN_FPratio    Accuracy
                 __________    ________
-    Probit       &quot;  1.6&quot;        95.7  
-    Probit_W     &quot; 0.56&quot;        94.5  
-    Lasso        &quot; 2.49&quot;        95.8  
-    Lasso_W      &quot; 5.14&quot;          95  
-    PLS          &quot; 2.54&quot;        95.4  
-    PLS_W        &quot;19.02&quot;        93.9  
-    LSTM         &quot;146.5&quot;        90.2  
-    LSTM_W       &quot; 0.38&quot;        95.2  
-</code></pre>
+    Probit        &quot;   1&quot;        96.7  
+    Probit_W      &quot;1.17&quot;        97.4  
+    Lasso         &quot;1.68&quot;        96.8  
+    Lasso_W       &quot;0.24&quot;        95.9  
+    PLS           &quot;1.79&quot;        96.4  
+    PLS_W         &quot;0.61&quot;        96.9  
+    LSTM          &quot;0.77&quot;        98.6  
+    LSTM_W        &quot;0.85&quot;        96.3  
+</code></pre><p>These measures of accuracy &amp; balance of False negatics &amp; positives are different than from the training measurements. The data here is higher resolution than training, and gives a better idea of what generalisation perfromance might be. The most striking difference is the LSTM which in it&rsquo;s weighted form, has an even balance between FNs and FPs (253:297), instead of in training where it was 152:35.</p>
+<p>Without a validation dataset containing many more subjects EEG readings, a metric of the true effectiveness of the real-world machine leanring application can&rsquo;t be fully known. That said, the model with best accuracy in both the wighted and unweighted cases is the LSTM. In terms of user expereince, it&rsquo;s the Partial Least Squares regression model which has the shortest consecutive misclassifications. The PLS model would result in the least &lsquo;flickering&rsquo; on and off of the autopilot system.</p>
+<hr>
 		</div>
 		<footer class="post__footer">
 			
