@@ -6,7 +6,34 @@
     <description>Recent content in Tags on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>exploratory data analysis</title>
+      <link>/tags/exploratory-data-analysis/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/exploratory-data-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mixture model</title>
+      <link>/tags/mixture-model/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mixture-model/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>price model</title>
+      <link>/tags/price-model/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/price-model/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>LSTM</title>
       <link>/tags/lstm/</link>
@@ -49,15 +76,6 @@
       <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/convex-optimisation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>exploratory data analysis</title>
-      <link>/tags/exploratory-data-analysis/</link>
-      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/exploratory-data-analysis/</guid>
       <description></description>
     </item>
     

@@ -66,6 +66,28 @@
 		<h1 class="main__title">Posts</h1>
 	</header><article class="list__item post">
 	<figure class="list__thumbnail">
+		<a href="../post/realestatepricing/">
+			<img src="../images/tierramallorca_unsplash.jpg" alt="Modelling Property Prices with Mixture models" />
+		</a>
+	</figure>
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="../post/realestatepricing/" rel="bookmark">
+			Modelling Property Prices with Mixture models
+			</a>
+		</h2>
+		<p class="list__lead post__lead">Property Pricing Analysis</p>
+		<div class="list__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-04-10T00:00:00Z">April 10, 2021</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../categories/datascience/" rel="category">Datascience</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		<p><em>A common application of gaussian mixture models is in property pricing. It&rsquo;s used as an implementation of a &ldquo;Hedonic Pricing&rdquo; which involves modelling the price using variables categorised into 3 types; structural (intrinsic properties of the property), locality (region, state etc.) and environmental (air quality, proximity to parks etc.) the latter 2 types genrally have noise in their measurement - so are modelled as &lsquo;random effects&rsquo;. it&rsquo;s this that makes a mixture model needed, where conventional multiple regression would only have errors as randomly distributed, and predictors fixed</em></p>
+	</div>
+</article><article class="list__item post">
+	<figure class="list__thumbnail">
 		<a href="../post/rnn5min_1/">
 			<img src="../images/matlabart_neuronevolution2.png" alt="5-min reads: why cell state propogation slows convergence" />
 		</a>
@@ -152,31 +174,13 @@
 	<div class="content list__excerpt post__content clearfix">
 		<p><em>Produce a detector that distinguisihes when a car&rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.</em></p>
 	</div>
-</article><article class="list__item post">
-	<figure class="list__thumbnail">
-		<a href="../post/buildingnnet/">
-			<img src="../images/matlabart_neuronevolution2.png" alt="A DIY reccurent neural network algorithm" />
-		</a>
-	</figure>
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="../post/buildingnnet/" rel="bookmark">
-			A DIY reccurent neural network algorithm
-			</a>
-		</h2>
-		<p class="list__lead post__lead">learning a neural network from the inside out</p>
-		<div class="list__meta meta">
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-08-12T00:00:00Z">August 12, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../categories/machine-learning/" rel="category">Machine Learning</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		See the LSTM building &amp; training algorithm I developed as a learning excercise on my Github
-	</div>
 </article>
 </main>
 
+<div class="pagination">
+	<span class="pagination__item pagination__item--current">1/2</span>
+	<a class="pagination__item pagination__item--next btn" href="../post/page/2/">»</a>
+</div>
 
 			</div>
 			
@@ -185,9 +189,9 @@
 	<h4 class="widget__title">Recent Posts</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="../post/realestatepricing/">Modelling Property Prices with Mixture models</a></li>
 			<li class="widget__item"><a class="widget__link" href="../post/rnn5min_1/">5-min reads: why cell state propogation slows convergence</a></li>
 			<li class="widget__item"><a class="widget__link" href="../post/eeg_costtradeoff/">Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</a></li>
-			<li class="widget__item"><a class="widget__link" href="../post/eeg_modelling/">Autonomous vechicle microsleep detector Vol2: Modelling</a></li>
 		</ul>
 	</div>
 </div>
@@ -215,8 +219,10 @@
 		<a class="widget-taglist__link widget__link btn" href="../tags/feature-engineering/" title="feature engineering">feature engineering</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/lasso/" title="lasso">lasso</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/lstm/" title="LSTM">LSTM</a>
+		<a class="widget-taglist__link widget__link btn" href="../tags/mixture-model/" title="mixture model">mixture model</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/neural-network/" title="neural network">neural network</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/pca/" title="PCA">PCA</a>
+		<a class="widget-taglist__link widget__link btn" href="../tags/price-model/" title="price model">price model</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/rnn/" title="RNN">RNN</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/statistics/" title="statistics">statistics</a>
 		<a class="widget-taglist__link widget__link btn" href="../tags/timeseries/" title="timeseries">timeseries</a>

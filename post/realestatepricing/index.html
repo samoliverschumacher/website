@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Modelling Property Prices with Mixture models - Sam Schumacher</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Modelling Property Prices with Mixture models" />
+<meta property="og:description" content="A common application of gaussian mixture models is in property pricing. It&rsquo;s used as an implementation of a &ldquo;Hedonic Pricing&rdquo; which involves modelling the price using variables categorised into 3 types; structural (intrinsic properties of the property), locality (region, state etc.) and environmental (air quality, proximity to parks etc.) the latter 2 types genrally have noise in their measurement - so are modelled as &lsquo;random effects&rsquo;. it&rsquo;s this that makes a mixture model needed, where conventional multiple regression would only have errors as randomly distributed, and predictors fixed" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/realestatepricing/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-10T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-10T00:00:00&#43;00:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="../../css/style.css">
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo logo--mixed">
+		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
+			<div class="logo__item logo__imagebox">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
+				</div><div class="logo__item logo__text">
+					<div class="logo__title">Sam Schumacher</div>
+					<div class="logo__tagline">ML &amp; AI</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="../../about/">
+				
+				<span class="menu__text">this blog</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Modelling Property Prices with Mixture models</h1>
+			<p class="post__lead">Property Pricing Analysis</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-04-10T00:00:00Z">April 10, 2021</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
+	</span>
+</div></div>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/tierramallorca_unsplash.jpg" alt="Modelling Property Prices with Mixture models">
+		</figure><div class="content post__content clearfix">
+			<p><em>A common application of gaussian mixture models is in property pricing. It&rsquo;s used as an implementation of a &ldquo;Hedonic Pricing&rdquo; which involves modelling the price using variables categorised into 3 types; structural (intrinsic properties of the property), locality (region, state etc.) and environmental (air quality, proximity to parks etc.) the latter 2 types genrally have noise in their measurement - so are modelled as &lsquo;random effects&rsquo;. it&rsquo;s this that makes a mixture model needed, where conventional multiple regression would only have errors as randomly distributed, and predictors fixed</em></p>
+<hr>
+<h3 id="table-of-contents">Table of Contents</h3>
+<ul>
+<li><a href="#data-cleaning">Data Cleaning</a></li>
+<li><a href="#missing-values">Missing Values</a></li>
+<li><a href="#missing-values-1">Missing values</a></li>
+<li><a href="#checking-for-random-occurance-of-missing-values">Checking for random occurance of missing values</a></li>
+<li><a href="#imputing-missing-values">Imputing missing values</a></li>
+<li><a href="#exploring-the-shape-of-data">Exploring the Shape of data</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#modelling-house-prices">Modelling House Prices</a></li>
+<li><a href="#feature-engineering">Feature Engineering;</a></li>
+<li><a href="#splitting-data-into-train-test-and-validation-sets">Splitting data into train, test and validation sets</a></li>
+<li><a href="#model-0-removed-all-rows-with-missing-values-multiple-regression">Model 0: removed all rows with missing values. Multiple regression;</a></li>
+<li><a href="#model-1-conservative-missing-value-treatment">Model 1: conservative missing value treatment.</a></li>
+<li><a href="#model-2-imputed-missing-values">Model 2: Imputed missing values</a></li>
+<li><a href="#model-selection">Model Selection</a></li>
+<li><a href="#best-model-mixed-effects-model">Best Model: Mixed Effects model;</a></li>
+<li><a href="#model-evaluation-with-5-inflation">Model Evaluation with 5% Inflation</a></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% import the data as a table</span>
+RawData = readtable(<span style="color:#e6db74">&#39;C:\Users\Sam Schumacher\Documents\Job Applications 2020\Applications\REA Group\Property pricing\dataset.csv&#39;</span>);
+
+<span style="color:#75715e">% preview the first 10 rows.</span>
+RawData(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">10</span>,:)
+</code></pre></div><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">property_id</th>
+<th style="text-align:center">sale_price</th>
+<th style="text-align:center">sale_date</th>
+<th style="text-align:center">property_type</th>
+<th style="text-align:center">suburb</th>
+<th style="text-align:center">postcode</th>
+<th style="text-align:center">state</th>
+<th style="text-align:center">land</th>
+<th style="text-align:center">floorplate</th>
+<th style="text-align:center">bedrooms</th>
+<th style="text-align:center">bathrooms</th>
+<th style="text-align:center">garages</th>
+<th style="text-align:center">slope</th>
+<th style="text-align:center">max_roof_height</th>
+<th style="text-align:center">year_built</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1452430</td>
+<td style="text-align:center">1061100</td>
+<td style="text-align:center">2011-06-02</td>
+<td style="text-align:center">&lsquo;House&rsquo;</td>
+<td style="text-align:center">&lsquo;MOUNT ANNAN&rsquo;</td>
+<td style="text-align:center">2567</td>
+<td style="text-align:center">&lsquo;NSW&rsquo;</td>
+<td style="text-align:center">450</td>
+<td style="text-align:center">267</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-5.0325</td>
+<td style="text-align:center">7.1777</td>
+<td style="text-align:center">2000</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">6915958</td>
+<td style="text-align:center">543900</td>
+<td style="text-align:center">2013-01-16</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;HILLCREST&rsquo;</td>
+<td style="text-align:center">4118</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">279</td>
+<td style="text-align:center">205</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-1.0426</td>
+<td style="text-align:center">5.8700</td>
+<td style="text-align:center">1982</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">841815</td>
+<td style="text-align:center">1102500</td>
+<td style="text-align:center">2014-07-20</td>
+<td style="text-align:center">&lsquo;House&rsquo;</td>
+<td style="text-align:center">&lsquo;EMERTON&rsquo;</td>
+<td style="text-align:center">2770</td>
+<td style="text-align:center">&lsquo;NSW&rsquo;</td>
+<td style="text-align:center">552</td>
+<td style="text-align:center">104</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-9.1149</td>
+<td style="text-align:center">4.1400</td>
+<td style="text-align:center">1988</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4393085</td>
+<td style="text-align:center">1183800</td>
+<td style="text-align:center">2019-08-15</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;PACIFIC PINES&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">380</td>
+<td style="text-align:center">NaN</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-2.7863</td>
+<td style="text-align:center">6.8900</td>
+<td style="text-align:center">1988</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2782313</td>
+<td style="text-align:center">805200</td>
+<td style="text-align:center">2013-10-30</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;MARSFIELD&rsquo;</td>
+<td style="text-align:center">2122</td>
+<td style="text-align:center">&lsquo;NSW&rsquo;</td>
+<td style="text-align:center">3627</td>
+<td style="text-align:center">1239</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-1.1416</td>
+<td style="text-align:center">12.2070</td>
+<td style="text-align:center">2000</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5987368</td>
+<td style="text-align:center">1564100</td>
+<td style="text-align:center">2018-07-25</td>
+<td style="text-align:center">&lsquo;House&rsquo;</td>
+<td style="text-align:center">&lsquo;MORAYFIELD&rsquo;</td>
+<td style="text-align:center">4506</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">997</td>
+<td style="text-align:center">288</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-4.3728</td>
+<td style="text-align:center">4.4600</td>
+<td style="text-align:center">1990</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4000575</td>
+<td style="text-align:center">816300</td>
+<td style="text-align:center">2015-08-27</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;PLUMPTON&rsquo;</td>
+<td style="text-align:center">2761</td>
+<td style="text-align:center">&lsquo;NSW&rsquo;</td>
+<td style="text-align:center">131</td>
+<td style="text-align:center">97</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-2.9442</td>
+<td style="text-align:center">7.7500</td>
+<td style="text-align:center">1984</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">4866318</td>
+<td style="text-align:center">1003100</td>
+<td style="text-align:center">2015-03-10</td>
+<td style="text-align:center">&lsquo;House&rsquo;</td>
+<td style="text-align:center">&lsquo;LOGAN CENTRAL&rsquo;</td>
+<td style="text-align:center">4114</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">607</td>
+<td style="text-align:center">128</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">14.3246</td>
+<td style="text-align:center">5.4667</td>
+<td style="text-align:center">1970</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">6546840</td>
+<td style="text-align:center">563400</td>
+<td style="text-align:center">2010-10-04</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;QUAKERS HILL&rsquo;</td>
+<td style="text-align:center">2763</td>
+<td style="text-align:center">&lsquo;NSW&rsquo;</td>
+<td style="text-align:center">378</td>
+<td style="text-align:center">1559</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">10.5286</td>
+<td style="text-align:center">24.7724</td>
+<td style="text-align:center">1985</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">7120683</td>
+<td style="text-align:center">962200</td>
+<td style="text-align:center">2017-09-30</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;COOMBABAH&rsquo;</td>
+<td style="text-align:center">4216</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">1665</td>
+<td style="text-align:center">1031</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">-7.3192</td>
+<td style="text-align:center">13.6833</td>
+<td style="text-align:center">1988</td>
+</tr>
+</tbody>
+</table>
+<p>We&rsquo;ve got a combination of strings, integers and floating point numbers.</p>
+<p>Lets see the range of them, and their data types;</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab">summary(RawData)
+</code></pre></div><pre><code class="language-text:Output" data-lang="text:Output">Variables:
+    property_id: 52248x1 double
+        Values:
+            Min        1.9224e+05  
+            Median     4.6982e+06  
+            Max        1.7425e+07  
+    sale_price: 52248x1 double
+        Values:
+            Min         3.781e+05 
+            Median      9.775e+05 
+            Max        2.8832e+06 
+    sale_date: 52248x1 datetime
+        Values:
+            Min       2010-01-01 
+            Median    2015-02-23 
+            Max       2020-12-31 
+    property_type: 52248x1 cell array of character vectors
+    suburb: 52248x1 cell array of character vectors
+    postcode: 52248x1 double
+        Values:
+            Min           2074  
+            Median      3395.5  
+            Max           4510  
+    state: 52248x1 cell array of character vectors
+    land: 52248x1 double
+        Values:
+            Min            51        
+            Median         550       
+            Max            2.304e+05 
+            NumMissing     41        
+    floorplate: 52248x1 double
+        Values:
+            Min               38      
+            Median            212     
+            Max               5843    
+            NumMissing        121     
+    bedrooms: 52248x1 double
+        Values:
+            Min              1      
+            Median           2      
+            Max              7      
+            NumMissing       299    
+    bathrooms: 52248x1 double
+        Values:
+            Min               1      
+            Median            3      
+            Max               7      
+            NumMissing        243    
+    garages: 52248x1 double
+        Values:
+            Min              0     
+            Median           1     
+            Max              8     
+            NumMissing       494   
+    slope: 52248x1 double
+        Values:
+            Min            -42.052  
+            Median         0.067975 
+            Max            43.77    
+            NumMissing     773      
+    max_roof_height: 52248x1 double
+        Values:
+            Min                2.1407      
+            Median             6.3969      
+            Max                51.598      
+            NumMissing         797         
+    year_built: 52248x1 double
+        Values:
+            Min               1860    
+            Median            1989    
+            Max               2012    
+            NumMissing        1345    
+</code></pre><p>Loading the data into the workspace automatically decided what type of varaible in each column of the CSV.</p>
+<p>Variables like **<code>property_id </code>**has been classified the same way as <strong><code>slope </code></strong>(as double), though they&rsquo;re a different type of variable: an ID will usually be an integer, **<code>slope </code>**is definitely a floating point number.</p>
+<p>by displaying the unique values returned when dividing all 52,248 rows by 1, we can double check which of the variables are strictly integers;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% identify if 1st value in each column is numeric
+numericIdx = arrayfun(@(X) isnumeric(RawData{1,X}) , 1:width(RawData) );
+
+for ix = find(numericIdx)
+      % unique list of values created by dividing all observations by 1
+      remainderVals = unique( rem(RawData{:,ix} , 1) );
+      % number of these values that are not NaNs (missing in the raw data)
+      countRealRemainders = numel( remainderVals ) - sum(isnan(remainderVals));
+      % display a count of unique decimals reamining after dividing each observation by 1
+      fprintf('%s has %.0f unique remainders after division by zero \n', RawData.Properties.VariableNames{ix}, countRealRemainders )
+end
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">property_id has 1 unique remainders after division by zero 
+sale_price has 1 unique remainders after division by zero 
+postcode has 1 unique remainders after division by zero 
+land has 1 unique remainders after division by zero 
+floorplate has 1 unique remainders after division by zero 
+bedrooms has 1 unique remainders after division by zero 
+bathrooms has 1 unique remainders after division by zero 
+garages has 1 unique remainders after division by zero 
+slope has 26316 unique remainders after division by zero 
+max_roof_height has 12193 unique remainders after division by zero 
+year_built has 1 unique remainders after division by zero 
+</code></pre><p>So, only <strong><code>slope</code></strong> and **<code>max_roof_height </code>**can be considered true continuous variables. The rest have a remaineder of 0 when divided by 1, for all observations.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">continuousIdx = ismember( RawData.Properties.VariableNames , {'slope','max_roof_height'});
+% the other double type variables are discrete because they are all integers
+discreteIdx = numericIdx &amp; ~continuousIdx;
+disp( RawData.Properties.VariableNames(discreteIdx))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">    'property_id'    'sale_price'    'postcode'    'land'    'floorplate'    'bedrooms'    'bathrooms'    'garages'    'year_built'
+</code></pre><p>While these variables are all discrete, the magnitude of some of them is still meaningful. i.e. <strong><code>year_built</code></strong>&rsquo;s value could indicate temporal patterns in the data, <strong><code>land, floorplate, bedrooms, bathrroms, garages</code></strong> will likely have a impact on <strong><code>sale_price</code></strong>.</p>
+<p>If **<code>property_id </code>**is an identifier there should be the same number of unique identifiers as rows;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">numel( unique(RawData.property_id))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 26625
+</code></pre><p>That&rsquo;s not the case. Is there only a small number of reccurences of any one ID ?</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">t = tabulate(RawData.property_id);
+figure;
+histogram( t( t(:,2)&gt;1 ,2) );
+xlabel('number of times a property_id occurs','Interpreter','none')
+ylabel('count of property ID''s')
+title('Property IDs with multiple occurances in the dataset')
+</code></pre><p><img src="../../images/Modelling_images/figure_0.png" alt="figure_0.png"></p>
+<p>This could indicate some proeprties were bought and sold multiple times in the dataset. One **<code>property_id </code>**occcured 36 times.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% Show data with the property_id that occurs 36 times
+RawData( RawData.property_id==t(t(:,2)==36,1) , : )
+</code></pre><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">property_id</th>
+<th style="text-align:center">sale_price</th>
+<th style="text-align:center">sale_date</th>
+<th style="text-align:center">property_type</th>
+<th style="text-align:center">suburb</th>
+<th style="text-align:center">postcode</th>
+<th style="text-align:center">state</th>
+<th style="text-align:center">land</th>
+<th style="text-align:center">floorplate</th>
+<th style="text-align:center">bedrooms</th>
+<th style="text-align:center">bathrooms</th>
+<th style="text-align:center">garages</th>
+<th style="text-align:center">slope</th>
+<th style="text-align:center">max_roof_height</th>
+<th style="text-align:center">year_built</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">747200</td>
+<td style="text-align:center">2016-02-09</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">690500</td>
+<td style="text-align:center">2014-07-31</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">836800</td>
+<td style="text-align:center">2018-08-17</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">891800</td>
+<td style="text-align:center">2019-10-30</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">NaN</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">575500</td>
+<td style="text-align:center">2010-10-25</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">830400</td>
+<td style="text-align:center">2018-06-15</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">802100</td>
+<td style="text-align:center">2017-09-29</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">830400</td>
+<td style="text-align:center">2018-06-15</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">891800</td>
+<td style="text-align:center">2019-10-30</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">NaN</td>
+<td style="text-align:center">1986</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">5543930</td>
+<td style="text-align:center">796900</td>
+<td style="text-align:center">2017-07-18</td>
+<td style="text-align:center">&lsquo;Strata&rsquo;</td>
+<td style="text-align:center">&lsquo;NERANG&rsquo;</td>
+<td style="text-align:center">4211</td>
+<td style="text-align:center">&lsquo;QLD&rsquo;</td>
+<td style="text-align:center">2200</td>
+<td style="text-align:center">43</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">-11.0887</td>
+<td style="text-align:center">6.8100</td>
+<td style="text-align:center">1986</td>
+</tr>
+</tbody>
+</table>
+<p>This explains it; <strong><code>property_id</code></strong> <code>5543930</code> was a &lsquo;<code>Strata</code>&rsquo; <strong><code>property_type</code></strong>. So, not all **<code>property_id'</code>**s define a unique property. This could give us insight into the data;</p>
+<blockquote>
+<p>**    Insight 1: <strong>&ldquo;Apartments with equivalent features (</strong><code>bathrooms</code>**, **<code>garages </code>**etc.) sell for different prices with only **<code>sale_date </code>**changing. Once <strong><code>sale_date</code></strong> is controlled for, the remaining variance could give a benchmark for the external effects on **<code>sale_price </code>**that we do not have data for.&rdquo;</p>
+</blockquote>
+<p>Only <strong><code>postcode </code></strong>&amp; <strong><code>property_id</code></strong> will be converted from numeric to categoricals for the purpose of exploring the data. Though, we must take note of this conversion for <strong><code>postcode</code></strong>. Because this is a spatial category, it could later be converted back to a numeric distance feature.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% identify cells of strings, property_id, and postcode as categorical variables
+categoryIdx = ismember( RawData.Properties.VariableNames , {'property_id','postcode'}) ...
+      | arrayfun(@(X) iscell(RawData{1,X}) , 1:width(RawData) );
+disp( RawData.Properties.VariableNames(categoryIdx) )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">    'property_id'    'property_type'    'suburb'    'postcode'    'state'
+</code></pre><p>Now we can reconstruct the dataset with meaningful data types before exploring the data.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">Data = table();
+% create categoricals
+for ic = find(categoryIdx)
+    Data.(RawData.Properties.VariableNames{ic}) = categorical(RawData{:,ic});
+end
+% create numeric variables
+for inum = find(numericIdx &amp; ~categoryIdx)
+    Data.(RawData.Properties.VariableNames{inum}) = (RawData{:,inum});
+end
+Data.('sale_date') = RawData.sale_date;
+disp(Data(1:5,:))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">    property_id    property_type       suburb        postcode    state    sale_price    land    floorplate    bedrooms    bathrooms    garages     slope     max_roof_height    year_built    sale_date 
+    ___________    _____________    _____________    ________    _____    __________    ____    __________    ________    _________    _______    _______    _______________    __________    __________
+      1452430         House         MOUNT ANNAN        2567       NSW     1.0611e+06     450        267          3            4           2       -5.0325        7.1777            2000       2011-06-02
+      6915958         Strata        HILLCREST          4118       QLD      5.439e+05     279        205          1            2           1       -1.0426          5.87            1982       2013-01-16
+      841815          House         EMERTON            2770       NSW     1.1025e+06     552        104          1            3           2       -9.1149          4.14            1988       2014-07-20
+      4393085         Strata        PACIFIC PINES      4211       QLD     1.1838e+06     380        NaN          2            4           2       -2.7863          6.89            1988       2019-08-15
+      2782313         Strata        MARSFIELD          2122       NSW      8.052e+05    3627       1239          2            2           2       -1.1416        12.207            2000       2013-10-30
+</code></pre><p>First 5 columns are categoricals, last column is the matlab &lsquo;datetime&rsquo; class. Columns 6:14 are numeric integers and floating point numbers. **<code>sale_date </code>**will be more meaningful as a continuous, numeric variable that starts at 0 for the earliest date:</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">Data.sale_date_numeric = datenum(Data.sale_date) - min(datenum(Data.sale_date));
+% store column names as variable names
+varNames = Data.Properties.VariableNames;
+</code></pre><p>Now is a good time to consider the the context &amp; provenence of each of the variables, before diving deeper into the EDA and missing the big picture.</p>
+<p><strong>Listing common sense assumptions &amp; relationships between variables:</strong></p>
+<ul>
+<li><strong><code>property_id</code></strong>: multiple houses &amp; multiple sale dates per ID</li>
+<li><strong><code>sale_price</code></strong>: have to asusme unadjusted for inflation</li>
+<li><strong><code>sale_date</code></strong>: should it be after <strong><code>year_built</code></strong>?</li>
+</ul>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">sum( year(Data.sale_date)&lt;Data.year_built )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 3
+</code></pre><p>3 observations are not!</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">disp( Data(year(Data.sale_date)&lt;Data.year_built,:) )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">    property_id    property_type      suburb       postcode    state    sale_price    land    floorplate    bedrooms    bathrooms    garages     slope      max_roof_height    year_built    sale_date     sale_date_numeric
+    ___________    _____________    ___________    ________    _____    __________    ____    __________    ________    _________    _______    ________    _______________    __________    __________    _________________
+      1887328          House        ST MARYS         2760       NSW     1.0236e+06    582        149           1            4           1         16.166          3.73            2012       2011-09-26           633       
+      5105997          House        WOODY POINT      4019       QLD      9.642e+05    607        116           2            5           2       -0.64221        5.0763            2012       2010-09-17           259       
+      1095750          House        HORNSBY          2077       NSW      9.493e+05    658        181           1            3           0        -1.1965        5.7719            2012       2010-11-19           322       
+</code></pre><p>Same <strong><code>year_built</code></strong> but different locations and <strong><code>sale_dates</code></strong> is suspect. With no way to verify if this is measurement error, and only small deviations in time, all we can do is treat these observations with less weight, if modelling technique allows.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">lowDataQuality_id = year(Data.sale_date)&lt;Data.year_built;
+</code></pre><ul>
+<li><strong><code>property_type</code></strong>: Should expect more strata with later year_built dates, lower number of rooms/garages, lower prices but on larger land &amp; floorplate. Smaller floorplate to land ratio than Houses.</li>
+<li><strong><code>suburb, postcode, state</code></strong>: these are nested categories in that order.</li>
+<li><strong><code>land, floorplate</code></strong>: larger land than floorplate</li>
+</ul>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">sum( (Data.land)&lt;Data.floorplate )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 5781
+</code></pre><p>Wrong assumption! This finding is contradictory to the description of the land and floorplate variables. Contacting the subject matter expert is required here, as there are a considerable number of violations of this common sense assumption. Until then, becasue these are all &ldquo;Strata&rdquo; **<code>property_types </code>**we&rsquo;ll assume the meaning is; &ldquo;<em>accumulated floorspace of all properties under that same <strong><strong><code>property_id</code></strong></strong>, in square meters</em>&rdquo;, and treat these observations as no different.</p>
+<ul>
+<li><strong><code>bedrooms, bathrooms, garages</code></strong>: No specific assumptions to point out.</li>
+<li><strong><code>slope</code></strong>: expect normally distributed values: the land&rsquo;s gradient &amp; orientation of houses shouldn&rsquo;t have a bias.</li>
+<li><strong><code>max_roof_height</code></strong>: larger values for Strata (multi-level)</li>
+<li><strong><code>year_built</code></strong>: (as **<code>sale_date </code>**above)</li>
+</ul>
+<h1 id="data-cleaning">Data Cleaning</h1>
+<p>Data cleaning will be done before exploring the data relationships, to give a clearer picture. This involves missing value handling, outlier treatments and some variable transformations.</p>
+<h1 id="missing-values">Missing Values</h1>
+<p>Checking string categoricals for empty strings or missing observations;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">sum( Data{:,1:5}==&quot;&quot; | Data{:,1:5}==&quot; &quot; | ismissing(Data{:,1:5}) )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 1x5    
+     0     0     0     0     0
+
+</code></pre><p>No categoricals have empty category labels.</p>
+<p>Inspecting only the numeric varialbes for missing values;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">summary(Data(:,[6:15]))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">Variables:
+    sale_price: 52248x1 double
+        Values:
+            Min         3.781e+05 
+            Median      9.775e+05 
+            Max        2.8832e+06 
+    land: 52248x1 double
+        Values:
+            Min            51        
+            Median         550       
+            Max            2.304e+05 
+            NumMissing     41        
+    floorplate: 52248x1 double
+        Values:
+            Min               38      
+            Median            212     
+            Max               5843    
+            NumMissing        121     
+    bedrooms: 52248x1 double
+        Values:
+            Min              1      
+            Median           2      
+            Max              7      
+            NumMissing       299    
+    bathrooms: 52248x1 double
+        Values:
+            Min               1      
+            Median            3      
+            Max               7      
+            NumMissing        243    
+    garages: 52248x1 double
+        Values:
+            Min              0     
+            Median           1     
+            Max              8     
+            NumMissing       494   
+    slope: 52248x1 double
+        Values:
+            Min            -42.052  
+            Median         0.067975 
+            Max            43.77    
+            NumMissing     773      
+    max_roof_height: 52248x1 double
+        Values:
+            Min                2.1407      
+            Median             6.3969      
+            Max                51.598      
+            NumMissing         797         
+    year_built: 52248x1 double
+        Values:
+            Min               1860    
+            Median            1989    
+            Max               2012    
+            NumMissing        1345    
+    sale_date: 52248x1 datetime
+        Values:
+            Min       2010-01-01 
+            Median    2015-02-23 
+            Max       2020-12-31 
+</code></pre><p>All but <strong><code>sale_price</code></strong> and <strong><code>sale_date</code></strong> have missing values. The most missing values is in <strong><code>year_built</code></strong>, which has 1345 missing (2-3% of observations).</p>
+<h1 id="missing-values-1">Missing values</h1>
+<p>One option for treating the missing variables when they are few is to remove the row entirely. Though, if this method is used, we need to be sure there isn&rsquo;t a pattern to where the missing variables occur. If the missing values occur in a non-random way - removing them might be removing a hidden variable in itself.</p>
+<h1 id="checking-for-random-occurance-of-missing-values">Checking for random occurance of missing values</h1>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">missingRow = any(ismissing(Data{:,7:14}),2);
+sprintf( '%0.1f%% of rows have at least 1 missing variable', sum( missingRow ) ./ height(Data)*100 )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = '7.6% of rows have at least 1 missing variable'
+</code></pre><p>Looking at correlations, and their associated pvalues between numeric variables and incidence of rows where at least one variable has a missing value will show if there is a significant underlying pattern to the missing values. But first, a transform of **<code>sale_date </code>**to numeric from datetime class.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">[rho,p] = corr([Data{:,[6:14,16]}, missingRow ],'rows','pairwise');
+missingTbl = table( p(end,1:end-1)' , rho(end,1:end-1)' , 'VariableNames',{'pValue','correlation'} , ...
+      'RowNames',varNames([6:14,16])');
+disp( missingTbl )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">                          pValue     correlation
+                         ________    ___________
+    sale_price           0.030832    -0.0094464 
+    land                  0.51082    -0.0028779 
+    floorplate            0.20624    -0.0055362 
+    bedrooms              0.64712    -0.0020085 
+    bathrooms             0.30326    -0.0045143 
+    garages               0.38262    -0.0038379 
+    slope                 0.75525     -0.001374 
+    max_roof_height       0.18467     0.0058482 
+    year_built           0.024703      0.009955 
+    sale_date_numeric     0.38533     -0.003798 
+</code></pre><p>Sale price and year built have &lt;0.05 pValues for their correlations to missing rows. Though, **<code>sale_price </code>**and **<code>year_built </code>**could themselves be correlated;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">[rho,p] = corr(Data.sale_price, Data.year_built,'rows','pairwise')
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">rho = -0.0550
+p = 2.2610e-35
+</code></pre><p>They are correlated. So missing values vary with sale price, but <strong><code>sale_price</code></strong> goes down, when year goes up; they are colinear.</p>
+<blockquote>
+<p>**    Insight #2: <strong>&quot;</strong><code>sale_price</code>**<code> </code>and <strong><code>year_built</code></strong><code> </code>have a weak relationship with occurance of missing values, but <strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>themselves have a strong relationship.&quot;</p>
+</blockquote>
+<p>Inspecting if variation in missing values is non-random &amp; influenced by the categoricals, can be done by using an Analysis of Variance (ANOVA) with the nested categories <strong><code>property_type, state, postcode </code></strong>&amp; <strong><code>suburb</code></strong>.</p>
+<p>Because we&rsquo;ve seen that **<code>sale_price </code>**and **<code>year_built </code>**are colinear, and correlated with observations that have missing rows, they will be added to the ANOVA as continuos variables.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% setting up the nested categories relationships matrix;
+nestingM =  [0 0 0 0 0 0; ... % property
+            0 0 0 1 0 0; ... % postcode -&gt; is nested in state
+            0 1 0 1 0 0; ... % suburb -&gt; is nested in postcode, which is nested in state
+            0 0 0 0 0 0;... % state
+            0 0 0 0 0 0;... % sale_price -&gt; a continuous variable
+            0 0 0 0 0 0];... % year_built -&gt; a continuous variable
+% Anova with covariates sale price &amp; year built. 
+[p,tbl,stats,terms] = anovan( missingRow , {Data.property_type,Data.postcode,Data.suburb,Data.state,Data.sale_price,Data.year_built} ,...
+      'varnames',varNames([2 4 3 5 6 14]),...
+      'nested',nestingM ,'continuous',[5, 6]);
+</code></pre><p><img src="../../images/Modelling_images/figure_1.png" alt="figure_1.png"></p>
+<blockquote>
+<pre><code>**Insight \#3: **&quot;Missing value rows occur very slightly more with properties built more recently.&quot;
+</code></pre>
+</blockquote>
+<p><em>(When controlling for <strong><strong><code>state, postcode, suburb </code></strong></strong>&amp; <strong><strong><code>sale_price </code></strong></strong>- with confidence level 3.3% (pValue))</em></p>
+<p>The conclusion here is that if we had to remove all rows that had <em>any</em> missing values, sales price prediction could be a biased model to the extent that year_built is predictive of **<code>sales_price. </code>**But because <strong><code>year_built</code></strong> is only slightly correlated with missing values, and only with 3.6% confidence of the null hypotheses - removal of all rows with missing values might be too heavy handed - especially when 7.6% of rows have a missing value/</p>
+<h1 id="imputing-missing-values">Imputing missing values</h1>
+<p>To keep observations with missing values, we&rsquo;ve two choices: let the modelling algorithm decide how to treat them, or impute the values with our own technique.</p>
+<p>Across all variables, if observations with non missing values but same <strong><code>property_id</code></strong> exists, those values can be used. This would be wrong if renovations we&rsquo;re done on the property over time - but we can assume this will have small impact across the dataset.</p>
+<p>For specific variables, treatment requires some common sense thinking about them;</p>
+<ul>
+<li><strong><code>Land</code>****:</strong> An average could be taken for &ldquo;<code>Houses&quot; </code>/ &ldquo;<code>Strata&quot;</code> in the same <strong><code>suburb </code><strong>or</strong><code> postcode</code></strong>. If too few observations exist in a nested group, and we assume housing density changes smoothly with location, GPS data could help to find the land-size averages of nearby suburbs.</li>
+<li><strong><code>floorplate</code>****:</strong> As above, we can take averages for in-suburb <strong><code>property_type</code></strong> = &ldquo;<code>Houses&quot;</code>. For strata, it&rsquo;s a little more involved. floorplate will relate to all observations under the same <strong><code>property_id</code></strong>. The number of observations under the same <strong><code>property_id</code></strong> is an indication of either sequential buy-sell events, and/or the number of apartments that &ldquo;<code>Strata</code>&rdquo; type <strong><code>property_id</code></strong> holds. As we&rsquo;ve seen in the &lsquo;<em>common sense assumptions&rsquo;</em> above - floorplate is of the entire building / <strong><code>property_id</code></strong> across all levels, we&rsquo;d take the average of <strong><code>property_id</code></strong> within <code>Strata.</code></li>
+<li><strong><code>bedrooms</code></strong><code>, </code><strong><code>bathrooms</code></strong><code>, </code><strong><code>garages</code>****:</strong> Imputation needs to adhere to the above also.</li>
+<li><strong><code>slope</code>****:</strong> estimated by the surrounding suburbs. Though if a suburb is less than unanimously +ve or -ve in slope, estimation might be worse than leaving the value as missing / removing from analysis. (House could be facing the otherway on a uniformly sloped suburb)</li>
+<li><strong><code>max_roof_height</code>****:</strong> Could be averaged using same method described for <strong><code>floorplate</code></strong>.</li>
+<li><strong><code>year_built</code>****:</strong> This could be done with suburb.</li>
+</ul>
+<p>If the model built with missing value rows removed is not accurate enough, these techniques above should be implemented.</p>
+<h1 id="exploring-the-shape-of-data">Exploring the Shape of data</h1>
+<p>Before exploring relationships between variables, we will view their shape &amp; make any normalising transforms. For the dependent variable, it will usually give a better model, for the independent variables, understanding their shape will be made easier. Some modelling techniques may benefit from this too.</p>
+<p>**    Numeric Variables**</p>
+<p>First, histograms to see bias, skew and extreme values of the numeric variables;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">numericVars = [6:14,16];
+figure;
+for vi = numericVars
+      subplot(4,3,find(numericVars==vi) )
+      histogram(Data{:,vi})
+      title(varNames{vi},'Interpreter','none')
+end
+</code></pre><p><img src="../../images/Modelling_images/figure_2.png" alt="figure_2.png"></p>
+<p><strong>Dependent Variable</strong>: <strong>sale_price</strong></p>
+<p>Positive skew**:** Could use a power law or exponential transform to make marginal changes of equal size no matter what starting value.</p>
+<p>**    Insight #4:***** ****&quot;*sale_price is positively skewed.&rdquo;</p>
+<p>Outliers: some large postive outliers, may not need to remove after the transform.</p>
+<p><strong>Independent variables;</strong></p>
+<ul>
+<li><strong><code>land, floorplate</code></strong>: both strongly positively skewed. This is likely because they are area measurements which scale with a 2nd power (Area = side*side). Once a square root transform is done, analysis of extreme values will be more meaningful.</li>
+<li><strong><code>bedrooms, bathrooms, garages</code></strong>: bedrooms &amp; garages are negatively skewed, though at low integer values, they will be left as raw before interpretting variable relationships.</li>
+<li>**<code>slope: </code>**normally distributed.</li>
+<li>**<code>max_roof_height: </code>**This distribution has 2 modes; likely a function of <strong><code>property_type</code></strong>, so adding interaction of these two variables could be helpful. Also positively skewed</li>
+<li><strong><code>year_built:</code></strong> Negative skew, and some extreme outliers left of median. A square or cube power transform could help normalise the data. Also, scalling the data so it starts at 0 will be applied so cubd values don&rsquo;t become too extreme. The higher frequency of values at the start of decades is suspicious - this could be an estimation made in the absense of true information on <strong><code>year_built.</code></strong></li>
+<li>**<code>sale_date_numeric: </code>**This is nearly uniform, with a lack of data in more recent years.</li>
+</ul>
+<p>Now, making the mentioned transforms to help see data patterns;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">Data.log_sale_price = log(Data.sale_price);
+Data.sqrt_land = sqrt(Data.land);
+Data.sqrt_floorplate = sqrt(Data.floorplate);
+Data.sqrt_max_roof_height = sqrt(Data.max_roof_height);
+Data.cube_year_built = (Data.year_built - min(Data.year_built)).^3;
+transformVarNames = {'log_sale_price','sqrt_land','sqrt_floorplate','bedrooms','bathrooms','garages','slope','sqrt_max_roof_height','cube_year_built','sale_date_numeric'};
+[is ,iL] = ismember(transformVarNames ,Data.Properties.VariableNames);
+transformNumericVars = iL(is);
+% replotting histograms of transformed variables
+figure;
+for vi = transformNumericVars
+      subplot(4,3,find(transformNumericVars==vi) )
+      histogram(Data{:,vi})
+      title(transformVarNames{(transformNumericVars==vi)},'Interpreter','none')
+end
+</code></pre><p><img src="../../images/Modelling_images/figure_3.png" alt="figure_3.png"></p>
+<p>A few things have popped up;</p>
+<ul>
+<li><strong><code>floorplate, land </code></strong>&amp; <strong><code>max_roof_height</code></strong> has some clusters in very high values that are now more obvious.</li>
+<li>Taking the log of <strong><code>sale_price </code></strong> was a perfect transform to normality, which will help with models assuming normal distribution of errors.</li>
+</ul>
+<p>Now calculating the covariance matrix &amp; associated pValues. Because there are quite a few variables, we&rsquo;ll inspect visually those with strength in upper 40% &amp; pvalues smaller than 0.05</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">[rho,p] = corr(Data{:,transformNumericVars},'rows','pairwise');
+% select strong &amp; significant relationships in the covariance matrix
+strongCovID = (p&lt;0.05) &amp; abs(rho)&gt;quantile(abs(rho(:)),0.6);
+strongCovID(1) = true; % include dependent variable
+figure;
+% correlation plot showing red values for correlations with &lt;0.05 pvalues
+corrplot( Data(:,transformNumericVars(strongCovID(1,:))) ,'testR','on','varNames',varNames(numericVars(strongCovID(1,:))));
+</code></pre><p><img src="../../images/Modelling_images/figure_4.png" alt="figure_4.png"></p>
+<p>The top row of plots is correlations with <strong><code>sale_price</code></strong>. The relationships are;</p>
+<ul>
+<li>Higher **<code>bedroom, bathroom, garage </code>**values increase sale price, but <strong><code>bathroom</code></strong> is strongest.</li>
+<li>**<code>floorspace \&amp; max_roof_height </code>**decrease with sale price (likely explained by <strong><code>property_type</code></strong>).</li>
+<li>**<code>sale_date </code>**increases <strong><code>sale_price</code></strong> (<em>the transform done maxes the earliest date = 0</em>).</li>
+</ul>
+<p>**    Categorical Variables**</p>
+<p><code>A boxplot can show effect of grouping on the dependent variable. There are so many categories of </code>**<code>suburb</code>**** <strong><code>and </code></strong><code>postcode</code>****, **so first <strong><code>state \&amp; property_type</code></strong> will be viewed;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">figure;
+boxplot(Data.sale_price,{Data.property_type,Data.state},&quot;ColorGroup&quot;,Data.state,'Orientation','horizontal');
+xlabel('sale_price','interpreter','none')
+</code></pre><p><img src="../../images/Modelling_images/figure_5.png" alt="figure_5.png"></p>
+<p>Box plots do not overlap too much between <strong><code>property_type</code></strong> groupings in each state. <strong><code>state</code></strong> grouping does separate values, though not as much.</p>
+<p>Viewing suburb and poscode would be tricky because there are 326 suburbs. But we ony need to view postcode, as subrub is nested in it.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">figure('Position',[740,119,583,685]);
+boxplot(Data.sale_price, Data.postcode,'PlotStyle','compact','Orientation','horizontal','OutlierSize',1)
+xlabel('sale_price','Interpreter','none')
+ylabel('Poscodes')
+set(gca,'YTickLabel',[])
+title('Variation of sale_price with postcode','Interpreter','none')
+grid minor;
+</code></pre><p><img src="../../images/Modelling_images/figure_6.png" alt="figure_6.png"></p>
+<p>There clearly is variation due to postcode, as many box plots do not overlap in their 25-75% quantiles.</p>
+<p>Using these categories as a predictor is trickier statistically than with categoricals with small number of categories. However, assuming they are random variables, Instead of fixed variables will allow them to be used. A rationale for postcode being a random variable not fixed this could be;</p>
+<blockquote>
+<p><em>&ldquo;suburbs and postcodes divide the land arbitrarily. They are not an intrinsict feature of the property&rdquo;</em></p>
+</blockquote>
+<p>So, we need to see that postcode median&rsquo;s are distributed normally.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">postcodeMedians = grpstats(Data(:,{'postcode','sale_price'}),'postcode','median');
+figure; 
+histogram(postcodeMedians.median_sale_price,20);
+title('Distribution of suburbs median sale prices')
+</code></pre><p><img src="../../images/Modelling_images/figure_7.png" alt="figure_7.png"></p>
+<p>Yes - they&rsquo;re normally distributed so we can model postcode and suburb as random variables, (unlike <strong><code>state</code></strong>, and <strong><code>property_type</code></strong>).</p>
+<p>**    Outliers**</p>
+<p>From the above visualisations, removing outliers shouldn&rsquo;t be necessary, expecially with such a large number of rows.</p>
+<h1 id="summary">Summary</h1>
+<p>The EDA is complete, now modelling can begin.</p>
+<p><strong>EDA Insights;</strong></p>
+<ol>
+<li>&ldquo;Apartments with equivalent features (<strong><code>bathrooms</code></strong>, **<code>garages </code>**etc.) sell for different prices with only **<code>sale_date </code>**changing. Once <strong><code>sale_date</code></strong> is controlled for, the remaining variance could give a benchmark for the external effects on **<code>sale_price </code>**that we do not have data for.&rdquo;</li>
+<li>&ldquo;<strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>have a weak relationship with occurance of missing values, but <strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>themselves have a strong relationship.&rdquo;</li>
+<li>&ldquo;Missing value rows occur very slightly more with properties built more recently.&rdquo;</li>
+<li>*&quot;*sale_price is positively skewed.&rdquo;</li>
+</ol>
+<p><strong>Data Notes;</strong></p>
+<ul>
+<li><strong><code>floorplate, land </code></strong>&amp; <strong><code>max_roof_height</code></strong> could be multi modal.</li>
+<li><code>For </code><strong><code>property_type=&quot;</code></strong><code>Strata</code><strong><code>&quot;, floorplate, land </code></strong>&amp; <strong><code>max_roof_height</code></strong> are not unique to an observation, only to <strong><code>property_id</code></strong>.</li>
+<li><strong><code>bedroom, bathroom, garage</code></strong> are collinear, and positively correlated with <strong><code>sale_price</code></strong></li>
+<li>**<code>year_built </code>**has significantly more observations at start of each decade. In the absense of subject matter expert to consult, this is likely measurement error.</li>
+<li><strong><code>slope</code></strong> is completely independent of <strong><code>sale_price</code></strong></li>
+</ul>
+<p><strong>Modelling implications;</strong></p>
+<ul>
+<li><strong><code>sale_date</code></strong>&rsquo;s effect on <strong><code>sale_price</code></strong> is an effect within the group of <strong><code>property_id</code></strong>.</li>
+<li><strong><code>year_built</code></strong> is a good proxy to downweight observations uniformly due to mising data pattern, and specifically for **<code>year_built </code>**at the satart of decades.</li>
+<li>log transform for <strong><code>sale_price.</code></strong></li>
+<li><strong><code>max_roof_height</code></strong>, <strong><code>land </code></strong>&amp; <strong><code>floorplate</code></strong> needs interaction terms to capture their multi-modal distribution.</li>
+<li>use **<code>property_id </code>**to impute missing values exactly.</li>
+<li>**<code>bedroom, bathroom, garage </code>**can be treated as ordinal variables.</li>
+</ul>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">save('EDAworkspace.mat')
+</code></pre><h1 id="modelling-house-prices">Modelling House Prices</h1>
+<p>Recapping the Exploratory Data Analysis;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">load('EDAworkspace.mat')
+</code></pre><p><strong>EDA Insights;</strong></p>
+<ol>
+<li>&ldquo;Apartments with equivalent features (<strong><code>bathrooms</code></strong>, **<code>garages </code>**etc.) sell for different prices with only **<code>sale_date </code>**changing. Once <strong><code>sale_date</code></strong> is controlled for, the remaining variance could give a benchmark for the external effects on **<code>sale_price </code>**that we do not have data for.&rdquo;</li>
+<li>&ldquo;<strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>have a weak relationship with occurance of missing values, but <strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>themselves have a strong relationship.&rdquo;</li>
+<li>&ldquo;Missing value rows occur very slightly more with properties built more recently.&rdquo;</li>
+<li>*&quot;*sale_price is positively skewed.&rdquo;</li>
+</ol>
+<p><strong>Data Notes;</strong></p>
+<ul>
+<li><strong><code>floorplate, land </code></strong>&amp; <strong><code>max_roof_height</code></strong> could be multi modal.</li>
+<li><code>For </code><strong><code>property_type=&quot;</code></strong><code>Strata</code><strong><code>&quot;, floorplate, land </code></strong>&amp; <strong><code>max_roof_height</code></strong> are not unique to an observation, only to <strong><code>property_id</code></strong>.</li>
+<li><strong><code>bedroom, bathroom, garage</code></strong> are collinear, and positively correlated with <strong><code>sale_price</code></strong></li>
+<li>**<code>year_built </code>**has significantly more observations at start of each decade. In the absense of subject matter expert to consult, this is likely measurement error.</li>
+<li><strong><code>slope</code></strong> is completely independent of <strong><code>sale_price</code></strong></li>
+</ul>
+<p><strong>Modelling implications;</strong></p>
+<ul>
+<li><strong><code>sale_date</code></strong>&rsquo;s effect on <strong><code>sale_price</code></strong> is an effect within the group of <strong><code>property_id</code></strong>.</li>
+<li><strong><code>year_built</code></strong> is a good proxy to downweight observations uniformly due to mising data pattern, and specifically for **<code>year_built </code>**at the satart of decades.</li>
+<li>log transform for <strong><code>sale_price.</code></strong></li>
+<li><strong><code>max_roof_height</code></strong>, <strong><code>land </code></strong>&amp; <strong><code>floorplate</code></strong> needs interaction terms to capture their multi-modal distribution.</li>
+<li>use **<code>property_id </code>**to impute missing values exactly.</li>
+<li>**<code>bedroom, bathroom, garage </code>**can be treated as ordinal variables.</li>
+</ul>
+<p><strong>Variable Types:</strong></p>
+<p>The indepenedent variables likely to be predictive of sale_price are a range of types;</p>
+<ul>
+<li>fixed effects categorical: state, property_type</li>
+<li>random effects categorical: postcode(nested in state), suburb(nested in postcode, state).</li>
+<li>ordinal: <strong><code>bedrooms, bathrooms, garages</code></strong>.</li>
+<li>continuous: <strong><code>floorplate, max_roof_height.</code></strong></li>
+</ul>
+<p>Fixed categoricals can be converted to dummy variables, random categoricals should utilise modelling methods' treatment, else there will be too many terms.</p>
+<p>Ordinal variables could be converted to numeric continuous for simplicity &amp; to allow prediction outside the range in the dataset.</p>
+<h1 id="feature-engineering">Feature Engineering;</h1>
+<p>Feature engineering has been done in the EDA in this case.</p>
+<h1 id="splitting-data-into-train-test-and-validation-sets">Splitting data into train, test and validation sets</h1>
+<p>because multiple models will be tested, a test set is required to select the best one. Validation set will also be used to fine tune each model&rsquo;s hyperparameters.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% create train &amp; test split 70%-30%
+[trainId,testId] = crossvalind('LeaveMOut' , 52248 , floor(52248*0.3) );
+% create validation split 15%
+validateId = false(size(testId));
+tstrw = find( testId );
+tstrw = tstrw(randperm(numel(tstrw)));
+validateId( tstrw( 1:floor(numel(tstrw)/2) ) ) = true;
+% remove validation split from test set
+testId = testId &amp; ~validateId;
+disp( sum([trainId, testId , validateId]) )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">       36574        7837        7837
+</code></pre><h1 id="model-0-removed-all-rows-with-missing-values-multiple-regression">Model 0: removed all rows with missing values. Multiple regression;</h1>
+<p>This model will be the baseline model.</p>
+<p>The standard practice model for this prediction problem, housing prices, is a hedonic model. Structural characteristics are bedrooms, bathrroms etc. State, postcode are the locality characteristics.</p>
+<p>Terms that won&rsquo;t be used;</p>
+<ul>
+<li>**<code>suburb: </code>**It&rsquo;s nested in postcode, adding it would unneccesarily complicated the model.</li>
+<li>**<code>slope </code>**was found to have no impact on the dependent variable.</li>
+</ul>
+<p>From the EDA, we found a way to slice the data that would show clearly the impact of sale_date on prices. (<em><strong>Insight #1</strong></em>).</p>
+<p>Modelling <strong><code>sales_price</code></strong> as a function of <strong><code>sale_date</code></strong>, conditional on the random effect of <strong><code>property_id;</code></strong></p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% Effect of sale date
+% from the EDA, some property_id's have sales over many years. This holds
+% all features constant except sale_date.
+% get averages by property id
+meanbyPropertyID = grpstats(Data(:,[{'property_id'},transformVarNames]),{'property_id'},'mean');
+% indicies of property_id in averages table
+[id,iL] = ismember(Data.property_id , meanbyPropertyID.property_id);
+
+DataSml = Data( ismember(Data.property_id, meanbyPropertyID.property_id(meanbyPropertyID.GroupCount &gt; 9 ) ) , :);
+
+mdl_saledate = fitglme( DataSml ,'log_sale_price ~ -1 + sale_date_numeric + property_type + ( 1 | property_id )')
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdl_saledate = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations             795
+    Fixed effects coefficients           2
+    Random effects coefficients         54
+    Covariance parameters                2
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ property_type + sale_date_numeric + (1 | property_id)
+
+Model fit statistics:
+    AIC        BIC        LogLikelihood    Deviance
+    -6754.4    -6735.7    3381.2           -6762.4 
+Fixed effects coefficients (95% CIs):
+    Name                          Estimate      SE            tStat     DF     pValue    Lower         Upper     
+    'property_type_Strata'            13.344       0.02289    582.95    793    0             13.299        13.389
+    'sale_date_numeric'           0.00013367    7.7994e-08    1713.9    793    0         0.00013352    0.00013383
+Random effects covariance parameters:
+Group: property_id (54 Levels)
+    Name1                Name2                Type         Estimate
+    '(Intercept)'        '(Intercept)'        'std'        0.1682  
+Group: Error
+    Name                      Estimate 
+    'sqrt(Dispersion)'        0.0023536
+</code></pre><p>pValue&rsquo;s are great.</p>
+<p>The effect **<code>sale_date_numeric </code>**has on log(sale_price) is 0.00013346 per day. In other words;</p>
+<!-- raw HTML omitted -->
+<p>We&rsquo;ll use this as a sense check that our model is showing **<code>sale_date </code>**to have a similar impact on <strong><code>sale_price.</code></strong></p>
+<p>First full model will be a multiple regression using features created in EDA, with terms as per the EDA (<em>see summary</em>).</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% Baseline model
+% without postcode, trained without rows containing ANY missing values.
+mdlBase_FE = fitglme( Data(trainId &amp; ~missingRow,:) , ['log_sale_price ~ sqrt_max_roof_height:property_type +'...
+    'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+    'sale_date_numeric + bedrooms + bathrooms + garages'...
+''] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_FE = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           33790
+    Fixed effects coefficients          14
+    Random effects coefficients          0
+    Covariance parameters                1
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + sale_date_numeric + cube_year_built + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -76744    -76618    38387            -76774  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate       SE            tStat      DF       pValue         Lower          Upper      
+    '(Intercept)'                                            13.14     0.0038382     3423.5    33776              0         13.132         13.147
+    'property_type_Strata'                                -0.11185     0.0043377    -25.787    33776    3.1916e-145       -0.12036       -0.10335
+    'state_QLD'                                           -0.11777     0.0012726    -92.545    33776              0       -0.12027       -0.11528
+    'bedrooms'                                            0.068573    0.00084452     81.198    33776              0       0.066918       0.070228
+    'bathrooms'                                            0.10425     0.0007833     133.09    33776              0        0.10272        0.10579
+    'garages'                                             0.058655    0.00073922     79.347    33776              0       0.057206       0.060104
+    'sale_date_numeric'                                 0.00013171     3.982e-07     330.77    33776              0     0.00013093     0.00013249
+    'sqrt_land'                                          0.0034426    5.8483e-05     58.865    33776              0       0.003328      0.0035573
+    'sqrt_floorplate'                                    0.0046399    0.00026926     17.232    33776     2.9335e-66      0.0041121      0.0051677
+    'cube_year_built'                                  -3.2372e-08    7.5863e-10    -42.672    33776              0    -3.3859e-08    -3.0885e-08
+    'property_type_Strata:state_QLD'                     -0.021953      0.001743    -12.595    33776     2.7158e-36      -0.025369      -0.018536
+    'property_type_Strata:sqrt_land'                    -0.0034709    6.7229e-05    -51.629    33776              0     -0.0036027     -0.0033392
+    'property_type_Strata:sqrt_floorplate'              -0.0048733    0.00027583    -17.667    33776     1.5354e-69      -0.005414     -0.0043327
+    'property_type_Strata:sqrt_max_roof_height'          -0.010235    0.00087519    -11.694    33776     1.5724e-31       -0.01195     -0.0085191
+Random effects covariance parameters:
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.077693
+</code></pre><pre><code class="language-matlab:Code" data-lang="matlab:Code">RMSE_FE = sqrt(nanmean( ( exp(predict( mdlBase_FE , Data(validateId,:) )) - exp(Data.log_sale_price(validateId)) ).^2 ))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">RMSE_FE = 9.1426e+04
+</code></pre><p>All pValues are small. Now to check residuals are normally distributed;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">plotResiduals(mdlBase_FE)
+</code></pre><p><img src="../../images/Modelling_images/figure_0.png" alt="figure_0.png"></p>
+<p>This looks normally distributed, the model is valid.</p>
+<h1 id="model-1-conservative-missing-value-treatment">Model 1: conservative missing value treatment.</h1>
+<p>Following on from the approach to missing values from the EDA, first replacing missing values with that of the same property_id;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% Establish new, clean dataset
+idnumericMissing = ismissing(Data{:,transformVarNames});
+DataCln = Data;
+% loop through numeric variables to replace missing values with those in different rows for the same property_id
+for vi = transformVarNames
+    iMiss = ismissing(Data.(vi{1}));
+    DataCln{ iMiss&amp;id , vi } = meanbyPropertyID{iL(iMiss&amp;id),['mean_',vi{1}]};
+end
+missingRows2 = any(idnumericMissing,2);
+sprintf('%0.0f rows cleaned', sum(missingRows2) - sum(any(ismissing( DataCln{:,transformVarNames} ),2)) )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = '1829 rows cleaned'
+</code></pre><p>Building on Model 0&rsquo;s terms, and including the cleaned rows</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% postcode as a random effect
+mdlBase_ME1 = fitglme( DataCln(trainId &amp; ~missingRows2,:) , ['log_sale_price ~ sqrt_max_roof_height:property_type + '...
+    'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+    'sale_date_numeric + bedrooms + bathrooms + garages'...
+' + (1 | postcode )'] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_ME1 = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           33790
+    Fixed effects coefficients          14
+    Random effects coefficients        119
+    Covariance parameters                2
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + sale_date_numeric + cube_year_built + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height + (1 | postcode)
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -79808    -79673    39920            -79840  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate      SE            tStat      DF       pValue         Lower         Upper     
+    '(Intercept)'                                          13.137     0.0075409     1742.1    33776              0        13.122        13.152
+    'property_type_Strata'                               -0.11554     0.0042826     -26.98    33776    1.2242e-158      -0.12394      -0.10715
+    'state_QLD'                                          -0.11884     0.0095107    -12.495    33776     9.4839e-36      -0.13748       -0.1002
+    'bedrooms'                                            0.07063    0.00082189     85.937    33776              0      0.069019      0.072241
+    'bathrooms'                                           0.10347    0.00074787     138.36    33776              0       0.10201       0.10494
+    'garages'                                            0.059131    0.00070487     83.889    33776              0      0.057749      0.060512
+    'sale_date_numeric'                                0.00013154    3.7871e-07     347.33    33776              0    0.00013079    0.00013228
+    'sqrt_land'                                         0.0032411    5.9276e-05     54.677    33776              0     0.0031249     0.0033572
+    'sqrt_floorplate'                                    0.004721    0.00026473     17.833    33776     8.2352e-71     0.0042021     0.0052399
+    'cube_year_built'                                  -3.123e-08    8.0106e-10    -38.986    33776              0     -3.28e-08    -2.966e-08
+    'property_type_Strata:state_QLD'                       -0.018     0.0022429    -8.0255    33776      1.044e-15     -0.022396     -0.013604
+    'property_type_Strata:sqrt_land'                   -0.0032602    6.7157e-05    -48.545    33776              0    -0.0033918    -0.0031285
+    'property_type_Strata:sqrt_floorplate'              -0.004976    0.00027082    -18.374    33776      4.944e-75    -0.0055068    -0.0044452
+    'property_type_Strata:sqrt_max_roof_height'         -0.010272    0.00083632    -12.282    33776     1.3359e-34     -0.011911    -0.0086327
+Random effects covariance parameters:
+Group: postcode (119 Levels)
+    Name1                Name2                Type         Estimate
+    '(Intercept)'        '(Intercept)'        'std'        0.049982
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.073723
+</code></pre><p>Again pValues are good. plotting Residuals;</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">plotResiduals(mdlBase_ME1)
+</code></pre><p><img src="../../images/Modelling_images/figure_1.png" alt="figure_1.png"></p>
+<p>Residuals are normal, the model is valid.</p>
+<p>The new term <strong><code>postcode</code></strong> has been designated a random variable, and this was seen to be normally distributed in the EDA. to asses whether the postcode term si significant, we have to conduct a null hypotheses test that this model is more likely than a model without the postcode term.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">mdlBase_FE1 = fitglme( DataCln(trainId &amp; ~missingRows2,:) , ['log_sale_price ~ sqrt_max_roof_height:property_type + '...
+    'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+    'sale_date_numeric + bedrooms + bathrooms + garages'...
+' '] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_FE1 = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           33790
+    Fixed effects coefficients          14
+    Random effects coefficients          0
+    Covariance parameters                1
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + sale_date_numeric + cube_year_built + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -76744    -76618    38387            -76774  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate       SE            tStat      DF       pValue         Lower          Upper      
+    '(Intercept)'                                            13.14     0.0038382     3423.5    33776              0         13.132         13.147
+    'property_type_Strata'                                -0.11185     0.0043377    -25.787    33776    3.1916e-145       -0.12036       -0.10335
+    'state_QLD'                                           -0.11777     0.0012726    -92.545    33776              0       -0.12027       -0.11528
+    'bedrooms'                                            0.068573    0.00084452     81.198    33776              0       0.066918       0.070228
+    'bathrooms'                                            0.10425     0.0007833     133.09    33776              0        0.10272        0.10579
+    'garages'                                             0.058655    0.00073922     79.347    33776              0       0.057206       0.060104
+    'sale_date_numeric'                                 0.00013171     3.982e-07     330.77    33776              0     0.00013093     0.00013249
+    'sqrt_land'                                          0.0034426    5.8483e-05     58.865    33776              0       0.003328      0.0035573
+    'sqrt_floorplate'                                    0.0046399    0.00026926     17.232    33776     2.9335e-66      0.0041121      0.0051677
+    'cube_year_built'                                  -3.2372e-08    7.5863e-10    -42.672    33776              0    -3.3859e-08    -3.0885e-08
+    'property_type_Strata:state_QLD'                     -0.021953      0.001743    -12.595    33776     2.7158e-36      -0.025369      -0.018536
+    'property_type_Strata:sqrt_land'                    -0.0034709    6.7229e-05    -51.629    33776              0     -0.0036027     -0.0033392
+    'property_type_Strata:sqrt_floorplate'              -0.0048733    0.00027583    -17.667    33776     1.5354e-69      -0.005414     -0.0043327
+    'property_type_Strata:sqrt_max_roof_height'          -0.010235    0.00087519    -11.694    33776     1.5724e-31       -0.01195     -0.0085191
+Random effects covariance parameters:
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.077693
+</code></pre><pre><code class="language-matlab:Code" data-lang="matlab:Code">compare(mdlBase_FE1 , mdlBase_ME1 )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 
+    Theoretical Likelihood Ratio Test
+
+    Model          DF    AIC       BIC       LogLik    LRStat    deltaDF    pValue
+    mdlBase_FE1    15    -76744    -76618    38387                                
+    mdlBase_ME1    16    -79808    -79673    39920     3065.2    1          0     
+</code></pre><p>the model with postcode as a random variable fails the null hypotheses test, so <strong><code>postcode</code></strong> is a random effect seen in the data.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">RMSE_ME1 = sqrt(nanmean( ( exp(predict( mdlBase_ME1 , DataCln(validateId,:) )) - exp(DataCln.log_sale_price(validateId)) ).^2 ))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">RMSE_ME1 = 8.7175e+04
+</code></pre><h1 id="model-2-imputed-missing-values">Model 2: Imputed missing values</h1>
+<p>For this model, the remaining missing values will be replaced with average values in the same suburb. First &ldquo;<code>Strata&quot; </code>types, then &ldquo;<code>House&quot; type observations.</code></p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% get averages by property id
+idnumericMissing3 = ismissing(DataCln{:,transformVarNames});
+missingRows3 = any(idnumericMissing3,2);
+% Establish new, clean dataset
+DataCln2 = DataCln;
+% process missing values by property type
+for ist = [DataCln.property_type==&quot;Strata&quot; , DataCln.property_type==&quot;House&quot;]
+      meanbysuburbpostcode = grpstats(DataCln( ist ,[{'suburb','property_type'},transformVarNames]),{'suburb','property_type'},'mean');
+      % indicies of suburb in averages table
+      [id,iL] = ismember(DataCln.suburb , meanbysuburbpostcode.suburb);
+      % loop over variables, impute from suburb average
+      for vi = transformVarNames
+            iMiss = ismissing(DataCln.(vi{1}));
+            DataCln2{ iMiss&amp;id &amp;ist, vi } = meanbysuburbpostcode{iL(iMiss&amp;id &amp;ist),['mean_',vi{1}]};
+      end
+      sprintf('%0.0f rows cleaned', sum(missingRows3) - sum(any(ismissing( DataCln2{:,transformVarNames} ),2)) )
+end
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = '864 rows cleaned'
+ans = '2164 rows cleaned'
+</code></pre><p>Now that all missing values have been replaced with suburb averages, the same Model as above will be built, but with the new cleaning technique applied/</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% postcode as a random effect. only 1 observation is missing from training set now;
+mdlBase_ME2 = fitglme( DataCln2(trainId &amp; ~missingRows3,:) , ['log_sale_price ~ sqrt_max_roof_height:property_type + '...
+    'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+    'sale_date_numeric + bedrooms + bathrooms + garages'...
+' + (1 | postcode )'] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_ME2 = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           35070
+    Fixed effects coefficients          14
+    Random effects coefficients        119
+    Covariance parameters                2
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + sale_date_numeric + cube_year_built + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height + (1 | postcode)
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -82839    -82703    41435            -82871  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate       SE            tStat      DF       pValue         Lower          Upper      
+    '(Intercept)'                                           13.136     0.0075002     1751.4    35056              0         13.121         13.151
+    'property_type_Strata'                                -0.11809     0.0042154    -28.014    35056    8.4107e-171       -0.12635       -0.10983
+    'state_QLD'                                           -0.11882      0.009486    -12.526    35056     6.4595e-36       -0.13741       -0.10023
+    'bedrooms'                                             0.07069    0.00080688     87.609    35056              0       0.069109       0.072272
+    'bathrooms'                                            0.10422    0.00073313     142.16    35056              0        0.10278        0.10566
+    'garages'                                             0.059607    0.00069305     86.007    35056              0       0.058249       0.060966
+    'sale_date_numeric'                                 0.00013142     3.703e-07     354.91    35056              0      0.0001307     0.00013215
+    'sqrt_land'                                           0.003231     5.866e-05     55.081    35056              0      0.0031161       0.003346
+    'sqrt_floorplate'                                    0.0045817    0.00026165     17.511    35056     2.3226e-68      0.0040688      0.0050945
+    'cube_year_built'                                  -3.1251e-08    7.8715e-10    -39.702    35056              0    -3.2794e-08    -2.9709e-08
+    'property_type_Strata:state_QLD'                     -0.017885     0.0022028    -8.1189    35056     4.8552e-16      -0.022202      -0.013567
+    'property_type_Strata:sqrt_land'                    -0.0032532    6.6163e-05     -49.17    35056              0     -0.0033829     -0.0031236
+    'property_type_Strata:sqrt_floorplate'              -0.0048453    0.00026755     -18.11    35056     5.7293e-73     -0.0053697     -0.0043209
+    'property_type_Strata:sqrt_max_roof_height'         -0.0098471    0.00081398    -12.097    35056     1.2715e-33      -0.011442     -0.0082516
+Random effects covariance parameters:
+Group: postcode (119 Levels)
+    Name1                Name2                Type         Estimate
+    '(Intercept)'        '(Intercept)'        'std'        0.049867
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.073732
+</code></pre><p>Model has only very slightly different coefficients - to be expected as only 3% or so of nearly randomly missing values were added.</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% Calculate Roomt Mean Square Error on the validation set, including the missing ros.
+RMSE_ME2 = sqrt(nanmean( ( exp(predict( mdlBase_ME2 , DataCln2(validateId,:) )) - exp(DataCln2.log_sale_price(validateId)) ).^2 ))
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">RMSE_ME2 = 8.8291e+04
+</code></pre><p>Interestingly, this model has a worse Root mean squared error, even though it has all of the missing values replaced with suburb averages.</p>
+<h1 id="model-selection">Model Selection</h1>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">
+compare(mdlBase_ME1,mdlBase_ME2)
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 
+    Theoretical Likelihood Ratio Test
+
+    Model          DF    AIC       BIC       LogLik    LRStat    deltaDF    pValue
+    mdlBase_ME1    16    -79808    -79673    39920                                
+    mdlBase_ME2    16    -82839    -82703    41435     3031.2    0          0     
+</code></pre><p>Testing all 3 models on the original dataset, with its transforms, but no adjustment to missing values, on the unseen test data. A second Metric used to test models is the AIC, which balances the tradeoff between goodness-of-fit &amp; model simplicity;</p>
+<!-- raw HTML omitted -->
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">RMSE_ME1_test = sqrt(nanmean( ( exp(predict( mdlBase_ME1 , Data(testId,:) )) - exp(Data.log_sale_price(testId)) ).^2 ));
+RMSE_ME2_test = sqrt(nanmean( ( exp(predict( mdlBase_ME2 , Data(testId,:) )) - exp(DataCln.log_sale_price(testId)) ).^2 ));
+RMSE_FE_test = sqrt(nanmean( ( exp(predict( mdlBase_FE , Data(testId,:) )) - exp(DataCln.log_sale_price(testId)) ).^2 ));
+RMSE_All_test = [RMSE_FE_test , RMSE_ME1_test , RMSE_ME2_test];
+figure;
+bar(RMSE_All_test); 
+ylim([min(RMSE_All_test).*0.99, max(RMSE_All_test).*1.01]);
+xticklabels({'Model0','Model1 - Conservative data clean','Model2 - All data clean'})
+ylabel('Root Mean Squared Error ($)')
+set(gca,'XTickLabelRotation',45)
+yyaxis right; 
+plot([mdlBase_FE.ModelCriterion.AIC, mdlBase_ME1.ModelCriterion.AIC, mdlBase_ME2.ModelCriterion.AIC],'-d','LineWidth',7)
+ylabel('Akaike information criterion (AIC)')
+title('Model Comparison - RMSE &amp; Model selection Critera')
+</code></pre><p><img src="../../images/Modelling_images/figure_2.png" alt="figure_2.png"></p>
+<p>Model 2 has slightly worse RMSE, but much better AIC, due to its superior log likelihood. Because the assumptions of this type of model were valid, and the fact that the property industry uses this type of model as standard practice - the likelihood measure is very trustworthy, so AIC will determione best model;</p>
+<h1 id="best-model-mixed-effects-model">Best Model: Mixed Effects model;</h1>
+<p>Data Cleaning algorithm;</p>
+<ol>
+<li><code>Replace missing values that are both structural and environmental characteristics with those observations with the same </code><strong><code>property_id.</code></strong></li>
+<li><code>Remaining missing values are filled with </code><strong><code>suburb</code></strong><code>averages for that</code><strong><code>property_type.</code></strong></li>
+</ol>
+<p>Feature Engineering;</p>
+<ul>
+<li>Transform areas &amp; distances with square root: <strong><code>land, floorplate, max_roof_height</code></strong></li>
+<li>Cubic transform of <strong><code>year_built</code></strong></li>
+<li>Convert <strong><code>sale_date</code></strong> to: minimum(<strong><code>sale_date</code></strong>) - <strong><code>sale_date</code></strong></li>
+</ul>
+<p>Model Terms;</p>
+<ul>
+<li>Interaction Terms: **<code>property_type </code>**with <strong><code>state, land, floorplate </code></strong>&amp; <strong><code>max_roof_height</code></strong></li>
+<li>Random Effects: <strong><code>postcode</code></strong> 
+\item</li>
+</ul>
+<p><strong>Effect of additional Bedroom</strong></p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% create a simulation dataset, and increase all properties # bedroom's by 1
+Data_Simulate = Data;
+Data_Simulate.bedrooms = Data_Simulate.bedrooms+1;
+% predict on the new, increased # of bedrooms dataset
+yfit_plusbedrrom = predict( mdlBase_ME2 , Data_Simulate );
+yfit = predict( mdlBase_ME2 , Data );
+% dollar increase due to bedroom, average across entire dataset
+bedrrom_effect = nanmean(exp(yfit_plusbedrrom)) - nanmean(exp(yfit));
+% Percentage increase in sale_price due to 1 increase in bedrooms
+nanmean(exp(yfit_plusbedrrom)) / nanmean(exp(yfit));
+
+</code></pre><p><strong>Using 5% per annum inflation as proxy to change over time</strong></p>
+<p>To incorporate the knowledge of an inflation rate, an additional variable will be added to the model which is proportional to the sale_date;</p>
+<p><strong><code>inflation_proxy: </code></strong><!-- raw HTML omitted --></p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">DataCln2.inflation_proxy = (1 + 0.05./365).^DataCln2.sale_date_numeric;
+mdlBase_ME2_inflation = fitglme( DataCln2(trainId &amp; ~missingRows3,:) , ['log_sale_price ~ inflation_proxy + sqrt_max_roof_height:property_type + '...
+'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+'sale_date_numeric + bedrooms + bathrooms + garages'...
+' + (1 | postcode )'] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_ME2_inflation = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           35070
+    Fixed effects coefficients          15
+    Random effects coefficients        119
+    Covariance parameters                2
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + sale_date_numeric + cube_year_built + inflation_proxy + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height + (1 | postcode)
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -82839    -82695    41437            -82873  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate      SE            tStat      DF       pValue         Lower          Upper      
+    '(Intercept)'                                          13.091      0.028939     452.38    35055              0         13.035         13.148
+    'property_type_Strata'                               -0.11814     0.0042154    -28.026    35055    6.1118e-171        -0.1264       -0.10988
+    'state_QLD'                                           -0.1188     0.0094861    -12.524    35055      6.595e-36        -0.1374       -0.10021
+    'bedrooms'                                           0.070684    0.00080686     87.604    35055              0       0.069103       0.072266
+    'bathrooms'                                           0.10423    0.00073311     142.17    35055              0        0.10279        0.10566
+    'garages'                                            0.059629    0.00069316     86.025    35055              0       0.058271       0.060988
+    'sale_date_numeric'                                0.00012323    5.1363e-06     23.993    35055    3.4705e-126     0.00011317      0.0001333
+    'sqrt_land'                                         0.0032306    5.8659e-05     55.075    35055              0      0.0031156      0.0033456
+    'sqrt_floorplate'                                   0.0045835    0.00026164     17.518    35055     2.0444e-68      0.0040707      0.0050963
+    'cube_year_built'                                  -3.126e-08    7.8714e-10    -39.713    35055              0    -3.2803e-08    -2.9717e-08
+    'inflation_proxy'                                    0.045889      0.028707     1.5986    35055        0.10993      -0.010376        0.10216
+    'property_type_Strata:state_QLD'                    -0.017903     0.0022028    -8.1276    35055     4.5209e-16      -0.022221      -0.013586
+    'property_type_Strata:sqrt_land'                   -0.0032534    6.6161e-05    -49.175    35055              0     -0.0033831     -0.0031237
+    'property_type_Strata:sqrt_floorplate'             -0.0048468    0.00026754    -18.116    35055     5.1324e-73     -0.0053711     -0.0043224
+    'property_type_Strata:sqrt_max_roof_height'        -0.0098455    0.00081395    -12.096    35055     1.2955e-33      -0.011441     -0.0082501
+Random effects covariance parameters:
+Group: postcode (119 Levels)
+    Name1                Name2                Type         Estimate
+    '(Intercept)'        '(Intercept)'        'std'        0.049867
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.073729
+</code></pre><pre><code class="language-matlab:Code" data-lang="matlab:Code">compare(mdlBase_ME2_inflation,mdlBase_ME2)
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 
+    Theoretical Likelihood Ratio Test
+
+    Model                    DF    AIC       BIC       LogLik    LRStat    deltaDF    pValue 
+    mdlBase_ME2              16    -82839    -82703    41435                                 
+    mdlBase_ME2_inflation    17    -82839    -82695    41437     2.5553    1          0.10992
+</code></pre><p>The Model using inflation as a proxy does not perform better. The term itself has an unsatisfactory pValue, and the whole Models AIC is definitely not better.</p>
+<p>Perhaps remooving the term <strong><code>sale_date_numeric</code></strong> will be helpful, as it is collinear with the new feature <strong><code>inflation_proxy</code></strong></p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">% remove sale_date_numeric
+mdlBase_ME2_inflation2 = fitglme( DataCln2(trainId &amp; ~missingRows3,:) , ['log_sale_price ~ inflation_proxy + sqrt_max_roof_height:property_type + '...
+'state*property_type + cube_year_built + sqrt_land*property_type + sqrt_floorplate*property_type + '...
+' bedrooms + bathrooms + garages'...
+' + (1 | postcode )'] )
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">mdlBase_ME2_inflation2 = 
+Generalized linear mixed-effects model fit by PL
+
+Model information:
+    Number of observations           35070
+    Fixed effects coefficients          14
+    Random effects coefficients        119
+    Covariance parameters                2
+    Distribution                    Normal
+    Link                            Identity
+    FitMethod                       MPL   
+
+Formula:
+    log_sale_price ~ 1 + bedrooms + bathrooms + garages + cube_year_built + inflation_proxy + property_type*state + property_type*sqrt_land + property_type*sqrt_floorplate + property_type:sqrt_max_roof_height + (1 | postcode)
+
+Model fit statistics:
+    AIC       BIC       LogLikelihood    Deviance
+    -82270    -82135    41151            -82302  
+Fixed effects coefficients (95% CIs):
+    Name                                               Estimate       SE            tStat      DF       pValue         Lower          Upper      
+    '(Intercept)'                                           12.424     0.0079041     1571.8    35056              0         12.408         12.439
+    'property_type_Strata'                                -0.11844     0.0042498     -27.87    35056    4.2767e-169       -0.12677       -0.11011
+    'state_QLD'                                            -0.1185     0.0094735    -12.509    35056      7.965e-36       -0.13707      -0.099934
+    'bedrooms'                                            0.070587    0.00081346     86.774    35056              0       0.068993       0.072182
+    'bathrooms'                                            0.10437     0.0007391     141.21    35056              0        0.10292        0.10582
+    'garages'                                             0.059982    0.00069869     85.849    35056              0       0.058612       0.061351
+    'sqrt_land'                                          0.0032224    5.9127e-05       54.5    35056              0      0.0031065      0.0033383
+    'sqrt_floorplate'                                    0.0046073    0.00026379     17.466    35056      5.059e-68      0.0040902      0.0051243
+    'cube_year_built'                                  -3.1392e-08    7.9355e-10     -39.56    35056              0    -3.2948e-08    -2.9837e-08
+    'inflation_proxy'                                      0.73284     0.0020865     351.23    35056              0        0.72875        0.73693
+    'property_type_Strata:state_QLD'                     -0.018329     0.0022207     -8.254    35056     1.5848e-16      -0.022682      -0.013977
+    'property_type_Strata:sqrt_land'                     -0.003254    6.6692e-05    -48.791    35056              0     -0.0033847     -0.0031233
+    'property_type_Strata:sqrt_floorplate'              -0.0048663    0.00026973    -18.041    35056     1.9624e-72      -0.005395     -0.0043376
+    'property_type_Strata:sqrt_max_roof_height'         -0.0098059    0.00082063    -11.949    35056     7.5839e-33      -0.011414     -0.0081975
+Random effects covariance parameters:
+Group: postcode (119 Levels)
+    Name1                Name2                Type         Estimate
+    '(Intercept)'        '(Intercept)'        'std'        0.049778
+Group: Error
+    Name                      Estimate
+    'sqrt(Dispersion)'        0.074334
+</code></pre><pre><code class="language-matlab:Code" data-lang="matlab:Code">compare(mdlBase_ME2_inflation2,mdlBase_ME2)
+</code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 
+    Theoretical Likelihood Ratio Test
+
+    Model                     DF    AIC       BIC       LogLik    LRStat    deltaDF    pValue
+    mdlBase_ME2_inflation2    16    -82270    -82135    41151                                
+    mdlBase_ME2               16    -82839    -82703    41435     568.4     0          0     
+</code></pre><h1 id="model-evaluation-with-5-inflation">Model Evaluation with 5% Inflation</h1>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">%adding inflation proxy to original dataset, so the test dataset can be uysed to evaluate models.
+Data.inflation_proxy = (1 + 0.05/365).^Data.sale_date_numeric;
+RMSE_ME2inflation_test = sqrt(nanmean( ( exp(predict( mdlBase_ME2_inflation , Data(testId,:) )) - exp(DataCln.log_sale_price(testId)) ).^2 ));
+RMSE_ME2inflation2_test = sqrt(nanmean( ( exp(predict( mdlBase_ME2_inflation2 , Data(testId,:) )) - exp(DataCln.log_sale_price(testId)) ).^2 ));
+RMSE_All_test = [RMSE_ME2_test, RMSE_ME2inflation_test, RMSE_ME2inflation2_test];
+figure;
+bar(RMSE_All_test); 
+ylim([min(RMSE_All_test).*0.99, max(RMSE_All_test).*1.01]);
+xticklabels({'Best Model - no inflation','Model: Inflation and sale date','Model: Inflation only'})
+ylabel('Root Mean Squared Error ($)')
+set(gca,'XTickLabelRotation',45)
+yyaxis right; 
+plot([mdlBase_ME2.ModelCriterion.AIC, mdlBase_ME2_inflation.ModelCriterion.AIC, mdlBase_ME2_inflation2.ModelCriterion.AIC],'-d','LineWidth',7)
+ylabel('Akaike information criterion (AIC)')
+title({'Model Comparison - RMSE &amp; Model selection Critera';'Effect of inflation proxy on model'})
+</code></pre><p><img src="../../images/Modelling_images/figure_3.png" alt="figure_3.png"></p>
+<p><strong>Inflation proxy should not be used;</strong></p>
+<ul>
+<li>Using the inflation proxy while keeping sale date in the model does not improve the AIC</li>
+<li>Only marginally improves the generalisation performance</li>
+<li>Inflation proxy has a pValue of 0.17</li>
+</ul>
+<p><strong>Verifying sale_date&rsquo;s impact;</strong></p>
+<p>The impact <strong><code>sale_date</code></strong> has in the best model is very similar to the effect found in the above small study of large strata properties that had apartments sold over a long period of time. (see under section for Model0).</p>
+<pre><code class="language-matlab:Code" data-lang="matlab:Code">save('Modellingworkspace.mat')
+</code></pre>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/mixture-model/" rel="tag">mixture model</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/price-model/" rel="tag">price model</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/exploratory-data-analysis/" rel="tag">Exploratory Data Analysis</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Sam Schumacher</span>
+	</div>
+	<div class="authorbox__description">
+		Using machine learning projects to discover the world through its problems
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="../../post/rnn5min_1/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;Previous</span>
+			<p class="pager__title">5-min reads: why cell state propogation slows convergence</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 Sam Schumacher.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+	</div>
+<script async defer src="../../js/menu.js"></script>
+
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>
+</script>
+</body>
+</html>
