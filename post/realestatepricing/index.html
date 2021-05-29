@@ -50,7 +50,7 @@
 		<li class="menu__item">
 			<a class="menu__link" href="../../about/">
 				
-				<span class="menu__text">this blog</span>
+				<span class="menu__text">This blog</span>
 				
 			</a>
 		</li>
@@ -382,7 +382,7 @@ RawData(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">10</spa
             Max               2012    
             NumMissing        1345    
 </code></pre><p>Loading the data into the workspace automatically decided what type of varaible in each column of the CSV.</p>
-<p>Variables like **<code>property_id </code>**has been classified the same way as <strong><code>slope </code></strong>(as double), though they&rsquo;re a different type of variable: an ID will usually be an integer, **<code>slope </code>**is definitely a floating point number.</p>
+<p>Variables like <strong><code>property_id</code></strong> has been classified the same way as <strong><code>slope</code></strong> (as double), though they&rsquo;re a different type of variable: an ID will usually be an integer, <strong><code>slope</code></strong> is definitely a floating point number.</p>
 <p>by displaying the unique values returned when dividing all 52,248 rows by 1, we can double check which of the variables are strictly integers;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">% identify if 1st value in each column is numeric
 numericIdx = arrayfun(@(X) isnumeric(RawData{1,X}) , 1:width(RawData) );
@@ -406,14 +406,14 @@ garages has 1 unique remainders after division by zero
 slope has 26316 unique remainders after division by zero 
 max_roof_height has 12193 unique remainders after division by zero 
 year_built has 1 unique remainders after division by zero 
-</code></pre><p>So, only <strong><code>slope</code></strong> and **<code>max_roof_height </code>**can be considered true continuous variables. The rest have a remaineder of 0 when divided by 1, for all observations.</p>
+</code></pre><p>So, only <strong><code>slope</code></strong> and <strong><code>max_roof_height</code></strong> can be considered true continuous variables. The rest have a remaineder of 0 when divided by 1, for all observations.</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">continuousIdx = ismember( RawData.Properties.VariableNames , {'slope','max_roof_height'});
 % the other double type variables are discrete because they are all integers
 discreteIdx = numericIdx &amp; ~continuousIdx;
 disp( RawData.Properties.VariableNames(discreteIdx))
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">    'property_id'    'sale_price'    'postcode'    'land'    'floorplate'    'bedrooms'    'bathrooms'    'garages'    'year_built'
 </code></pre><p>While these variables are all discrete, the magnitude of some of them is still meaningful. i.e. <strong><code>year_built</code></strong>&rsquo;s value could indicate temporal patterns in the data, <strong><code>land, floorplate, bedrooms, bathrroms, garages</code></strong> will likely have a impact on <strong><code>sale_price</code></strong>.</p>
-<p>If **<code>property_id </code>**is an identifier there should be the same number of unique identifiers as rows;</p>
+<p>If <strong><code>property_id</code></strong> is an identifier there should be the same number of unique identifiers as rows;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">numel( unique(RawData.property_id))
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 26625
 </code></pre><p>That&rsquo;s not the case. Is there only a small number of reccurences of any one ID ?</p>
@@ -424,7 +424,7 @@ xlabel('number of times a property_id occurs','Interpreter','none')
 ylabel('count of property ID''s')
 title('Property IDs with multiple occurances in the dataset')
 </code></pre><p><img src="../../images/Modelling_images/figure_0.png" alt="figure_0.png"></p>
-<p>This could indicate some proeprties were bought and sold multiple times in the dataset. One **<code>property_id </code>**occcured 36 times.</p>
+<p>This could indicate some proeprties were bought and sold multiple times in the dataset. One <strong><code>property_id</code></strong> occcured 36 times.</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">% Show data with the property_id that occurs 36 times
 RawData( RawData.property_id==t(t(:,2)==36,1) , : )
 </code></pre><table>
@@ -631,11 +631,11 @@ RawData( RawData.property_id==t(t(:,2)==36,1) , : )
 </tr>
 </tbody>
 </table>
-<p>This explains it; <strong><code>property_id</code></strong> <code>5543930</code> was a &lsquo;<code>Strata</code>&rsquo; <strong><code>property_type</code></strong>. So, not all **<code>property_id'</code>**s define a unique property. This could give us insight into the data;</p>
+<p>This explains it; <strong><code>property_id</code></strong> <code>5543930</code> was a &lsquo;<code>Strata</code>&rsquo; <strong><code>property_type</code></strong>. So, not all <strong><code>property_id</code></strong>&rsquo;s define a unique property. This could give us insight into the data;</p>
 <blockquote>
-<p>**    Insight 1: <strong>&ldquo;Apartments with equivalent features (</strong><code>bathrooms</code>**, **<code>garages </code>**etc.) sell for different prices with only **<code>sale_date </code>**changing. Once <strong><code>sale_date</code></strong> is controlled for, the remaining variance could give a benchmark for the external effects on **<code>sale_price </code>**that we do not have data for.&rdquo;</p>
+<p>**    Insight 1: **&ldquo;Apartments with equivalent features ( <strong><code>bathrooms</code></strong> , <strong><code>garages</code></strong> etc.) sell for different prices with only <strong><code>sale_date</code></strong> changing. Once <strong><code>sale_date</code></strong> is controlled for, the remaining variance could give a benchmark for the external effects on <strong><code>sale_price</code></strong> that we do not have data for.&rdquo;</p>
 </blockquote>
-<p>Only <strong><code>postcode </code></strong>&amp; <strong><code>property_id</code></strong> will be converted from numeric to categoricals for the purpose of exploring the data. Though, we must take note of this conversion for <strong><code>postcode</code></strong>. Because this is a spatial category, it could later be converted back to a numeric distance feature.</p>
+<p>Only <strong><code>postcode</code></strong> &amp; <strong><code>property_id</code></strong> will be converted from numeric to categoricals for the purpose of exploring the data. Though, we must take note of this conversion for <strong><code>postcode</code></strong>. Because this is a spatial category, it could later be converted back to a numeric distance feature.</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">% identify cells of strings, property_id, and postcode as categorical variables
 categoryIdx = ismember( RawData.Properties.VariableNames , {'property_id','postcode'}) ...
       | arrayfun(@(X) iscell(RawData{1,X}) , 1:width(RawData) );
@@ -660,7 +660,7 @@ disp(Data(1:5,:))
       841815          House         EMERTON            2770       NSW     1.1025e+06     552        104          1            3           2       -9.1149          4.14            1988       2014-07-20
       4393085         Strata        PACIFIC PINES      4211       QLD     1.1838e+06     380        NaN          2            4           2       -2.7863          6.89            1988       2019-08-15
       2782313         Strata        MARSFIELD          2122       NSW      8.052e+05    3627       1239          2            2           2       -1.1416        12.207            2000       2013-10-30
-</code></pre><p>First 5 columns are categoricals, last column is the matlab &lsquo;datetime&rsquo; class. Columns 6:14 are numeric integers and floating point numbers. **<code>sale_date </code>**will be more meaningful as a continuous, numeric variable that starts at 0 for the earliest date:</p>
+</code></pre><p>First 5 columns are categoricals, last column is the matlab &lsquo;datetime&rsquo; class. Columns 6:14 are numeric integers and floating point numbers. <strong><code>sale_date</code></strong> will be more meaningful as a continuous, numeric variable that starts at 0 for the earliest date:</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">Data.sale_date_numeric = datenum(Data.sale_date) - min(datenum(Data.sale_date));
 % store column names as variable names
 varNames = Data.Properties.VariableNames;
@@ -689,12 +689,12 @@ varNames = Data.Properties.VariableNames;
 </ul>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">sum( (Data.land)&lt;Data.floorplate )
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 5781
-</code></pre><p>Wrong assumption! This finding is contradictory to the description of the land and floorplate variables. Contacting the subject matter expert is required here, as there are a considerable number of violations of this common sense assumption. Until then, becasue these are all &ldquo;Strata&rdquo; **<code>property_types </code>**we&rsquo;ll assume the meaning is; &ldquo;<em>accumulated floorspace of all properties under that same <strong><strong><code>property_id</code></strong></strong>, in square meters</em>&rdquo;, and treat these observations as no different.</p>
+</code></pre><p>Wrong assumption! This finding is contradictory to the description of the land and floorplate variables. Contacting the subject matter expert is required here, as there are a considerable number of violations of this common sense assumption. Until then, becasue these are all &ldquo;Strata&rdquo; <strong><code>property_types</code></strong> we&rsquo;ll assume the meaning is; &ldquo;<em>accumulated floorspace of all properties under that same <strong><strong><code>property_id</code></strong></strong>, in square meters</em>&rdquo;, and treat these observations as no different.</p>
 <ul>
 <li><strong><code>bedrooms, bathrooms, garages</code></strong>: No specific assumptions to point out.</li>
 <li><strong><code>slope</code></strong>: expect normally distributed values: the land&rsquo;s gradient &amp; orientation of houses shouldn&rsquo;t have a bias.</li>
 <li><strong><code>max_roof_height</code></strong>: larger values for Strata (multi-level)</li>
-<li><strong><code>year_built</code></strong>: (as **<code>sale_date </code>**above)</li>
+<li><strong><code>year_built</code></strong>: (as <strong><code>sale_date</code></strong> above)</li>
 </ul>
 <h1 id="data-cleaning">Data Cleaning</h1>
 <p>Data cleaning will be done before exploring the data relationships, to give a clearer picture. This involves missing value handling, outlier treatments and some variable transformations.</p>
@@ -703,7 +703,6 @@ varNames = Data.Properties.VariableNames;
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">sum( Data{:,1:5}==&quot;&quot; | Data{:,1:5}==&quot; &quot; | ismissing(Data{:,1:5}) )
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = 1x5    
      0     0     0     0     0
-
 </code></pre><p>No categoricals have empty category labels.</p>
 <p>Inspecting only the numeric varialbes for missing values;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">summary(Data(:,[6:15]))
@@ -773,7 +772,7 @@ varNames = Data.Properties.VariableNames;
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">missingRow = any(ismissing(Data{:,7:14}),2);
 sprintf( '%0.1f%% of rows have at least 1 missing variable', sum( missingRow ) ./ height(Data)*100 )
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">ans = '7.6% of rows have at least 1 missing variable'
-</code></pre><p>Looking at correlations, and their associated pvalues between numeric variables and incidence of rows where at least one variable has a missing value will show if there is a significant underlying pattern to the missing values. But first, a transform of **<code>sale_date </code>**to numeric from datetime class.</p>
+</code></pre><p>Looking at correlations, and their associated pvalues between numeric variables and incidence of rows where at least one variable has a missing value will show if there is a significant underlying pattern to the missing values. But first, a transform of <strong><code>sale_date</code></strong> to numeric from datetime class.</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">[rho,p] = corr([Data{:,[6:14,16]}, missingRow ],'rows','pairwise');
 missingTbl = table( p(end,1:end-1)' , rho(end,1:end-1)' , 'VariableNames',{'pValue','correlation'} , ...
       'RowNames',varNames([6:14,16])');
@@ -790,16 +789,16 @@ disp( missingTbl )
     max_roof_height       0.18467     0.0058482 
     year_built           0.024703      0.009955 
     sale_date_numeric     0.38533     -0.003798 
-</code></pre><p>Sale price and year built have &lt;0.05 pValues for their correlations to missing rows. Though, **<code>sale_price </code>**and **<code>year_built </code>**could themselves be correlated;</p>
+</code></pre><p>Sale price and year built have &lt;0.05 pValues for their correlations to missing rows. Though, <strong><code>sale_price</code></strong> and <strong><code>year_built</code></strong> could themselves be correlated;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">[rho,p] = corr(Data.sale_price, Data.year_built,'rows','pairwise')
 </code></pre><pre><code class="language-text:Output" data-lang="text:Output">rho = -0.0550
 p = 2.2610e-35
 </code></pre><p>They are correlated. So missing values vary with sale price, but <strong><code>sale_price</code></strong> goes down, when year goes up; they are colinear.</p>
 <blockquote>
-<p>**    Insight #2: <strong>&quot;</strong><code>sale_price</code>**<code> </code>and <strong><code>year_built</code></strong><code> </code>have a weak relationship with occurance of missing values, but <strong><code>sale_price</code></strong><code> </code>and <strong><code>year_built</code></strong><code> </code>themselves have a strong relationship.&quot;</p>
+<p>**    Insight #2: <strong>&quot;<code>sale_price</code></strong> and <strong><code>year_built</code></strong><code> </code>have a weak relationship with occurance of missing values, but  <strong><code>sale_price</code></strong> and <strong><code>year_built</code></strong><code> </code>themselves have a strong relationship.&quot;</p>
 </blockquote>
 <p>Inspecting if variation in missing values is non-random &amp; influenced by the categoricals, can be done by using an Analysis of Variance (ANOVA) with the nested categories <strong><code>property_type, state, postcode </code></strong>&amp; <strong><code>suburb</code></strong>.</p>
-<p>Because we&rsquo;ve seen that **<code>sale_price </code>**and **<code>year_built </code>**are colinear, and correlated with observations that have missing rows, they will be added to the ANOVA as continuos variables.</p>
+<p>Because we&rsquo;ve seen that <strong><code>sale_price </code></strong> and <strong><code>year_built </code></strong> are colinear, and correlated with observations that have missing rows, they will be added to the ANOVA as continuos variables.</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">% setting up the nested categories relationships matrix;
 nestingM =  [0 0 0 0 0 0; ... % property
             0 0 0 1 0 0; ... % postcode -&gt; is nested in state
@@ -816,24 +815,24 @@ nestingM =  [0 0 0 0 0 0; ... % property
 <pre><code>**Insight \#3: **&quot;Missing value rows occur very slightly more with properties built more recently.&quot;
 </code></pre>
 </blockquote>
-<p><em>(When controlling for <strong><strong><code>state, postcode, suburb </code></strong></strong>&amp; <strong><strong><code>sale_price </code></strong></strong>- with confidence level 3.3% (pValue))</em></p>
-<p>The conclusion here is that if we had to remove all rows that had <em>any</em> missing values, sales price prediction could be a biased model to the extent that year_built is predictive of **<code>sales_price. </code>**But because <strong><code>year_built</code></strong> is only slightly correlated with missing values, and only with 3.6% confidence of the null hypotheses - removal of all rows with missing values might be too heavy handed - especially when 7.6% of rows have a missing value/</p>
+<p><em>(When controlling for <strong><strong><code>state, postcode, suburb</code></strong></strong> &amp; <strong><strong><code>sale_price </code></strong></strong>- with confidence level 3.3% (pValue))</em></p>
+<p>The conclusion here is that if we had to remove all rows that had <em>any</em> missing values, sales price prediction could be a biased model to the extent that year_built is predictive of <strong><code>sales_price.</code></strong> But because <strong><code>year_built</code></strong> is only slightly correlated with missing values, and only with 3.6% confidence of the null hypotheses - removal of all rows with missing values might be too heavy handed - especially when 7.6% of rows have a missing value/</p>
 <h1 id="imputing-missing-values">Imputing missing values</h1>
 <p>To keep observations with missing values, we&rsquo;ve two choices: let the modelling algorithm decide how to treat them, or impute the values with our own technique.</p>
 <p>Across all variables, if observations with non missing values but same <strong><code>property_id</code></strong> exists, those values can be used. This would be wrong if renovations we&rsquo;re done on the property over time - but we can assume this will have small impact across the dataset.</p>
 <p>For specific variables, treatment requires some common sense thinking about them;</p>
 <ul>
-<li><strong><code>Land</code>****:</strong> An average could be taken for &ldquo;<code>Houses&quot; </code>/ &ldquo;<code>Strata&quot;</code> in the same <strong><code>suburb </code><strong>or</strong><code> postcode</code></strong>. If too few observations exist in a nested group, and we assume housing density changes smoothly with location, GPS data could help to find the land-size averages of nearby suburbs.</li>
-<li><strong><code>floorplate</code>****:</strong> As above, we can take averages for in-suburb <strong><code>property_type</code></strong> = &ldquo;<code>Houses&quot;</code>. For strata, it&rsquo;s a little more involved. floorplate will relate to all observations under the same <strong><code>property_id</code></strong>. The number of observations under the same <strong><code>property_id</code></strong> is an indication of either sequential buy-sell events, and/or the number of apartments that &ldquo;<code>Strata</code>&rdquo; type <strong><code>property_id</code></strong> holds. As we&rsquo;ve seen in the &lsquo;<em>common sense assumptions&rsquo;</em> above - floorplate is of the entire building / <strong><code>property_id</code></strong> across all levels, we&rsquo;d take the average of <strong><code>property_id</code></strong> within <code>Strata.</code></li>
-<li><strong><code>bedrooms</code></strong><code>, </code><strong><code>bathrooms</code></strong><code>, </code><strong><code>garages</code>****:</strong> Imputation needs to adhere to the above also.</li>
-<li><strong><code>slope</code>****:</strong> estimated by the surrounding suburbs. Though if a suburb is less than unanimously +ve or -ve in slope, estimation might be worse than leaving the value as missing / removing from analysis. (House could be facing the otherway on a uniformly sloped suburb)</li>
-<li><strong><code>max_roof_height</code>****:</strong> Could be averaged using same method described for <strong><code>floorplate</code></strong>.</li>
-<li><strong><code>year_built</code>****:</strong> This could be done with suburb.</li>
+<li><strong><code>Land</code>:</strong> An average could be taken for &ldquo;<code>Houses&quot; </code>/ &ldquo;<code>Strata&quot;</code> in the same <strong><code>suburb </code><strong>or</strong><code> postcode</code></strong>. If too few observations exist in a nested group, and we assume housing density changes smoothly with location, GPS data could help to find the land-size averages of nearby suburbs.</li>
+<li><strong><code>floorplate</code>:</strong> As above, we can take averages for in-suburb <strong><code>property_type</code></strong> = &ldquo;<code>Houses&quot;</code>. For strata, it&rsquo;s a little more involved. floorplate will relate to all observations under the same <strong><code>property_id</code></strong>. The number of observations under the same <strong><code>property_id</code></strong> is an indication of either sequential buy-sell events, and/or the number of apartments that &ldquo;<code>Strata</code>&rdquo; type <strong><code>property_id</code></strong> holds. As we&rsquo;ve seen in the &lsquo;<em>common sense assumptions&rsquo;</em> above - floorplate is of the entire building / <strong><code>property_id</code></strong> across all levels, we&rsquo;d take the average of <strong><code>property_id</code></strong> within <code>Strata.</code></li>
+<li><strong><code>bedrooms</code></strong><code>, </code><strong><code>bathrooms</code></strong><code>, </code><strong><code>garages</code>:</strong> Imputation needs to adhere to the above also.</li>
+<li><strong><code>slope</code>:</strong> estimated by the surrounding suburbs. Though if a suburb is less than unanimously +ve or -ve in slope, estimation might be worse than leaving the value as missing / removing from analysis. (House could be facing the otherway on a uniformly sloped suburb)</li>
+<li><strong><code>max_roof_height</code>:</strong> Could be averaged using same method described for <strong><code>floorplate</code></strong>.</li>
+<li><strong><code>year_built</code>:</strong> This could be done with suburb.</li>
 </ul>
 <p>If the model built with missing value rows removed is not accurate enough, these techniques above should be implemented.</p>
 <h1 id="exploring-the-shape-of-data">Exploring the Shape of data</h1>
 <p>Before exploring relationships between variables, we will view their shape &amp; make any normalising transforms. For the dependent variable, it will usually give a better model, for the independent variables, understanding their shape will be made easier. Some modelling techniques may benefit from this too.</p>
-<p>**    Numeric Variables**</p>
+<p><strong>Numeric Variables</strong></p>
 <p>First, histograms to see bias, skew and extreme values of the numeric variables;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">numericVars = [6:14,16];
 figure;
@@ -845,16 +844,18 @@ end
 </code></pre><p><img src="../../images/Modelling_images/figure_2.png" alt="figure_2.png"></p>
 <p><strong>Dependent Variable</strong>: <strong>sale_price</strong></p>
 <p>Positive skew**:** Could use a power law or exponential transform to make marginal changes of equal size no matter what starting value.</p>
-<p>**    Insight #4:***** ****&quot;*sale_price is positively skewed.&rdquo;</p>
+<blockquote>
+<p><strong>Insight #4:</strong> <strong>&quot;<code>sale_price</code></strong> is positively skewed.&rdquo;</p>
+</blockquote>
 <p>Outliers: some large postive outliers, may not need to remove after the transform.</p>
 <p><strong>Independent variables;</strong></p>
 <ul>
 <li><strong><code>land, floorplate</code></strong>: both strongly positively skewed. This is likely because they are area measurements which scale with a 2nd power (Area = side*side). Once a square root transform is done, analysis of extreme values will be more meaningful.</li>
 <li><strong><code>bedrooms, bathrooms, garages</code></strong>: bedrooms &amp; garages are negatively skewed, though at low integer values, they will be left as raw before interpretting variable relationships.</li>
-<li>**<code>slope: </code>**normally distributed.</li>
-<li>**<code>max_roof_height: </code>**This distribution has 2 modes; likely a function of <strong><code>property_type</code></strong>, so adding interaction of these two variables could be helpful. Also positively skewed</li>
+<li><strong><code>slope:</code></strong> normally distributed.</li>
+<li><strong><code>max_roof_height:</code></strong> This distribution has 2 modes; likely a function of <strong><code>property_type</code></strong>, so adding interaction of these two variables could be helpful. Also positively skewed</li>
 <li><strong><code>year_built:</code></strong> Negative skew, and some extreme outliers left of median. A square or cube power transform could help normalise the data. Also, scalling the data so it starts at 0 will be applied so cubd values don&rsquo;t become too extreme. The higher frequency of values at the start of decades is suspicious - this could be an estimation made in the absense of true information on <strong><code>year_built.</code></strong></li>
-<li>**<code>sale_date_numeric: </code>**This is nearly uniform, with a lack of data in more recent years.</li>
+<li><strong><code>sale_date_numeric:</code></strong> This is nearly uniform, with a lack of data in more recent years.</li>
 </ul>
 <p>Now, making the mentioned transforms to help see data patterns;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">Data.log_sale_price = log(Data.sale_price);
@@ -889,12 +890,12 @@ corrplot( Data(:,transformNumericVars(strongCovID(1,:))) ,'testR','on','varNames
 </code></pre><p><img src="../../images/Modelling_images/figure_4.png" alt="figure_4.png"></p>
 <p>The top row of plots is correlations with <strong><code>sale_price</code></strong>. The relationships are;</p>
 <ul>
-<li>Higher **<code>bedroom, bathroom, garage </code>**values increase sale price, but <strong><code>bathroom</code></strong> is strongest.</li>
-<li>**<code>floorspace \&amp; max_roof_height </code>**decrease with sale price (likely explained by <strong><code>property_type</code></strong>).</li>
-<li>**<code>sale_date </code>**increases <strong><code>sale_price</code></strong> (<em>the transform done maxes the earliest date = 0</em>).</li>
+<li>Higher <strong><code>bedroom, bathroom, garage</code></strong> values increase sale price, but <strong><code>bathroom</code></strong> is strongest.</li>
+<li><strong><code>floorspace \&amp; max_roof_height</code></strong> decrease with sale price (likely explained by <strong><code>property_type</code></strong>).</li>
+<li><strong><code>sale_date</code></strong> increases <strong><code>sale_price</code></strong> (<em>the transform done maxes the earliest date = 0</em>).</li>
 </ul>
-<p>**    Categorical Variables**</p>
-<p><code>A boxplot can show effect of grouping on the dependent variable. There are so many categories of </code>**<code>suburb</code>**** <strong><code>and </code></strong><code>postcode</code>****, **so first <strong><code>state \&amp; property_type</code></strong> will be viewed;</p>
+<p><strong>Categorical Variables</strong></p>
+<p>A boxplot can show effect of grouping on the dependent variable. There are so many categories of <strong><code>suburb</code></strong> and <strong><code>postcode</code></strong>, so first <strong><code>state &amp; property_type</code></strong> will be viewed;</p>
 <pre><code class="language-matlab:Code" data-lang="matlab:Code">figure;
 boxplot(Data.sale_price,{Data.property_type,Data.state},&quot;ColorGroup&quot;,Data.state,'Orientation','horizontal');
 xlabel('sale_price','interpreter','none')
@@ -1531,6 +1532,12 @@ title({'Model Comparison - RMSE &amp; Model selection Critera';'Effect of inflat
 		<a class="pager__link" href="../../post/rnn5min_1/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;Previous</span>
 			<p class="pager__title">5-min reads: why cell state propogation slows convergence</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="../../post/socratesvalidation/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">Socratic argument against using Validation Sets</p>
 		</a>
 	</div>
 </nav>

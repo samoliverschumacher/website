@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Socratic argument against using Validation Sets - Sam Schumacher</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Socratic argument against using Validation Sets" />
+<meta property="og:description" content="There is no real utility in taking the position that you won&rsquo;t do model selection via validation splits, although, know there is a meta-purpose to bringing a blowtorch to this concept&hellip;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/socratesvalidation/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-05-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-20T00:00:00&#43;00:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="../../css/style.css">
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo logo--mixed">
+		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
+			<div class="logo__item logo__imagebox">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
+				</div><div class="logo__item logo__text">
+					<div class="logo__title">Sam Schumacher</div>
+					<div class="logo__tagline">ML &amp; AI</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="../../about/">
+				
+				<span class="menu__text">This blog</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Socratic argument against using Validation Sets</h1>
+			<p class="post__lead">Validation datasets for model selection</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-05-20T00:00:00Z">May 20, 2021</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>, <a class="meta__link" href="../../categories/datascience/" rel="category">Datascience</a>
+	</span>
+</div></div>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/simone-secci-redquestionmark-unsplash.jpg" alt="Socratic argument against using Validation Sets">
+		</figure><div class="content post__content clearfix">
+			<p><em>There is no real utility in taking the position that you <em><strong>won&rsquo;t do model selection via validation splits</strong></em>, although, know there is a meta-purpose to bringing a blowtorch to this concept&hellip;</em></p>
+<hr>
+<ul>
+<li><a href="#socratic-argument-against-using-validation-sets">Socratic argument against using Validation Sets</a>
+<ul>
+<li><a href="#a-disciplined-structure-to-questioning-can">A disciplined structure to questioning can</a></li>
+<li><a href="#different-questions-have-different-focuses">Different questions have different focuses</a></li>
+<li><a href="#socrates-questions-his-student-on-why-they-use-validation-splits-for-model-selection">Socrates questions his student on why they use validation splits for model selection</a></li>
+<li><a href="#no-ml-task-is-the-same-you-must-think-from-first-principles">No ML task is the same, you must think from first principles</a></li>
+<li><a href="#an-argument-against-something-isnt-an-argument-for-the-other">An argument <em><strong>against</strong></em> something, isn&rsquo;t an argument <em><strong>for</strong></em> the other.</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="socratic-argument-against-using-validation-sets">Socratic argument against using Validation Sets</h1>
+<p>Socrates, a father to Stoicism &amp; Western philosophy,  started a legacy in his approach to gaining knowledge. Rather than bringing new ideas, he would challenge conventional ones (like the scientific method). The Socratic Method was questioning to get to the corners of someones knowledge until; &hellip; they walked away embarrassed, second guessing if they ever were an expert.</p>
+<h2 id="a-disciplined-structure-to-questioning-can">A disciplined structure to questioning can</h2>
+<blockquote>
+<ul>
+<li>Acknowledge contradictions.</li>
+<li>Follow out logical consequences of thought, the implications of what we think.</li>
+<li>Distinguish what we know from what we don&rsquo;t.</li>
+<li>To probe the extent of knowledge.</li>
+</ul>
+</blockquote>
+<h2 id="different-questions-have-different-focuses">Different questions have different focuses</h2>
+<blockquote>
+<dl>
+<dt>To clarify thinking, explore origin:</dt>
+<dd><em>&ldquo;Why, but Why, but Why?&quot;</em></dd>
+<dt>Challenge assumptions:</dt>
+<dd><em>&ldquo;Is this always the case?&quot;</em></dd>
+<dt>Provide evidence as a basis for arguments:</dt>
+<dd><em>&ldquo;Is there any reason to doubt this argument?&quot;</em></dd>
+<dt>Discover alternative viewpoints and perspectives and conflicts between contentions:</dt>
+<dd><em>&ldquo;What is the counter argument? did anyone see this another way?&quot;</em></dd>
+<dt>Exploring implications and consequences:</dt>
+<dd><em>&ldquo;How does that affect&hellip;X? But what else would result?&quot;</em></dd>
+</dl>
+<p><em><a href="https://en.wikipedia.org/wiki/Socratic_questioning#:~:text=Socratic%20questioning%20is%20a%20form,we%20know%20from%20what%20we">- Wikipedia</a></em></p>
+</blockquote>
+<p>So - Stay to listen, and discover the extent of the merit in the prescription &ldquo;Always use validation data&rdquo;.</p>
+<hr>
+<h2 id="socrates-questions-his-student-on-why-they-use-validation-splits-for-model-selection">Socrates questions his student on why they use validation splits for model selection</h2>
+<p><strong>Pupil:</strong> Data Should be separated out, and used as validation for model selection<br>
+<em><strong>Socrates:</strong> Why does that help model selection?</em><br>
+<strong>Pupil:</strong> A process which optimised on the training set, but still does well on the validation set is going to do better on the population.<br>
+<em><strong>Socrates:</strong> Why is the population important?</em><br>
+<strong>Pupil:</strong> We are trying to understand the population the sample is generated from, because it will generate new sample data again in an identical process.<br>
+<em><strong>Socrates:</strong> Identically? What about the stock market? Is the population that created your sample the same one generating data points in 1990?</em><br>
+<strong>Pupil:</strong> That&rsquo;s different.<br>
+<em><strong>Socrates:</strong> Ok, So by how much is it different to your &lsquo;model selection&rsquo; challenge?</em><br>
+<strong>Pupil:</strong> I don&rsquo;t know precisely<br>
+<em><strong>Socrates:</strong> Precisely?</em><br>
+<strong>Pupil:</strong> 1990 Stock market has foundational principles that make it the same as today, but some relationships are different than in 1990. The split between those, I can&rsquo;t say</p>
+<blockquote>
+<p><em><strong>A caveat to the rule:</strong></em> Validation data splitting should be used for model selection to the extent that the population is similar to the sample we&rsquo;re interested in modelling. We&rsquo;re not sure how different tomorrows sample is to todays population.</p>
+</blockquote>
+<p><em><strong>Socrates:</strong> If we <strong>strictly</strong> stick to this selection method, what other situations could arise?</em><br>
+<strong>Pupil:</strong> The technique rejects a model even when it performs best on tomorrows sample.<br>
+<em><strong>Socrates:</strong> Why so?</em><br>
+<strong>Pupil:</strong> Validation data might have patterns in it that occur on tomorrows sample. The model won&rsquo;t learn those if it&rsquo;s hidden from training.<br>
+<em><strong>Socrates:</strong> What else is true, if validation data has unique patterns in it?</em><br>
+<strong>Pupil:</strong> The training data would have low entropy - be lacking in the amount of information.</p>
+<blockquote>
+<p><em>Validation reducing performance</em> If the data sample has a lot of noise, chance could remove patterns from training that are instructive for the prediction task.</p>
+</blockquote>
+<p><em><strong>Socrates:</strong> How does selection process affect model outcomes?</em><br>
+<strong>Pupil</strong>: It affects predictions.<br>
+<em><strong>Socrates:</strong> All predictions? Are there some predictions that are affected differently?</em><br>
+<strong>Pupil:</strong> not all predictions, only predictions until next model fitting or model selection step.</p>
+<blockquote>
+<p>There is a <strong>tradeoff between cost of data removal vs. value of additional data</strong>: When dataset&rsquo;s entropy lowers, or prediction occurs only for a short period, the uplift to performance because of model selection via validation dataset is diluted'</p>
+</blockquote>
+<p><em><strong>Socrates:</strong> If population does remain the same for tomorrow&rsquo;s prediction task, Are there situations when splitting validation data out could have no impact on population prediction?</em><br>
+<strong>Pupil:</strong> Yes, there is a situation. When the validation data has nothing useful in it compared to the training data, for helping to select a model that predicts the population better.<br>
+<em><strong>Socrates:</strong> If this were not the case, are there situations which might <strong>still</strong> give this perception of the two datasets?</em><br>
+<strong>Pupil:</strong> Perhaps models that have a low ability to express nuances in data.</p>
+<blockquote>
+<p>If a model cannot perform any worse on the validation set, than it does on the training set, the process is not helpful. A Model with assumptions that give it low ability to express nuances only found in training set, may limit the impact the validation selection process has on choosing which model will go on to make population predictions.</p>
+</blockquote>
+<hr>
+<p>Questioning assumptions, inverting an argument, hypothesising other conclusions which must also hold, can help to discover more about a topic. This conversational style of questioning can be powerful. If you can&rsquo;t find a team who embraces this, you can always talk with Socrates.</p>
+<hr>
+<h2 id="no-ml-task-is-the-same-you-must-think-from-first-principles">No ML task is the same, you must think from first principles</h2>
+<p>I recently had a machine learning task where thinking in first principles led me to question the rule of Always use validation data to select models. Through this, I learnt so much more deeply about optimising the efficiency of a Datasets.</p>
+<p>As Socrates helped his pupil discover, there are were trade-offs happening;</p>
+<ol>
+<li>Information loss in training set, for prediction accuracy</li>
+<li>Model Variance-Bias tradeoff</li>
+<li>Automation via models to add variation to the dataa histoy for the sake of prototyping &amp; learning, vs reverting to rules based automation due to poor validation performance caused by small number of observations in dataset.</li>
+</ol>
+<p>The task was using datasets from partially markovian causual structures - they changed over time, so population that was sampled from was, in theory, different to the validation dataset. Because thousands of models needed to be rebuilt daily, algorithmically, edge cases due to hard rules would come up.</p>
+<p>Model Validation has its reasons deeply rooted in elegant theories, but machine learning isn&rsquo;t always so. A model rejected due to the only remaining feature, on a very new data generating process having pValue = 0.0500001, could lead to automation by use of a rules based model.</p>
+<hr>
+<p>This might all seem like an argument against validation sets - it is&hellip; kind of. While it&rsquo;s certainly my stance to use validation, the Socratic method has helped to probe the extent of the idea.</p>
+<p>Even if you come to a situation where model selection via validation dataset has a weaker than normal rationale, remember;</p>
+<h2 id="an-argument-against-something-isnt-an-argument-for-the-other">An argument <em><strong>against</strong></em> something, isn&rsquo;t an argument <em><strong>for</strong></em> the other.</h2>
+<p>Deciding <em><strong>not</strong></em> to use validation data, even with all the arguments in the world, doesn&rsquo;t <em><strong>permit</strong></em> deploying the model. More conditions are necessary to ensure the model does the best it can on the data it hasn&rsquo;t seen yet;</p>
+<ul>
+<li>Develop models in line with the theoretical understanding of the DGP / causal structures of the ML environment.
+<ul>
+<li>Write rules that check these sensibilities in the model: &ldquo;an increasing customer age shouldn&rsquo;t predict a decreasing salary level&rdquo;</li>
+<li>Should some coefficients have large power relative to the other variables?</li>
+<li>Data sources with anomalous amount of missing data?</li>
+<li>If data is an aggregate, weight the observation proportional to the number of samples in that aggregate?</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>One more mental model I&rsquo;ve found useful, that applies here is to think of <em>&ldquo;Use Validation dataset to select model&rdquo;</em> as a <em><strong>map</strong></em> to guide your actions:</p>
+<blockquote>
+<p><em>The map is not the territory. A map&rsquo;s value becomes less when the world changes. A map cant represent the section of the world you are in - else it would be too large to carry with you. Question the cartographer: They had a purpose when writing the map.</em>
+<a href="https://fs.blog/2015/11/map-and-territory/">https://fs.blog/2015/11/map-and-territory/</a></p>
+</blockquote>
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/philosophy/" rel="tag">philosophy</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/first-princinples/" rel="tag">first princinples</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/machine-learning/" rel="tag">machine learning</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/model-selection/" rel="tag">model selection</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Sam Schumacher</span>
+	</div>
+	<div class="authorbox__description">
+		Using machine learning projects to discover the world through its problems
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="../../post/realestatepricing/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;Previous</span>
+			<p class="pager__title">Modelling Property Prices with Mixture models</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 Sam Schumacher.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+	</div>
+<script async defer src="../../js/menu.js"></script>
+
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>
+</script>
+</body>
+</html>

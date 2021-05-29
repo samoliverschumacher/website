@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>machine learning on Sam Schumacher</title>
+    <link>/tags/machine-learning/</link>
+    <description>Recent content in machine learning on Sam Schumacher</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 20 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Socratic argument against using Validation Sets</title>
+      <link>/post/socratesvalidation/</link>
+      <pubDate>Thu, 20 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/socratesvalidation/</guid>
+      <description>&lt;p&gt;&lt;em&gt;There is no real utility in taking the position that you &lt;em&gt;&lt;strong&gt;won&amp;rsquo;t do model selection via validation splits&lt;/strong&gt;&lt;/em&gt;, although, know there is a meta-purpose to bringing a blowtorch to this concept&amp;hellip;&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

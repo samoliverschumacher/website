@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mixture model on Sam Schumacher</title>
+    <link>/tags/mixture-model/</link>
+    <description>Recent content in mixture model on Sam Schumacher</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/mixture-model/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Modelling Property Prices with Mixture models</title>
+      <link>/post/realestatepricing/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/realestatepricing/</guid>
+      <description>&lt;p&gt;&lt;em&gt;A common application of gaussian mixture models is in property pricing. It&amp;rsquo;s used as an implementation of a &amp;ldquo;Hedonic Pricing&amp;rdquo; which involves modelling the price using variables categorised into 3 types; structural (intrinsic properties of the property), locality (region, state etc.) and environmental (air quality, proximity to parks etc.) the latter 2 types genrally have noise in their measurement - so are modelled as &amp;lsquo;random effects&amp;rsquo;. it&amp;rsquo;s this that makes a mixture model needed, where conventional multiple regression would only have errors as randomly distributed, and predictors fixed&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
