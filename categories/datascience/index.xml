@@ -6,7 +6,25 @@
     <description>Recent content in Datascience on Sam Schumacher</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/datascience/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/datascience/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Socratic argument against using Validation Sets</title>
+      <link>/post/socratesvalidation/</link>
+      <pubDate>Thu, 20 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/socratesvalidation/</guid>
+      <description>&lt;p&gt;&lt;em&gt;There is no real utility in taking the position that you &lt;em&gt;&lt;strong&gt;won&amp;rsquo;t do model selection via validation splits&lt;/strong&gt;&lt;/em&gt;, although, know there is a meta-purpose to bringing a blowtorch to this concept&amp;hellip;&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Modelling Property Prices with Mixture models</title>
+      <link>/post/realestatepricing/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/realestatepricing/</guid>
+      <description>&lt;p&gt;&lt;em&gt;A common application of gaussian mixture models is in property pricing. It&amp;rsquo;s used as an implementation of a &amp;ldquo;Hedonic Pricing&amp;rdquo; which involves modelling the price using variables categorised into 3 types; structural (intrinsic properties of the property), locality (region, state etc.) and environmental (air quality, proximity to parks etc.) the latter 2 types genrally have noise in their measurement - so are modelled as &amp;lsquo;random effects&amp;rsquo;. it&amp;rsquo;s this that makes a mixture model needed, where conventional multiple regression would only have errors as randomly distributed, and predictors fixed&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Autonomous vechicle microsleep detector Vol3: Misclassification tradeoff</title>
       <link>/post/eeg_costtradeoff/</link>
