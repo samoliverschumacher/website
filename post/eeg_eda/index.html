@@ -218,7 +218,7 @@ boxplot( TimeSeries_clnnorm ,<span style="color:#e6db74">&#39;Orientation&#39;</
 yticklabels(eegName); grid on;
 xlim([<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span> , <span style="color:#ae81ff">8</span>]); xlabel(<span style="color:#e6db74">&#39;normalised mV&#39;</span>)
 title(<span style="color:#e6db74">&#39;EEG signals within 99.9% of all observed values&#39;</span>)
-</code></pre></div><p><img src="../../images/eegeda/7.png/" alt="eeg box plot"></p>
+</code></pre></div><p><img src="../../images/eegeda/7.png" alt="eeg box plot"></p>
 <p>The boxplot whisker length is set to 3 times the interquartile range. Seeing more outliers across all variables' box-plots to the right, means the distribution will have heavy tails (compared to a normal distribution) i.e. more very large values than very small values. The prediction model must be capable of handling asymmetric extreme values.</p>
 <blockquote>
 <p><strong>Insight #1</strong>: <em>&ldquo;EEG values' extremes are asymmetric around their medians&rdquo;</em></p>
@@ -235,7 +235,7 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
     title(eegName(v)); legend({<span style="color:#e6db74">&#39;Closed&#39;</span>,<span style="color:#e6db74">&#39;Open&#39;</span>}); xlabel(<span style="color:#e6db74">&#39;Normalised mV&#39;</span>)
     xlim([<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span> , <span style="color:#ae81ff">8</span>]);
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/6.png/" alt="eeg histograms"></p>
+</code></pre></div><p><img src="../../images/eegeda/6.png" alt="eeg histograms"></p>
 <p>Globally, it&rsquo;s not obvious that magnitude of EEG values is different for each eye-state.</p>
 <blockquote>
 <p><strong>Insight #2</strong>: <em>&ldquo;Mean EEG value doesn&rsquo;t change much globally with eye state&rdquo;</em></p>
@@ -251,12 +251,12 @@ figure(<span style="color:#e6db74">&#39;Position&#39;</span>,[<span style="color
     xlabel(<span style="color:#e6db74">&#39;time (128^t^h sec)&#39;</span>);
     title(eegName(v))
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/timeseries1.png/" alt="eeg time series 1"></p>
+</code></pre></div><p><img src="../../images/eegeda/timeseries1.png" alt="eeg time series 1"></p>
 <p>Plotted as a time series it&rsquo;s clear that for some EEGs, the signal &lsquo;spikes&rsquo; as the patients' eyes open or close. It&rsquo;s hard to make out on the small plots. Zooming in on transition from open to closed eyes in the range t= 2000 - 3500;</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#66d9ef">for</span> v=<span style="color:#ae81ff">1</span>:Nvars
     xlim(subplot(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">3</span>,v),[<span style="color:#ae81ff">2000</span> , <span style="color:#ae81ff">3500</span>])
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/5.png/" alt="eeg time series zoom"></p>
+</code></pre></div><p><img src="../../images/eegeda/5.png" alt="eeg time series zoom"></p>
 <p>The patterns happen before opening &amp; closing, including a brief blink around t = 2800. So, the pattern is more specific for regular closing, compared to blinking only.</p>
 <p>The effect is more pronounced in EEGs 1-2 &amp; 11-14 across the whole dataset.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% View particular Variables only, as time series.</span>
@@ -269,7 +269,7 @@ vars=[<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>,
     xlabel(<span style="color:#e6db74">&#39;time \fontsize{8}({\it128^t^h sec})&#39;</span>);
     title(eegName(v))
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/4.png/" alt="eeg transition signals"></p>
+</code></pre></div><p><img src="../../images/eegeda/4.png" alt="eeg transition signals"></p>
 <blockquote>
 <p><strong>Insight #3</strong>: <em>&ldquo;Lead signals exist for closing &amp; opening eys. Strongest in EEGs 1-2 &amp; 11-14&rdquo;</em></p>
 </blockquote>
@@ -287,7 +287,7 @@ vars=[<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">8</span>,
     annotation_datadims(<span style="color:#e6db74">&#39;rectangle&#39;</span>,[<span style="color:#ae81ff">10000</span>, min(ylim), <span style="color:#ae81ff">1500</span>,diff(ylim)] ,<span style="color:#e6db74">&#39;FaceAlpha&#39;</span>,<span style="color:#ae81ff">0.2</span>,<span style="color:#e6db74">&#39;FaceColor&#39;</span>,<span style="color:#e6db74">&#39;g&#39;</span>);
     yyaxis right; bar(idx_openclose,<span style="color:#e6db74">&#39;LineStyle&#39;</span>,<span style="color:#e6db74">&#39;none&#39;</span>,<span style="color:#e6db74">&#39;FaceAlpha&#39;</span>,<span style="color:#ae81ff">0.2</span>); ylabel(<span style="color:#e6db74">&#39;Closed = 1&#39;</span>)
 <span style="color:#66d9ef">end</span>
-</code></pre></div><p><img src="../../images/eegeda/3.png/" alt="eeg time series"></p>
+</code></pre></div><p><img src="../../images/eegeda/3.png" alt="eeg time series"></p>
 <p>EEG1 has a spike around t=11,000 not too different to other spikes near eye-state changes. Though in EEG8, this spike @t=11,000 is found also, and much larger compared to the other spikes in EEG8.</p>
 <blockquote>
 <p><strong>Insight #5</strong>: <em>&ldquo;Similar patterns to transition-spikes in EEGs 1-2, 11-14 occur at some non-transition timesteps, but EEGs 5 &amp; 8 have a uniquely pronounced signal at this time also&rdquo;</em></p>
@@ -358,7 +358,7 @@ corrlabels( significant_delta<span style="color:#f92672">==</span><span style="c
 hold on; boxplot((Xcorrdiff_significant),<span style="color:#e6db74">&#39;PlotStyle&#39;</span>,<span style="color:#e6db74">&#39;Compact&#39;</span>,<span style="color:#e6db74">&#39;Labels&#39;</span>,corrlabels); set(gca,<span style="color:#e6db74">&#39;XTickLabelRotation&#39;</span>,<span style="color:#ae81ff">90</span>)
 grid on; xlabel(<span style="color:#e6db74">&#39;EEG correlations&#39;</span>); ylabel(<span style="color:#e6db74">&#39;Change in correlation due to eye state&#39;</span>);
 title(<span style="color:#e6db74">&#39;Distributions of in EEG correlation differences due to eye state, across the 200 samples&#39;</span>)
-</code></pre></div><p><img src="../../images/eegeda/2.png/" alt="EEGc correlation differences distribution"></p>
+</code></pre></div><p><img src="../../images/eegeda/2.png" alt="EEGc correlation differences distribution"></p>
 <p>The box plot shows how the 91 correlation changes are distributed over the 200 randomly picked buckets.</p>
 <p>Highlighted are the correlations which change due to eye state, with 99% confidence (against the zero mean normal assumption). For example, the left most box and whisker plot is shows the 200 samples are distributed above zero, with all but a few outliers. It shows EEGs 1 &amp; 2 are more stronbgly correlated when eyes are open. And EEG 1 &amp; 8, are less correlated when eyes are open, though the effect ismore variaed across the 200 buckets (by the longer box, compared to EEG1-2).</p>
 <blockquote>
