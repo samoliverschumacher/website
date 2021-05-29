@@ -1301,7 +1301,7 @@ yyaxis right;
 plot([mdlBase_FE.ModelCriterion.AIC, mdlBase_ME1.ModelCriterion.AIC, mdlBase_ME2.ModelCriterion.AIC],<span style="color:#e6db74">&#39;-d&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">7</span>)
 ylabel(<span style="color:#e6db74">&#39;Akaike information criterion (AIC)&#39;</span>)
 title(<span style="color:#e6db74">&#39;Model Comparison - RMSE &amp; Model selection Critera&#39;</span>)
-</code></pre></div><p><img src="../../images/Modelling_images/figure_2.png" alt="figure_2.png"></p>
+</code></pre></div><p><img src="../../images/Modelling_images/figure_2_modelling.png" alt="figure_2.png"></p>
 <p>Model 2 has slightly worse RMSE, but much better AIC, due to its superior log likelihood. Because the assumptions of this type of model were valid, and the fact that the property industry uses this type of model as standard practice - the likelihood measure is very trustworthy, so AIC will determione best model;</p>
 <h1 id="best-model-mixed-effects-model">Best Model: Mixed Effects model;</h1>
 <p>Data Cleaning algorithm;</p>
@@ -1461,7 +1461,7 @@ yyaxis right;
 plot([mdlBase_ME2.ModelCriterion.AIC, mdlBase_ME2_inflation.ModelCriterion.AIC, mdlBase_ME2_inflation2.ModelCriterion.AIC],<span style="color:#e6db74">&#39;-d&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">7</span>)
 ylabel(<span style="color:#e6db74">&#39;Akaike information criterion (AIC)&#39;</span>)
 title({<span style="color:#e6db74">&#39;Model Comparison - RMSE &amp; Model selection Critera&#39;</span>;<span style="color:#e6db74">&#39;Effect of inflation proxy on model&#39;</span>})
-</code></pre></div><p><img src="../../images/Modelling_images/figure_3.png" alt="figure_3.png"></p>
+</code></pre></div><p><img src="../../images/Modelling_images/figure_3_modelling.png" alt="figure_3.png"></p>
 <p><strong>Inflation proxy should not be used;</strong></p>
 <ul>
 <li>Using the inflation proxy while keeping sale date in the model does not improve the AIC</li>
