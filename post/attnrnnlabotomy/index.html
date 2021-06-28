@@ -76,7 +76,9 @@
 		<figure class="post__thumbnail">
 			<img src="../../images/NNetLobotomy.jpg" alt="Surgery on an Attentional Neural Network">
 		</figure><div class="content post__content clearfix">
-			<h2 id="why-this-project">Why this project?</h2>
+			<p><em>Explaining the concept of &lsquo;Attention&rsquo; in Natural Language Processing Models by removing part of the memory function of a Recurrent Neural Network Encoder-Decoder</em></p>
+<hr>
+<h2 id="why-this-project">Why this project?</h2>
 <ul>
 <li>Understand &lsquo;Attention&rsquo;, in Natural Language Processing algorithms.</li>
 <li>Advancing explainability of A.I.</li>
@@ -213,7 +215,7 @@ In the example of sentence prediction;</p>
 <p>In the bidirectional LSTM, the Encoder takes a sequence in both directions as input. In the regular Encoder, the attention mechanism focused on the last step in the sequence, where the <code>{eos}</code> tag occurs - because this step stored all information from the entire sequence.</p>
 <p>In the bidirectional LSTM, the information from the entire sequence occurs at <em>both</em> the first position and the last position. So, attention finds the most useful information to be at the half way point;</p>
 <p><img src="../../images/attnRnnLobotomy/AttnScoresBiLSTM.png" alt="AttnScoresBiLSTM"></p>
-<p>The prediction for &ldquo;374&rdquo; is quite intuitive. Attention went to &ldquo;3&rdquo; when predicting &ldquo;C,C,C&rdquo;. Because the input sequence was flipped (Bidirectional LSTM), the first position was referenced when predicting the final output: &ldquo;end of string {eos}&rdquo;. The model knew that for this input, finishing with a &ldquo;4&rdquo; signals no more roman numerals needed to translate from numeric.</p>
+<p>The prediction for <code>374</code> is quite intuitive. Attention went to <code>3</code> when predicting <code>C,C,C</code>. Because the input sequence was flipped (Bidirectional LSTM), the first position was referenced when predicting the final output: end of string <code>{eos}</code>. The model knew that for this input, finishing with a <code>4</code> signals no more roman numerals needed to translate from numeric.</p>
 <p>There is a bias of the attention to the first step rather than the 3rd. This is because 2 digit numbers are 10% of observations which have no useful information in the final sequence spot.</p>
 <h2 id="forgetful-encoder-lstm-w-attn-1">Forgetful Encoder LSTM w. Attn.</h2>
 <h4 id="attn-scores-2">Attn Scores</h4>
@@ -238,7 +240,6 @@ In the example of sentence prediction;</p>
 </li>
 </ol>
 </section>
-
 		</div>
 		<footer class="post__footer">
 			
@@ -247,9 +248,6 @@ In the example of sentence prediction;</p>
 	<ul class="tags__list">
 		<li class="tags__item">
 			<a class="tags__link btn" href="../../tags/timeseries/" rel="tag">timeseries</a>
-		</li>
-		<li class="tags__item">
-			<a class="tags__link btn" href="../../tags/classification/" rel="tag">classification</a>
 		</li>
 		<li class="tags__item">
 			<a class="tags__link btn" href="../../tags/natural-language-processing/" rel="tag">Natural Language Processing</a>
