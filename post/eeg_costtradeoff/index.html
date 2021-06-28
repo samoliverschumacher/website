@@ -130,7 +130,7 @@ carcrash_risk = Loss_closeeye<span style="color:#f92672">.*</span>[ones(<span st
 autopilot_takeover_risk = Loss_openeye<span style="color:#f92672">.*</span>[NaN(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>),ones(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>)];
 hold on; 
 p1 = plot( carcrash_risk<span style="color:#f92672">&#39;</span>,<span style="color:#e6db74">&#39;r&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;HandleVisibility&#39;</span>,<span style="color:#e6db74">&#39;off&#39;</span>); p2 = plot( autopilot_takeover_risk<span style="color:#f92672">&#39;</span>,<span style="color:#e6db74">&#39;b&#39;</span>,<span style="color:#e6db74">&#39;LineWidth&#39;</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;HandleVisibility&#39;</span>,<span style="color:#e6db74">&#39;off&#39;</span>);
-</code></pre></div><p><img src="../../images/eegcosttradeoff/1.png" alt="log loss regular"></p>
+</code></pre></div><p><img src="../../static/images/eegcosttradeoff/1.png" alt="log loss regular"></p>
 <p>This loss shows it is equally bad to predict that eyes are closed when they are open, as it does to predict eyes open, when they are closed.</p>
 <p>Knowing the model will make some mistakes, we&rsquo;d prefer more false &ldquo;Opens&rdquo; (false negatives) if we can get them, even at the cost of more of false &ldquo;Closed&rdquo;. Penalising the loss curve more heavily when the true class is &ldquo;Closed&rdquo; could help to achieve this. It would be an asymmetric loss function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-matlab" data-lang="matlab"><span style="color:#75715e">% loss for miscalssifying Closed eyes</span>
@@ -499,7 +499,7 @@ trainingSettings.LossType = &#34;WeightedTwoClassCrossEntropy&#34;;
 	<div class="pager__item pager__item--next">
 		<a class="pager__link" href="../../post/rnn5min_1/" rel="next">
 			<span class="pager__subtitle">Next&thinsp;»</span>
-			<p class="pager__title">5-min reads: why cell state propogation slows convergence</p>
+			<p class="pager__title">5-min reads: why propogation cell state through mini-batches slows convergence</p>
 		</a>
 	</div>
 </nav>

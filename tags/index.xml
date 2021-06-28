@@ -170,6 +170,24 @@
     </item>
     
     <item>
+      <title>Natural Language Processing</title>
+      <link>/tags/natural-language-processing/</link>
+      <pubDate>Sun, 08 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/natural-language-processing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>seq2eq</title>
+      <link>/tags/seq2eq/</link>
+      <pubDate>Sun, 08 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/seq2eq/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Attentional LSTM</title>
       <link>/tags/attentional-lstm/</link>
       <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>

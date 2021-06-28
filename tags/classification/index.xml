@@ -25,5 +25,14 @@
       <description>&lt;p&gt;&lt;em&gt;Autonomous vehicles are no longer reserved for the realm of science fiction, but some AI experts say the complexities of AI-driven cars in public make the possibility of never needing to drive a far off future. Perhaps to bridge the gap are technologies that greatly reduce the labour involved in driving, while still reducing the risk.&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>Surgery on an Attentional Neural Network</title>
+      <link>/post/attnrnnlabotomy/</link>
+      <pubDate>Sun, 08 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/attnrnnlabotomy/</guid>
+      <description>Why this project?  Understand &amp;lsquo;Attention&amp;rsquo;, in Natural Language Processing algorithms. Advancing explainability of A.I. Understand the flexible nature of Neural Networks   Table of Contents  Why this project?  Table of Contents   Normal use of Attention Concept of Attention Recap on RNNs Combining RNNs with Attn. Purpose of project Project Specs, Setup &amp;amp; modelling process 3 Model Topologies  LSTM w. Attn. BiLSTM w. Attn. Forgetful Encoder LSTM w.</description>
+    </item>
+    
   </channel>
 </rss>

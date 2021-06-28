@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Surgery on an Attentional Neural Network - Sam Schumacher</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="Example test article that contains basic HTML elements for text formatting on the Web.">
+		<meta property="og:title" content="Surgery on an Attentional Neural Network" />
+<meta property="og:description" content="Example test article that contains basic HTML elements for text formatting on the Web." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/attnrnnlabotomy/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-08T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-11-08T00:00:00&#43;00:00" />
+
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="../../css/style.css">
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo logo--mixed">
+		<a class="logo__link" href="../../" title="Sam Schumacher" rel="home">
+			<div class="logo__item logo__imagebox">
+					<img class="logo__img" src="../../images/matlabart_neuronevolution.png">
+				</div><div class="logo__item logo__text">
+					<div class="logo__title">Sam Schumacher</div>
+					<div class="logo__tagline">ML &amp; AI</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">Menu</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="../../about/">
+				
+				<span class="menu__text">This blog</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Surgery on an Attentional Neural Network</h1>
+			<p class="post__lead">Customising an LSTM model to better understand Attention in Sequence to Sequence text prediction</p>
+			<div class="post__meta meta">
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-11-08T00:00:00Z">November 08, 2020</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="../../categories/machine-learning/" rel="category">Machine Learning</a>
+	</span>
+</div></div>
+		</header>
+		<figure class="post__thumbnail">
+			<img src="../../images/NNetLobotomy.jpg" alt="Surgery on an Attentional Neural Network">
+		</figure><div class="content post__content clearfix">
+			<h2 id="why-this-project">Why this project?</h2>
+<ul>
+<li>Understand &lsquo;Attention&rsquo;, in Natural Language Processing algorithms.</li>
+<li>Advancing explainability of A.I.</li>
+<li>Understand the flexible nature of Neural Networks</li>
+</ul>
+<hr>
+<h3 id="table-of-contents">Table of Contents</h3>
+<ul>
+<li><a href="#why-this-project">Why this project?</a>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+</ul>
+</li>
+<li><a href="#normal-use-of-attention">Normal use of Attention</a></li>
+<li><a href="#concept-of-attention">Concept of Attention</a></li>
+<li><a href="#recap-on-rnns">Recap on RNNs</a></li>
+<li><a href="#combining-rnns-with-attn">Combining RNNs with Attn.</a></li>
+<li><a href="#purpose-of-project">Purpose of project</a></li>
+<li><a href="#project-specs-setup--modelling-process">Project Specs, Setup &amp; modelling process</a></li>
+<li><a href="#3-model-topologies">3 Model Topologies</a>
+<ul>
+<li><a href="#lstm-w-attn">LSTM w. Attn.</a></li>
+<li><a href="#bilstm-w-attn">BiLSTM w. Attn.</a></li>
+<li><a href="#forgetful-encoder-lstm-w-attn">Forgetful Encoder LSTM w. Attn.</a></li>
+</ul>
+</li>
+<li><a href="#lstm-w-attn-1">LSTM w Attn.</a>
+<ul>
+<li><a href="#attn-scores">Attn Scores</a></li>
+<li><a href="#visualising-encoded-input-sequence">Visualising encoded input sequence</a></li>
+</ul>
+</li>
+<li><a href="#bilstm-w-attn-1">BiLSTM w. Attn.</a>
+<ul>
+<li><a href="#attn-scores-1">Attn Scores</a></li>
+</ul>
+</li>
+<li><a href="#forgetful-encoder-lstm-w-attn-1">Forgetful Encoder LSTM w. Attn.</a>
+<ul>
+<li><a href="#attn-scores-2">Attn Scores</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<blockquote>
+<p><em>Deep learning has such a large and growing set of algorithms within it. The jargon can get confusing - some are referenced in this post&hellip;</em></p>
+<ul>
+<li><em>Recurrent Neural Network is a type of Neural Network</em></li>
+<li><em>a Long Short Term Memory (LSTM) Neural Network is a type of Recurrent Neural Network (RNN)</em></li>
+<li><em>an Encoder-Decoder is a configuration of a LSTM-RNN (also of other RNNs, and non-Recurrent Neural Networks)</em></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="normal-use-of-attention">Normal use of Attention</h2>
+<p>&lsquo;Attention&rsquo; is a mechanism <a href="https://arxiv.org/abs/1409.0473">delveoped in 2015</a> to give Recurrent Neural Networks more power to learn longer sequences. It&rsquo;s particularly powerful for <a href="https://iq.opengenus.org/applications-of-rnn/">AI driven text prediction tasks, like captions on videos, or chatbots.</a></p>
+<p>While an LSTM-RNN was designed for longer sequences, it still has it&rsquo;s limits for the kind of length found in most of the sentences we use everyday.</p>
+<h2 id="concept-of-attention">Concept of Attention</h2>
+<p>When we move our eyes along a sentence, we&rsquo;re able to read each word even at a small font size - though we have to look directly at that word. However, walking down the street, we&rsquo;ll know what a billboard in our peripheral vision says.</p>
+<p>When we bring our attention to something, we can see greater detail. When there is greater detail, more information can be packed in for us to interpret. Likewise, a map can express more when it&rsquo;s scale is large, and we use a magnifying glass to focus our attention on it&rsquo;s sections.</p>
+<p><img src="../../images/attnRnnLobotomy/focusroad.jpg" alt="focus"></p>
+<h2 id="recap-on-rnns">Recap on RNNs</h2>
+<p>RNN&rsquo;s (Recurrent Neural Networks) are set up to accept data that is meant to be looked at in a particular sequence;</p>
+<ul>
+<li>A song is a collection of notes <strong>only</strong> if the notes are in a particular order.</li>
+<li>A sentence makes no sense when you slightly the change of order words.</li>
+</ul>
+<p>An RNN can take advantage of additional information intrinsict to the input - their <em>order</em>. The new piece of information is a <em>relationship</em> between sequential inputs.</p>
+<p>An example. If a sequence of inputs is: <code>4, 3, 2</code> a machine that didn&rsquo;t pay attention to their sequence would treat <code>2, 4, 3</code> the same - so predicting an output of &ldquo;<code>1</code>&rdquo; wouldn&rsquo;t be possible.</p>
+<p>Only a machine that stores memory over the sequence can pay attention to the relationship between inputs in the sequence. It would see the relationship between <code>4, 3</code> and <code>3, 2</code> so could use the last input <code>2</code> in combination with the <em>relationship information: <code>-1</code></em>, to predict an output <code>1</code>, and it would work for any sequence of any length. The RNN is fed additional information: the <em>order of inputs</em> - so it makes use of this in prediction.</p>
+<p>So, a prediction machine has parameters for inputs, but a RNN also has parameters for the <em>temporal relationship</em> based on the order the inputs are presented in.</p>
+<p>$$\mathrm{Relationship}\ \mathrm{information}=\mathit{\mathbf{f}}\left(\mathrm{prior}\ \mathrm{relationship},\mathrm{input}\ \mathrm{at}\ \mathrm{step}\ t\right)$$
+$$\mathrm{Next}\ \mathrm{Output}=\mathit{\mathbf{f}}\left(\mathrm{relationship}\ \mathrm{information},\mathrm{input}\ \mathrm{at}\ \mathrm{step}\ t\right)$$
+In the example of sentence prediction;</p>
+<p>$$\mathrm{Next}\ \mathrm{word}=\mathit{\mathbf{f}}\left(\mathrm{meaning}\ \mathrm{of}\ \mathrm{recent}\ \mathrm{words},\mathrm{last}\ \mathrm{word}\right)$$</p>
+<p>In the image below, &ldquo;Hidden State&rdquo; can be thought of as the relationship information. It evolves as it gets passed through the sequence.</p>
+<p><img src="../../images/attnRnnLobotomy/simple%20Encoder%20Decoder%20RNN.png" alt="simple Encoder Decoder RNN"></p>
+<p>Typically in deep learning sentence prediction, an <a href="https://medium.com/analytics-vidhya/Encoder-Decoder-seq2seq-models-clearly-explained-c34186fbf49b">Encoder-Decoder RNN</a> setup is used. The first half of the Neural Network, the Encoder, converts the input sequence into data points in a multi-dimensional space (<em>Hidden State</em>). The second half, the Decoder, predicts what multi-dimensional data point should come after the encoded sequence. The prediction is then converted from multi-dimensional datapoint back to something similar as the input, i.e. from <em>Hidden States</em> to words.</p>
+<h2 id="combining-rnns-with-attn">Combining RNNs with Attn.</h2>
+<p>For many setups in NLP, the RNN Encoder is converting a sequence of datapoints, into a single datapoint. We can call this &lsquo;<em><strong>compression</strong></em>&rsquo; of the sequence.</p>
+<p>It&rsquo;s often helpful to understand a concept from differing analogies. To understand <em><strong>compressed sequence</strong></em> in the context of RNNs using the map &amp; magnifying glass example; imagine putting your eye on the surface of the map, and looking along its surface. You&rsquo;d see in great detail the part of the map close to your eye, but less so further away. This is an analogy for how RNN Encoders compress a sequence, before passing it to the Decoder, to predict the resulting sequence. Greater detail can be achieved at recent time steps, and less detail at older steps in the compressed sequence.</p>
+<p><img src="../../images/attnRnnLobotomy/map%20perspective.jpg" alt="map perspective"></p>
+<p>Normally, the Decoder is passed only the compressed encoded sequence;</p>
+<ul>
+<li>Encoder compresses the input sequence at it&rsquo;s final step, and passes it to the Decoder for its first prediction step only. The Decoder takes over for all output steps after that.</li>
+</ul>
+<p>In a Seq2Seq RNN model with Attention, the Decoder is passed information about the input sequence in a second way;</p>
+<ul>
+<li>The Attention mechanism takes the entire un-compressed encoded sequence, at each step of the length of input sequence. It then uses this, in conjunction with the Decoders' most recent prediction to feed the Decoder at every step of the output sequence prediction.</li>
+</ul>
+<p>Here the Decoder is initialised with the final &lsquo;state&rsquo; of the Encoder, but then for each Decoder step, the attention mechanism is an input also (which comes from each individual step of the encoded sequence)</p>
+<p><img src="../../images/attnRnnLobotomy/simpleAttention.png" alt="simple attention"></p>
+<p>Below, we can see the Decoder pays most attention to &ldquo;sister&rdquo;, when trying to predict the word &ldquo;she&rdquo;;</p>
+<p><img src="../../images/attnRnnLobotomy/simpleAttention_2.png" alt="simple attention 2"></p>
+<h2 id="purpose-of-project">Purpose of project</h2>
+<p>This project will help explain how the attention mechanism works, and also shine a light on the nature of <em>hidden state</em> / <em>compressed sequences</em> in RNNs.</p>
+<p>I&rsquo;ll create 3 RNNs &amp; visualise where attention is going.</p>
+<blockquote>
+<p><a href="https://github.com/samoliverschumacher/machinelearningprojects/tree/main/toyProjects/lstmRomannumerals"><em>code from my GitHub</em></a></p>
+</blockquote>
+<p>What we&rsquo;ll see is the way a Neural network can learn a dataset in many different ways. We&rsquo;ll get a sense for how an Encoder tries to represent information so it is most clear and most useful for the Decoder to predict output.</p>
+<p>Think of this as very simple and clear lines and marks on a topographic map - they try to be as helpful to the reader, with smallest amount of marks and colours.</p>
+<h2 id="project-specs-setup--modelling-process">Project Specs, Setup &amp; modelling process</h2>
+<p>I&rsquo;ve been always been interested in time-series data, so decided to <a href="https://github.com/samoliverschumacher/neuralnets/tree/main/rnngenerator">build my own LSTM RNN</a> from the math and theory I could find in the literature. From there, I added an Attention mechanism.</p>
+<p>The advantage to writing your own, is you can manipulate its architecture to get a deeper understanding. In this project, I will perform a &lsquo;lobotomy&rsquo; on the long term memory part of a Neural Network to see how Attention allows the Network to adapt!</p>
+<p>I&rsquo;ll create 3 topologies of neural networks, where one of them has been manipulated so that the Encoder is left with the memory of a goldfish, while the Decoder &amp; attention are left to try and complete the task of converting Numbers to Roman Numerals.</p>
+<p>Converting Numbers to Roman Numerals in the baseline model will be structured as below;</p>
+<p><img src="../../images/attnRnnLobotomy/matlabAttentionTopology.png" alt="matlab Attention"></p>
+<h2 id="3-model-topologies">3 Model Topologies</h2>
+<h3 id="lstm-w-attn">LSTM w. Attn.</h3>
+<p>This model will be the baseline. It&rsquo;s the simplest LSTM structure to successfully ustilise Attention.</p>
+<h3 id="bilstm-w-attn">BiLSTM w. Attn.</h3>
+<p>In a Bi-directional LSTM, the input sequence is fed into the Encoder twice - once in its usual start to finish order, as well as in reverse;</p>
+<p><img src="../../images/attnRnnLobotomy/BiLSTM.png" alt="Bidirectional LSTM"></p>
+<p>This means the &lsquo;compressed&rsquo; sequence going into the Decoder has been compressed with <strong>both</strong> first &amp; last step in the sequence being most recent in the compression. When the attention mechanism takes each step of the uncompressed encoded sequence, it&rsquo;s seeing a blend of the sequence <strong>forward and backward</strong>.</p>
+<h3 id="forgetful-encoder-lstm-w-attn">Forgetful Encoder LSTM w. Attn.</h3>
+<p>Normally, the Encoder takes data in a sequence. The RNN can &lsquo;remember&rsquo; past steps through the sequence by evolving knowledge of the sequence along the way. At the first step, it knows only the first input. At 2nd it&rsquo;s a compressed version of 1st step with 2nd input added to it. At the last step, its a compression of all steps in their sequence. (This is not the same as the 2nd encoded step being knowledge of only step 2&rsquo;s input.)</p>
+<p>This model is the same as the 1st model, except between input sequence steps, no information is passed along - removing the &ldquo;Recurrent&rdquo; aspect to the Encoder.</p>
+<p>The attention mechanism will see all of the encoded steps, but they will be completely independent of prior steps. This means the Decoder will not have a <em><strong>compressed</strong></em> &amp; <em><strong>ordered</strong></em> input sequence to work with. But, will still know the positional nature of input steps.</p>
+<p><em>See footnote for technically how this is done.</em> <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<h2 id="lstm-w-attn-1">LSTM w Attn.</h2>
+<h4 id="attn-scores">Attn Scores</h4>
+<p>For each roman numeral prediction step, the Decoder looks at the prior output step (rows) and the entire encoded input sequence (all columns). Each row of blue and white squares shows where the network is placing importance to make a prediction for that output step. This example is very counter-intuitive to how we pay attention to each number when converting numbers to roman numerals;</p>
+<p><img src="../../images/attnRnnLobotomy/AttnScoresLSTM.png" alt="AttnScoresLSTM"></p>
+<p>Across all examples, the attention mechanism only pays attention to the final step of the input. This isn&rsquo;t the final step alone, it&rsquo;s the compression of all steps leading up to the final step.</p>
+<p>So, the attention mechanism isn&rsquo;t really necessary here - a Decoder without attention already takes the final input step!</p>
+<p>The problem is too simple to necessitate the Attention mechanism.</p>
+<h4 id="visualising-encoded-input-sequence">Visualising encoded input sequence</h4>
+<p>To better understand how more valuable information is present at the final step, we can plot the encoded multi-dimensional values of the input over sequential time steps. (plotted on only 2 dimensions using <a href="https://builtin.com/data-science/step-step-explanation-principal-component-analysis">PCA</a>)</p>
+<p>There are two pieces of information at each timestep - the LSTM <em><strong>Hidden State</strong></em> and <em><strong>Memory</strong></em>. Remember, each encoded step is storing a compression of all steps leading up to it;</p>
+<p><img src="../../images/attnRnnLobotomy/PCAencoded.png" alt="PCAencoded"></p>
+<p>As we go through the encoded steps, the spread of data points is increasing in variety (spreading apart). This growing diversity, gives the Decoder more to work with in accurately predicting between one roman numeral and another. Step 3 &amp; 4 are not too dissimilar because the &ldquo;<code>{eos}</code>&rdquo; tag doesnt add any new information.</p>
+<h2 id="bilstm-w-attn-1">BiLSTM w. Attn.</h2>
+<h4 id="attn-scores-1">Attn Scores</h4>
+<p>In the bidirectional LSTM, the Encoder takes a sequence in both directions as input. In the regular Encoder, the attention mechanism focused on the last step in the sequence, where the <code>{eos}</code> tag occurs - because this step stored all information from the entire sequence.</p>
+<p>In the bidirectional LSTM, the information from the entire sequence occurs at <em>both</em> the first position and the last position. So, attention finds the most useful information to be at the half way point;</p>
+<p><img src="../../images/attnRnnLobotomy/AttnScoresBiLSTM.png" alt="AttnScoresBiLSTM"></p>
+<p>The prediction for &ldquo;374&rdquo; is quite intuitive. Attention went to &ldquo;3&rdquo; when predicting &ldquo;C,C,C&rdquo;. Because the input sequence was flipped (Bidirectional LSTM), the first position was referenced when predicting the final output: &ldquo;end of string {eos}&rdquo;. The model knew that for this input, finishing with a &ldquo;4&rdquo; signals no more roman numerals needed to translate from numeric.</p>
+<p>There is a bias of the attention to the first step rather than the 3rd. This is because 2 digit numbers are 10% of observations which have no useful information in the final sequence spot.</p>
+<h2 id="forgetful-encoder-lstm-w-attn-1">Forgetful Encoder LSTM w. Attn.</h2>
+<h4 id="attn-scores-2">Attn Scores</h4>
+<p>Now, the Encoder&rsquo;s outputs are a function of only the input of that step, and not a memory of steps leading up to it. Instead of the attention mechanism obtaining all information about the input sequence from the final compressed state, it must read from each step of the input sequence, so the Decoder can predict the output.</p>
+<p><img src="../../images/attnRnnLobotomy/AttnScoresForgetLSTM.png" alt="AttnScoresForgetLSTM"></p>
+<p>Without the Encoder passing information along the sequence, attention must be placed on all parts of the sequence to give the Decoder the best chance at predicting outputs.</p>
+<p>This result looks tricky to make sense of but we can try for the <code>4 0 3 {eos}</code> example:</p>
+<ul>
+<li>in predicting <code>C</code>, it&rsquo;s focused on the first and a little on the second &amp; third digit: only a 3 digit number can start with a <code>C</code> if <code>4</code> is in the first position.</li>
+<li>because the Decoder predicts as well as creates knowledge to pass on, the <code>0</code> indicates to predict a <code>D</code> making <code>CD = 400</code>, but a <code>D</code> with few roman numerals afterwards (only the last digit <code>3</code> to translate).</li>
+<li>for the rest of the prediction sequence <code>I,I,I</code>, attention has gone to the final digit <code>3</code> as expected.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Attention in our human lives, and in machine translation, allows thinking to be done with a lot more efficiency. Giving context helps to understand a datapoint, whether its predicting that a &lsquo;cat&rsquo; is in an area of an image, or understanding a spoken sentence because of the broader conversation it&rsquo;s in. <em>(<a href="https://www.myenglishpages.com/blog/meaning-and-context-in-language-teaching/">see here</a> for a deeper understanding of this very generalisable concept)</em></p>
+<p>We&rsquo;ve seen here how Neural networks are incredibly powerful due to their flexibility. I was able to customise how the LSTM was configured because I wrote the algorithms - and through this, learnt the nature of Neural networks for NLP from first principles.</p>
+<p>This article is about concepts, so I&rsquo;ve left technical aspects out. Please feel free to contact me if you&rsquo;d like specifics.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Altering LSTM to forget.<img src="../../images/attnRnnLobotomy/ForgettingEncoderDerivation.png" alt="ForgettingEncoderDerivation"> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/timeseries/" rel="tag">timeseries</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/classification/" rel="tag">classification</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/natural-language-processing/" rel="tag">Natural Language Processing</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/seq2eq/" rel="tag">seq2eq</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/lstm/" rel="tag">LSTM</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="../../tags/neural-network/" rel="tag">neural network</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="Sam Schumacher avatar" src="../../images/matlabart_neuronevolution2.png" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About Sam Schumacher</span>
+	</div>
+	<div class="authorbox__description">
+		Using machine learning projects to discover the world through its problems
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="../../post/buildingnnet/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;Previous</span>
+			<p class="pager__title">A DIY reccurent neural network algorithm</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="../../post/eeg_eda/" rel="next">
+			<span class="pager__subtitle">Next&thinsp;»</span>
+			<p class="pager__title">Autonomous vechicle microsleep detector Vol1: EDA</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 Sam Schumacher.
+			<span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> theme.</span>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+	</div>
+<script async defer src="../../js/menu.js"></script>
+
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async>
+</script>
+</body>
+</html>

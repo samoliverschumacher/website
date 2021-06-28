@@ -26,7 +26,7 @@
     </item>
     
     <item>
-      <title>5-min reads: why cell state propogation slows convergence</title>
+      <title>5-min reads: why propogation cell state through mini-batches slows convergence</title>
       <link>/post/rnn5min_1/</link>
       <pubDate>Sat, 02 Jan 2021 00:00:00 +0000</pubDate>
       
@@ -59,6 +59,15 @@
       
       <guid>/post/eeg_eda/</guid>
       <description>&lt;p&gt;&lt;em&gt;Produce a detector that distinguisihes when a car&amp;rsquo;s driver has eyes closed. This detector will connect to an autopilot system for the car temporarily until driver regains control, otherwise safely brings the car to a halt on the side of the road. Detector will have access to EEG signals connected to drivers head.&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Surgery on an Attentional Neural Network</title>
+      <link>/post/attnrnnlabotomy/</link>
+      <pubDate>Sun, 08 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/attnrnnlabotomy/</guid>
+      <description>Why this project?  Understand &amp;lsquo;Attention&amp;rsquo;, in Natural Language Processing algorithms. Advancing explainability of A.I. Understand the flexible nature of Neural Networks   Table of Contents  Why this project?  Table of Contents   Normal use of Attention Concept of Attention Recap on RNNs Combining RNNs with Attn. Purpose of project Project Specs, Setup &amp;amp; modelling process 3 Model Topologies  LSTM w. Attn. BiLSTM w. Attn. Forgetful Encoder LSTM w.</description>
     </item>
     
     <item>
